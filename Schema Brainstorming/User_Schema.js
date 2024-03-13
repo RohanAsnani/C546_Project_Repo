@@ -11,6 +11,10 @@ const userSchema = {
     "role": String,
     "notes": String,
     "status": String,
+    "Vet": String,
+    "Disable": String,
+    "Race": String,
+    "Country_of_Origin":String,
     "startDate": Date,
     "endDate": Date,
     "DOB": Date,
@@ -57,7 +61,8 @@ const userSchema = {
         "_start": Date,
         "_end": Date,
         "_type": String,
-        "_status": String 
+        "_status": String,
+        "Reviewer_ID" : ObjectId()
       }
     ],
     "leaveBank": {
@@ -67,3 +72,8 @@ const userSchema = {
     }
   }
   
+
+
+  /// How we are tackling that which hr does the current employee belong too.
+  //// Notes update just 
+  /// DEPARTMENT AND HR RELATION SOMETHING LIKE THAT 
