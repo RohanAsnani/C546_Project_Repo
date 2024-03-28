@@ -9,7 +9,13 @@ const userSchema = {
     "married": String,
     "department": String,
     "role": String,
-    "notes": String,
+    "notes": [{
+      "_id": new ObjectId(),//note Id
+      "_reviewerId": ObjectId(),
+      "note_text": [String],
+      "note_date": Date
+      //boolean flag for user to acknowledge the note
+    }],
     "status": String,
     "Vet": String,
     "Disable": String,
@@ -21,12 +27,14 @@ const userSchema = {
     "currentPosition": String,
     "currentSalary": Number,
     "promoDate": Date,
-    "appraisal": [
-      {
-        "_date": Date,
-        "_sal": Number
-      }
-    ],
+    // "appraisal": [
+    //   {
+    //     "_date": Date,
+    //     "_sal": Number
+    //   }
+    // ],
+
+    //previousPos to be removed??
     "previousPos": [
       {
         "_pos": String,
