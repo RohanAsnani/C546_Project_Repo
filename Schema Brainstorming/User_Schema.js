@@ -40,22 +40,24 @@ const userSchema = {
         "_pos": String,
         "_promoDate": Date,
         "_posEndDate": Date,
-        "_appraisal": [
-          {
-            "_date": Date,
-            "_sal": Number
-          }
-        ]
+        "_sal": Number
+        //     "_sal": Number
+        // "_appraisal": [
+        //   {
+        //     "_date": Date,
+        //     "_sal": Number
+        //   }
+        // ]
       }
     ],
-    "performance": [
-      {
-        "_reviewerId": String,
-        "_reviewDate": Date,
-        "_rating": Number,
-        "_review": String
-      }
-    ],
+    // "performance": [
+    //   {
+    //     "_reviewerId": String,
+    //     "_reviewDate": Date,
+    //     "_rating": Number,
+    //     "_review": String
+    //   }
+    // ],
     "contactInfo": {
       "phone": String, 
       "email": String,

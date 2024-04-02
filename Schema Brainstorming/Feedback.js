@@ -4,7 +4,7 @@ const feedback = {
     "type": String,// Can be a drop down or a subject line
     "feedback_text": String,
     "feedback_date": Date,
-    "role": String,
+    "role": String,//validate that current user is HR
     "status": String // To Do/In progress/ Completed/ Declined
 }
 
