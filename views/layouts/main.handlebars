@@ -1,0 +1,48 @@
+{{! This will be your default layout for all handlebars file rendered. This will be inherited by all other templates. }}
+{{! Refer lecture code to learn more on how this works: https://github.com/stevens-cs546-cs554/CS-546/tree/master/lecture_08/code/HTML_Templating }}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>{{Title}}</title>
+    <link rel="stylesheet" href="/public/css/styles.css">
+</head>
+
+<body>
+    {{!-- <header>
+        <h1>{{Title}}</h1>
+    </header> --}}
+    <main>
+        {{{body}}}
+    </main>
+</body>
+
+</html>
+
+{{!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Movie Finder</title>
+    <link rel="stylesheet" href="/public/css/styles.css">
+</head>
+
+<body>    
+    <header>
+        <h1>Movie Finder</h1>
+    </header>
+    <main>
+        <p>This is a simple HTML CSS website I made, to look up and find movies that you would like. Below is a search bar, just type in the name of the movie you want and click on search, the website will show you results if it can find any.</p>
+        <form>
+            <label for="searchMoviesByName">Search by Name:</label>
+            <input type="text" id="searchMoviesByName" name="searchMoviesByName">
+            <input type="submit" value="Search">
+        </form>
+    </main>
+    <footer>I'm a footer</footer>
+</body>
+
+</html> --}}
