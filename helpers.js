@@ -75,6 +75,7 @@ const isValidDate=(month,date,year,param)=>{
 }
 
 const numberExistandType=(num,param,int=true,dec=2)=>{
+    if(typeof(num)==='string') throw new Error (`parameter ${param} cannot be string.`)
     if(num===null){
         throw new Error(`parameter ${(param)} cannot be null`)
     }
@@ -97,6 +98,7 @@ const numberExistandType=(num,param,int=true,dec=2)=>{
     if(num<0){
         throw new Error(`parameter ${(param)} is a number less than 0`) 
     }
+    return num
 }
 
 const arrayExistandType=(arr,param)=>{
@@ -118,6 +120,7 @@ const validObject=(id)=>{
     if(!ObjectId.isValid(id)){
         throw new Error(`The parameter id is not a valid ObjectId`)
     }
+    return id
 }
 
 const isValidWebsite=(manufacturerWebsite)=>{
@@ -164,4 +167,109 @@ const numberRange=(num,param,low,high)=>{
     }
 }
 
-export{arrayExistandType,booleanExistsandType,dateFormat,isValidDate,isValidWebsite,numberExistandType,numberRange,stringExistandType,validObject}
+
+const checkTypeMaster=(updationInfo)=>{
+    let strArr = [updationInfo.employeeId,updationInfo.firstName,updationInfo.lastName,updationInfo.username,updationInfo.password,updationInfo.gender,updationInfo.maritalStatus,updationInfo.department,updationInfo.role,updationInfo.disable,updationInfo.race,updationInfo.countryOfOrigin,updationInfo.currentPosition,];
+
+  let dateArr = [updationInfo.startDate,updationInfo.endDate,updationInfo.dob,updationInfo.promoDate];
+
+  let numArr = [updationInfo.currentSalary];
+
+
+  strArr = strArr.map((check)=>{
+    check = stringExistandType(check,`${check}`);
+    return check
+  });
+//   updationInfo.lastName = stringExistandType(updationInfo.lastName,`${updationInfo.lastName}`);
+
+  dateArr = dateArr.map((check)=>{
+    check = check.trim();
+    check = dateFormat(check);
+    let month = check[0];
+    let date = check[1];
+    let year = check[2];
+
+    isValidDate(month,date,year);
+    check = String(check[0])+'/'+String(check[1])+'/'+String(check[2]);
+    return check
+  });
+
+  numArr = numArr.map((check)=>{
+    check = numberExistandType(check,`${check}`);
+    return check
+  });
+
+  const updateuser ={
+    employeeId : strArr[0], firstName: strArr[1], lastName: strArr[2], username: strArr[3],password: strArr[4], gender: strArr[5], maritalStatus: strArr[6], department: strArr[7], role: strArr[8], disable: strArr[9], race: strArr[10], countryOfOrigin: strArr[11], startDate:dateArr[0], endDate:dateArr[1],dob:dateArr[2], currentPosition: strArr[12], currentSalary: numArr[0], promoDate: dateArr[3]
+  }
+  return updateuser
+}
+
+
+const checkIfExistsAndValidate =(info)=>{
+    
+    
+    if(info.firstName){
+        info.firstName = stringExistandType(info.firstName);
+    }
+    if(info.lastName){
+        info.lastName = stringExistandType(info.lastName);
+    }
+    if(info.username){
+        info.username = stringExistandType(info.username);
+    }    
+    if(info.password){
+        info.password = stringExistandType(info.password);
+    }
+    if(info.gender){
+        info.gender = stringExistandType(info.gender);
+    }
+    if(info.maritalStatus){
+        info.maritalStatus = stringExistandType(info.maritalStatus);
+    }if(info.department){
+        info.department = stringExistandType(info.department);
+    }
+    if(info.role){
+        info.role = stringExistandType(info.role);
+    }
+    if(info.status){
+        info.status = stringExistandType(info.status);
+    }
+    if(info.disable){
+        info.disable = stringExistandType(info.disable);
+    }
+    if(info.race){
+        info.race = stringExistandType(info.race);
+    }
+    if(info.countryOfOrigin){
+        info.countryOfOrigin = stringExistandType(info.countryOfOrigin);
+    }
+    if(info.currentPosition){
+        info.currentPosition = stringExistandType(info.currentPosition);
+    }
+    if(info.currentSalary){
+        info.currentSalary = numberExistandType(info.currentSalary);
+    }
+    if(info.startDate){
+        dateFormat(info.startDate);
+        let month = check[0];
+        let date = check[1];
+        let year = check[2];
+        isValidDate(month,date,year);
+    }if(info.endDate){
+        dateFormat(info.endDate);
+        let month = check[0];
+        let date = check[1];
+        let year = check[2];
+        isValidDate(month,date,year);
+    }if(info.promoDate){
+        dateFormat(info.promoDate);
+        let month = check[0];
+        let date = check[1];
+        let year = check[2];
+        isValidDate(month,date,year);
+    }
+    return info
+}
+
+export{arrayExistandType,booleanExistsandType,dateFormat,isValidDate,isValidWebsite,numberExistandType,numberRange,stringExistandType,validObject,checkTypeMaster,checkIfExistsAndValidate}
