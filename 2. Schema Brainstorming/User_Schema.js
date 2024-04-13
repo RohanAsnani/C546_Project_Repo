@@ -2,7 +2,7 @@ const userSchema = {
   "_id": ObjectId(), 
   "firstName": String,
   "lastName": String,
-  "employeeid": String,
+  "employeeId": String,
   "username": String,
   "password": String, 
   "gender": String,
