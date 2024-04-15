@@ -2,7 +2,7 @@ const userSchema = {
     "_id": ObjectId(), 
     "firstname": String,
     "lastname": String,
-    "employeeid": String,
+    "employeeId": String,
     "username": String,
     "password": String, 
     "gender": String,
@@ -11,19 +11,19 @@ const userSchema = {
     "role": String,
     "notes": [{
       "_id": new ObjectId(),//note Id
-      "_reviewerId": ObjectId(),
-      "note_text": [String],
-      "note_date": Date
+      "reviewerId": ObjectId(),
+      "noteText": [String],
+      "noteDate": Date
       //boolean flag for user to acknowledge the note
     }],
     "status": String,
-    "Vet": String,
-    "Disable": String,
-    "Race": String,
-    "Country_of_Origin":String,
+    "vet": String,
+    "disable": String,
+    "race": String,
+    "countryOfOrigin":String,
     "startDate": Date,
     "endDate": Date,
-    "DOB": Date,
+    "dateOfBirth": Date,
     "currentPosition": String,
     "currentSalary": Number,
     "promoDate": Date,
@@ -37,10 +37,10 @@ const userSchema = {
     //previousPos to be removed??
     "previousPos": [
       {
-        "_pos": String,
-        "_promoDate": Date,
-        "_posEndDate": Date,
-        "_sal": Number
+        "pos": String,
+        "promoDate": Date,
+        "posEndDate": Date,
+        "salary": Number
         //     "_sal": Number
         // "_appraisal": [
         //   {
@@ -68,11 +68,11 @@ const userSchema = {
     "managerId": ObjectId(),
     "leave": [
       {
-        "_start": Date,
-        "_end": Date,
-        "_type": String,
-        "_status": String,
-        "Reviewer_ID" : ObjectId()
+        "start": Date,
+        "end": Date,
+        "type": String,
+        "status": String,
+        "reviewerId" : ObjectId()
       }
     ],
     "leaveBank": {
