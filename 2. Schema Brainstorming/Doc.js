@@ -1,17 +1,13 @@
 const Doc = {
-    "_id": ObjectId(),
-    "Emp_id": ObjectId(),
-    "Documents" : [
+    "_id": new ObjectId(),
+    "employeeId": ObjectId(),
+    "documents": [
         {
-            "type_of_doc":String,
-            "Doc_url": String,
-            "Status": String,
-            "SubmittedOn": Date,
-            "approvedby": ObjectId()
-
+            "typeOfDoc": String,
+            "docUrl": String,
+            "status": String,
+            "submittedOn": Date,
+            "approvedBy": ObjectId()
         }
-
     ]
-
-
 }
