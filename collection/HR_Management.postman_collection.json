@@ -1,0 +1,83 @@
+{
+	"info": {
+		"_postman_id": "4976b3fd-a0c7-4030-882a-b618394143ca",
+		"name": "HR_Management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33326490"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": []
+		},
+		{
+			"name": "Boarding",
+			"item": [
+				{
+					"name": "GetAllBoardingEmployees",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "CreateTask",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"employeeId\": \"662548291278b1c0225c22d3\",\r\n \"taskName\": \"Complete HR Onboarding Form\",\r\n \"dueDate\": \"12-12-2024\",\r\n \"taskType\": \"offboard\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/hr",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"hr"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateTask",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"employeeId\": \"662548291278b1c0225c22d3\",\r\n \"taskId\":\"6625c1e260581d45f5dc44c1\",\r\n \"taskType\": \"offboard\" ,\r\n \"updateBoardDataObj\":{\r\n    \"completedOn\": \"12-22-2024\"\r\n } \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/hr",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"hr"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
