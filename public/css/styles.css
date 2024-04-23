@@ -1,3 +1,27 @@
 /*
 You will style your page using at least 5 CSS selectors for general CSS styling. You will place the CSS in its own file. 
 */
+h1,h5{
+    text-align: center;
+}
+
+.loginForm{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loginForm label{
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.loginForm input{
+    margin-bottom: 5px;
+}
+
+.footer{
+    
+    margin-top: 490px;
+    text-align: center;
+}

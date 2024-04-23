@@ -23,7 +23,7 @@ const db = await dbConnection();
 app.use('/public', express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-//app.use(rewriteUnsupportedBrowserMethods);
+
 
 app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');

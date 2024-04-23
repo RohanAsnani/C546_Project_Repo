@@ -180,7 +180,6 @@ const checkTypeMaster=(updationInfo)=>{
     check = stringExistandType(check,`${check}`);
     return check
   });
-//   updationInfo.lastName = stringExistandType(updationInfo.lastName,`${updationInfo.lastName}`);
 
   dateArr = dateArr.map((check)=>{
     check = check.trim();
