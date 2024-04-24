@@ -3,12 +3,28 @@ import axios from "axios";
 import * as validation from "../helpers.js"
 import { users } from "../config/mongoCollections.js"
 import { ObjectId } from "mongodb"
+import bcrypt from 'bcryptjs';
 
 const exportedMethods ={
 async create(creationInfo){
   creationInfo = validation.checkTypeMaster(creationInfo);
+  creationInfo.password = await validation.bcryptPass(creationInfo.password);
+  creationInfo.endDate = "";
+  creationInfo.status = "";
+  creationInfo.vet = "";
+  creationInfo.notes = [];
+  creationInfo.previousPos = [];
+  creationInfo.leave = [];
+  creationInfo.leaveBank = {};
+  
+  creationInfo = {
+    employeeId: creationInfo.employeeId, firstName : creationInfo.firstName,lastName:creationInfo.lastName,username: creationInfo.username,password: creationInfo.password,gender: creationInfo.gender,maritalStatus:creationInfo.maritalStatus,department:creationInfo.department,role:creationInfo.role,notes:creationInfo.notes,status:creationInfo.status,vet:creationInfo.vet,disablity:creationInfo.disability,race:creationInfo.race,countryOfOrigin:creationInfo.countryOfOrigin,startDate:creationInfo.startDate,endDate:creationInfo.endDate,dob:creationInfo.dob,currentPosition:creationInfo.currentPosition,promoDate:creationInfo.promoDate,previousPos:creationInfo.previousPos,contactInfo:{phone:creationInfo.phone,email:creationInfo.email,primaryAddress:creationInfo.primaryAddress,secondaryAddress:creationInfo.secondaryAddress},subordinates:creationInfo.subordinates,managerId:creationInfo.managerId,leave:creationInfo.leave,leaveBank:creationInfo.leaveBank
+  }
   
   const userCollection = await users();
+
+  let checkUsername = await userCollection.findOne({username: creationInfo.username})
+  if(checkUsername)throw new Error('Username already exists. Try Another Username.');
   let createdUser = await userCollection.insertOne(creationInfo);
 
   if(!createdUser || typeof(createdUser) === 'null') throw new Error('Could not add User.');

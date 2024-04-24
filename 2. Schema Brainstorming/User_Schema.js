@@ -1,4 +1,4 @@
-const userSchema = {
+  const userSchema = {
   "_id": ObjectId(), 
   "firstName": String,
   "lastName": String,
@@ -18,12 +18,12 @@ const userSchema = {
   }],
   "status": String,
   "Vet": String,
-  "Disable": String,
+  "disability": String,
   "Race": String,
   "Country_of_Origin":String,
   "startDate": Date,
   "endDate": Date,
-  "DOB": Date,
+  "dob": Date,
   "currentPosition": String,
   "currentSalary": Number,
   "promoDate": Date,

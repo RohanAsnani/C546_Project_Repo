@@ -25,11 +25,11 @@ router.route('/')
         if(!credentialsCheck) return res.json('Invalid username');
         if(credentialsCheck.credentialsCheckStatus === 'true'){
             switch(credentialsCheck.role){
-                case 'Admin': return res.render('profile',{firstName : credentialsCheck.firstName,role: credentialsCheck.role});
+                case 'Admin': return res.redirect('/hrc/admin');
                     
-                case 'HR': return res.render('profile',{firstName : credentialsCheck.firstName,role: credentialsCheck.role});
+                case 'HR': return res.redirect('/hrc/hr');
                     
-                case 'Employee': return res.render('profile',{firstName : credentialsCheck.firstName,role: credentialsCheck.role});
+                case 'Employee': return res.redirect('/hrc/employee');
                     
             }
             

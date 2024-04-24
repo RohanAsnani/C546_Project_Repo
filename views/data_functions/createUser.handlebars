@@ -1,0 +1,126 @@
+<form id="createUser-form" name="createUser-form" action="../admin/addEmp" method="POST">
+    <h2>Create New User</h2>
+    <h4>Personal Details</h4>
+    <label for="firstName" id="labelFirstname">First Name:</label>
+    <input  type="text" class="firstName" id="firstName" name="firstName" required><br>
+
+    <label for="lastName" id="labelLastname">Last Name:</label>
+    <input type="text" class="lastName" id="lastName" name="lastName" required><br>
+
+    <label for="employeeId" id="labelEmployeeId">Employee Id:</label>
+    <input type="text" class="employeeId" id="employeeId" name="employeeId" required><br>
+
+    <label for="username" id="labelUsername">Username:</label>
+    <input type="text" class="username" id="username" name="username" required><br>
+
+    <label for="password" id="labelPassword">Password:</label>
+    <input type="password" class="password" id="password" name="password" required><br>
+
+    <label for="confirmPassword" id="labelConfirmPassword">Confirm Password:</label>
+    <input type="password" class="confirmPassword" id="confirmPassword" name="confirmPassword" required><br>
+
+    <label for="gender" id="labelGender" >Gender:</label>
+    <select id="gender" name="gender">
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+    </select><br>
+    
+    <label for="maritalStatus" id="labelMaritalStatus">Marital Status:</label>
+    <select id="maritalStatus" name="maritalStatus">
+        <option value="Single">Single</option>
+        <option value="Married">Married</option>
+        <option value="Seperated">Seperated</option>
+        <option value="Widowed">Widowed</option> 
+        <option value="Divorced">Divorced</option>
+    </select><br>
+
+    <label for="department" id="labelDepartment">Department:</label>
+    <select id="department" name="department">
+        <option value="IT">IT</option>
+        <option value="Finance">Finance</option>
+        <option value="Human Resources">Human Resources</option>
+        <option value="Adminstration">Adminstration</option>
+        <option value="Research And Development">Research And Developement</option>
+        <option value="Customer Service">Customer Service</option>
+    </select><br>
+
+    <label for="role" id="labelId">Role:</label>
+    <select id="role" name="role">
+        <option value="Admin">Admin</option>
+        <option value="HR">HR</option>
+        <option value="Employee">Employee</option>
+    </select><br>
+  
+    {{!-- 
+    Notes
+    Status
+    Vet 
+    --}}
+    <h6>Notes,Status and Vet yet to implement</h6>
+
+    <label for="disability" id="labelDisability">Disability:</label>
+    <input type="text" class="disability" id="disability" name="disability" required><br>
+
+    <label for="race" id="labelRace">Race:</label>
+    <input type="text" class="race" id="race" name="race"><br>
+
+    <label for="countryOfOrigin" id="labelCountryOfOrigin">Country Of Origin:</label>
+    <input type="text" class="countryOfOrigin" id="countryOfOrigin" name="countryOfOrigin" required><br>
+
+    <label for="startDate" id="labelStartDate">Start Date:</label>
+    <input type="date" class="startDate" id="startDate" name="startDate" required><br>
+  {{!-- <label for="endDate" id="labelEndDate">End Date:</label>
+    <input type="date" class="endDate" id="endDate" name="endDate"><br> Intitalise End date as none at first--}}
+
+    <label for="dob" id="labelDob">Date of Birth:</label>
+    <input type="date" class="dob" id="dob" name="dob" required><br>
+
+  {{!-- previous Position --}}  
+    <label for="currentPosition" id="labelCurrentPosition">Current Position:</label>
+    <input type="text" id="currentPosition" name="currentPosition" class="currentPosition" required><br>
+
+    <label for="currentSalary" id="labelCurrentSalary">Current Salary:</label>
+    <input type="number" class="currentSalary" id="currentSalary" name="currentSalary" required><br>
+
+    <label for="promoDate" id="labelPromoDate">Promo Date:</label>
+    <input type="date" class="promoDate" id="promoDate" name="promoDate"><br>
+  {{!-- ContactInfo --}}
+     <h4>Contact Info</h4>
+    
+    <label for="phone" id="labelPhone">Phone Number:</label>
+    <input type="tel" class="phone" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required><br>
+    
+    <label for="email" id="labelEmail">Email Id:</label>
+    <input type="email" class="email" id="email" name="email" required><br>
+
+    <label for="primaryAddress" id="labelPrimaryAddress">Primary Address:</label>
+    <input type="text" class="primaryAddress" id="primaryAddress" name="primaryAddress" required><br>
+
+    <label for="secondaryAddress" id="labelSecondaryAddress">Secondary Address:</label>
+    <input type="text" class="secondaryAddress" id="secondaryAddress" name="secondaryAddress" required><br>
+
+    <h4>Team Assignment</h4>
+    <h6>for subordinates and managers i will be implementing multiple select dropdown</h6><br>
+    <label for="subordinates" id="labelSubordinates">Subordinates:</label>
+    <select id="subordinates" name="subordinates" multiple>
+        <option value="Employee 1">Employee 1</option>
+        <option value="Employee 2">Employee 2</option>
+        <option value="Employee 3">Employee 3</option>
+    </select><br>
+
+    <label for="managerId" id="labelManagerId">Manager Assigned:</label>
+    <select id="managerId" name="managerId" multiple>
+        <option value="Manager 1">Manager 1</option>
+        <option value="Manager 2">Manager 2</option>
+        <option value="Manager 3">Manager 3</option>
+    </select>
+
+  {{!-- leaves --}}
+    {{!-- leaves Bank --}}
+    
+     <h6>Leaves and Leave Banks yet to implement</h6><br>
+
+    <button type="submit" class="submitButton" id="submitButton" name="submitButton">Submit</button><br>
+
+</form>

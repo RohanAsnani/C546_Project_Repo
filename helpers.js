@@ -1,32 +1,25 @@
 import { ObjectId } from "mongodb";
+import bcrypt from 'bcryptjs';
 
-const stringExistandType = (str, param, length = 0) => {
-    if (str === null) {
-        throw new Error(`${(param)} parameter cannot be null`)
+const checkStr =(str,param,minLen,maxLen,containNum)=>{
+    if(!(typeof(str) === 'string'))throw new Error(`${param} needs to be string type.`)
+    if(!str) throw new Error(`${param} needed.`);
+    str  = str.trim()
+    str = str.toLowerCase(); 
+    if(str.length === 0) throw new Error(`${param} cannot be empty or just spaces.`);
+    if(containNum === false){
+    if(/\d/.test(str))throw new Error(`${param} cannot have any numbers in it.`);
     }
-    if (str === undefined) {
-        throw new Error(`${(param)} parameter cannot be undefined`)
-    }
-    if (typeof (str) !== 'string') {
-        throw new Error(`${(param)} parameter has value ${str} which is a ${typeof (str)} and not of the type string`)
-    }
-    str = str.trim()
-    if (str.length === 0) {
-        throw new Error(`${(param)} parameter cannot be a empty string`)
-    }
-    if (length !== 0) {
-        if (str.length !== length) {
-            throw new Error(`${(param)} parameter should be ${length} characters long`)
-        }
-    }
-    return str;
+    if(!(!minLen && !maxLen))
+    if(!(minLen<= str.length && str.length <= maxLen)) throw new Error(`${param} should be atleast ${minLen} characters and max ${maxLen} characters long.`);
+    return str
 }
 
 const dateFormat = (dateReleased, param) => {
     if (dateReleased.length !== 10) {
         throw new Error(`parameter ${(param)} is not in proper date format`)
     }
-    let date = dateReleased.split('/').map(x => x)
+    let date = dateReleased.split('-').map(x => x)
     if (date.length !== 3) {
         throw new Error(`parameter ${(param)} is not in proper date format`)
     }
@@ -167,41 +160,119 @@ const numberRange = (num, param, low, high) => {
     }
 }
 
+const isValidEmail = (email) =>{
+    email = checkStr(email,'email',5,35,true);
+    if(!(email.includes('@')))throw new Error('Email id should contain @ in it.');
+    let firstIndex = email.indexOf('@');
+    let lastIndex = email.lastIndexOf('@');
+    if(firstIndex !== lastIndex)throw new Error("Email Id cannot contain more than one '@'.")
+    
+    if(!(email.endsWith('.com')))throw new Error("Email Id should end with '.com'");
+    return email
+}
+
+const isValidEmployeeId =(employeeId)=> {
+    const regex = /^HRC[A-Z]{2}[0-9]{4}$/;
+    if(!(regex.test(employeeId)))throw new Error('Employee Id must be in format of HRC followed by 2 Uppercase Characters and ending with 4 digits. Eg: HRCNS0001 , HRCST0002');
+    return employeeId
+}
+
+const checkPassConstraints=(str,minLen)=>{
+    str = str.trim(); //should we trim this??
+    if(!(minLen <= str.length))throw new Error('password should be atleast 8 characters long.');
+    if(!(/[A-Z]/.test(str)))throw new Error('password should contain atleast 1 Uppercase Character.');
+    if(!(/\d/.test(str)))throw new Error('password should contain atleast 1 number in it.');
+    if(!(/[^a-zA-Z0-9_]/.test(str))) throw new Error('password should contain atleast 1 special Character.');
+    if(str.includes(' '))throw new Error('password cannot contain spaces in between.')
+    return str
+    
+}
+const isValidPhoneNumber=(phoneNumber) =>{
+    if(typeof(phoneNumber) !== 'string')throw new Error('Date is not in proper data type.');
+    let regex = /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/;
+    if(!(regex.test(phoneNumber)))throw new Error('Phone Number must be in format 012-345-6789');
+    return phoneNumber
+}
 
 const checkTypeMaster = (updationInfo) => {
-    let strArr = [updationInfo.employeeId, updationInfo.firstName, updationInfo.lastName, updationInfo.username, updationInfo.password, updationInfo.gender, updationInfo.maritalStatus, updationInfo.department, updationInfo.role, updationInfo.disable, updationInfo.race, updationInfo.countryOfOrigin, updationInfo.currentPosition,];
+    let strArr =[updationInfo.firstName,updationInfo.lastName,updationInfo.disability,updationInfo.race,updationInfo.countryOfOrigin,updationInfo.currentPosition];
 
-    let dateArr = [updationInfo.startDate, updationInfo.endDate, updationInfo.dob, updationInfo.promoDate];
+    updationInfo.username = checkStr(updationInfo.username,'username',5,20,true);
+    
+    updationInfo.email = isValidEmail(updationInfo.email);
+    updationInfo.employeeId = isValidEmployeeId(updationInfo.employeeId);
+    if(!(updationInfo.password === updationInfo.confirmPassword))throw new Error('password and Confirm passwords do not match.');
+    updationInfo.password = checkPassConstraints(updationInfo.password,8);
+
+    updationInfo.gender = checkState(updationInfo.gender,'Gender',['male','female','other']);
+
+    updationInfo.department = checkState(updationInfo.department,'Department',['it','finance','human resources','adminstration','research and development','customer service']);
+
+    updationInfo.role = checkState(updationInfo.role,'role',['admin','hr','employee']);
+
+    updationInfo.maritalStatus = checkState(updationInfo.maritalStatus,'Marital Status',['single','married','divorced','seperated','widowed']);
+
+    let dateArr = [updationInfo.startDate, updationInfo.dob];
+
+    updationInfo.endDate = "";
 
     let numArr = [updationInfo.currentSalary];
 
     strArr = strArr.map((check) => {
-        check = stringExistandType(check, `${check}`);
+        check = checkStr(check, `${check}`,2,20,false);
         return check
     });
-    //   updationInfo.lastName = stringExistandType(updationInfo.lastName,`${updationInfo.lastName}`);
+   
+    updationInfo.phone = isValidPhoneNumber(updationInfo.phone)
 
     dateArr = dateArr.map((check) => {
         check = check.trim();
         check = dateFormat(check);
-        let month = check[0];
-        let date = check[1];
-        let year = check[2];
+        let year = check[0];
+        let month = check[1];
+        let date = check[2];
 
         isValidDate(month, date, year);
-        check = String(check[0]) + '/' + String(check[1]) + '/' + String(check[2]);
+        check = String(check[0]) + '-' + String(check[1]) + '-' + String(check[2]);
         return check
     });
 
+
+    if(!(updationInfo.promoDate === "")){
+        check = dateFormat(updationInfo.promoDate);
+        let year = check[0];
+        let month = check[1];
+        let date = check[2];
+
+        isValidDate(month, date, year);
+        updationInfo.promoDate = String(check[0]) + '-' + String(check[1]) + '-' + String(check[2]);
+    }
+
     numArr = numArr.map((check) => {
+        check = parseInt(check);
         check = numberExistandType(check, `${check}`);
         return check
     });
 
     const updateuser = {
-        employeeId: strArr[0], firstName: strArr[1], lastName: strArr[2], username: strArr[3], password: strArr[4], gender: strArr[5], maritalStatus: strArr[6], department: strArr[7], role: strArr[8], disable: strArr[9], race: strArr[10], countryOfOrigin: strArr[11], startDate: dateArr[0], endDate: dateArr[1], dob: dateArr[2], currentPosition: strArr[12], currentSalary: numArr[0], promoDate: dateArr[3]
+        employeeId: updationInfo.employeeId, firstName: strArr[0], lastName: strArr[1], username: updationInfo.username, password: updationInfo.password, gender: updationInfo.gender, maritalStatus: updationInfo.maritalStatus, department: updationInfo.department, role: updationInfo.role, disability: strArr[2], race: strArr[3], countryOfOrigin: strArr[4], startDate: dateArr[0], endDate: updationInfo.endDate,dob: dateArr[1], currentPosition: strArr[5], currentSalary: numArr[0], promoDate: updationInfo.promoDate,subordinates:updationInfo.subordinates,managerId:updationInfo.managerId,email:updationInfo.email,phone:updationInfo.phone,primaryAddress:updationInfo.primaryAddress,secondaryAddress:updationInfo.secondaryAddress
     }
     return updateuser
+}
+
+const checkState =(val,param,arr) =>{
+    if(!(typeof(val) === 'string'))throw new Error(`${param} needs to be string type.`)
+    val=val.trim();
+    val=val.toLowerCase();
+    if(!(arr.includes(val)))throw new Error(`${param} should be ${[...arr]} nothing else.`);
+    return val
+
+}
+async function bcryptPass(str){
+    const saltRounds = 12;
+    str = await bcrypt.hash(str,saltRounds)
+   let buffer = 1;
+    return str
 }
 
 
@@ -396,4 +467,4 @@ const validateBoardingDataPatch = (userId, taskId, taskType, updateBoardDataObj)
     return resObj;
 }
 
-export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, stringExistandType, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch }
+export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch ,isValidEmployeeId,checkPassConstraints,isValidEmail,isValidPhoneNumber,bcryptPass}
