@@ -4,6 +4,8 @@ const app = express();
 import configRoutes from './routes/index.js';
 import exphbs from 'express-handlebars';
 import {dbConnection, closeConnection} from './config/mongoConnection.js';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
 
 // const rewriteUnsupportedBrowserMethods = (req, res, next) => {
 //   // If the user posts to the server with a property called _method, rewrite the request's method
@@ -23,10 +25,91 @@ const db = await dbConnection();
 app.use('/public', express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-//app.use(rewriteUnsupportedBrowserMethods);
+
 
 app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
+
+app.use(cookieParser());
+app.use(session({
+  name: 'AuthenticationState',
+  secret:'This is a secret.',
+  resave: false,
+  saveUninitialized: false
+}))
+
+app.use('/hrc/login',(req,res,next)=>{
+  if(req.session.user){
+    switch(req.session.user.role){
+      case 'admin':
+        return res.redirect('/hrc/admin');
+      case 'employee': 
+        return res.redirect('/hrc/employee');
+      case 'hr':
+        return res.redirect('/hrc/hr');
+      default:
+        return res.render('error',{message:'Forbidden',title:'Forbidden',class:'error',previous_Route:'hrc/login',linkMessage:'Click Here to Login.'})
+    }
+  }
+  next();
+});
+
+app.use('/hrc/admin',(req,res,next)=>{
+  if(req.session.user){
+    if(req.session.user.role !== 'admin'){
+      return res.status(403).render('error',{message:'Forbidden',title:'Forbidden',class:'error',previous_Route:'hrc/login',linkMessage:'Click Here to Login.'});
+    }
+    next();
+  }else{
+    return res.redirect('/hrc/login');
+  }
+});
+
+app.use('/hrc/employee',(req,res,next)=>{
+  if(req.session.user){
+    if(req.session.user.role !== 'employee'){
+      return res.status(403).render('error',{message:'Forbidden',title:'Forbidden',class:'error',previous_Route:'hrc/login',linkMessage:'Click Here to Login.'});
+    }
+    next();
+  }else{
+     return res.redirect('/hrc/login');
+  }
+});
+
+app.use('/hrc/hr',(req,res,next)=>{
+  if(req.session.user){
+    if(req.session.user.role !== 'hr'){
+      return res.status(403).render('error',{message:'Forbidden',title:'Forbidden',class:'error',previous_Route:'hrc/login',linkMessage:'Click Here to Login.'});
+    }
+    next();
+  }else{
+    return res.redirect('/hrc/login');
+    }
+});
+
+
+app.use('/',(req,res,next)=>{
+    console.log( new Date().toString());
+    console.log(req.method);
+    console.log(req.originalUrl);
+    
+    if(req.originalUrl === '/'){
+    if(req.session.user){
+      switch(req.session.user.role){
+        case 'admin':
+          return res.redirect('/admin');
+        case 'hr':
+          return res.redirect('/hr');
+        case 'employee':
+          return res.redirect('/employee');
+        
+      }
+    }else{
+      return res.redirect('/hrc/login');
+      }
+  }
+  next();
+});
 
 configRoutes(app);
 
