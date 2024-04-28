@@ -59,7 +59,7 @@ async getByObjectId(objectId){
 async getUserById(userId){
 
   if(!userId) throw 'id required';
-  userId = validation.stringExistandType(userId,'User Id');
+  userId = validation.checkStr(userId,'User Id');
 
   const userCollection = await users();
   let userList = await userCollection.findOne({employeeId: userId},{firstName : 1, lastName: 1/*more projections*/ });

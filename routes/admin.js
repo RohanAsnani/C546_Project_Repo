@@ -19,7 +19,7 @@ router
 router
     .route('/addEmp')
     .get(async(req,res)=>{
-       return res.render('./data_functions/createUser',{title:'Create User'});
+       return res.render('./data_functions/createUser',{title:'Create User',hidden:'hidden'});
     })
     .post(async(req,res)=>{
         try{
@@ -28,7 +28,7 @@ router
             creationData = validatoin.checkTypeMaster(creationData);
             
         }catch(e){
-           return  res.status(400).json(e.message);//rerender page and tell user what is wrong also set status to 400
+           return  res.status(400).render('./data_functions/createUser',{title:'Create User',hidden:''});
         }
 
         try{

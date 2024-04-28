@@ -64,7 +64,7 @@ router
   router.route('/:id').get(async (req,res) =>{
 
   try{
-    req.params.id = validation.stringExistandType(req.params.id);
+    req.params.id = validation.checkStr(req.params.id);
   }catch(e){
    return res.status(400).json({error:e});
   }

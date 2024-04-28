@@ -4,7 +4,7 @@ import boardData from '../data/board.js';
 import * as validation from '../helpers.js';
 
 router
-    .route('/')
+    .route('/getAll')
     .get(async (req, res) => {
         try {
             const boardUserData = await boardData.getAll();

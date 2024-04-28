@@ -25,3 +25,32 @@ h1,h5{
     margin-top: 490px;
     text-align: center;
 }
+
+#username, #password,#firstName,#lastName,#employeeId,#confirmPassword,#gender,#maritalStatus,#department,#role,#disability,#race,#countryOfOrigin,#startDate,#dob,#currentPosition,#currentSalary,#promoDate,#phone,#email,#primaryAddress,#secondaryAddress,#subordinates,#maagersId{
+    border-style: solid;
+    color:black;
+    font-weight: 400;
+   }
+
+.error{
+    color:red;
+    font-weight: bold;
+    border-color: red;
+    
+}
+
+.createUser-form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.createUser-form label{
+    margin-bottom: 2px;
+    text-align: center;
+}
+
+.createUser-form input{
+    margin-bottom: 3px;
+}
+

@@ -14,7 +14,18 @@ const checkStr =(str,param,minLen,maxLen,containNum)=>{
     if(!(minLen<= str.length && str.length <= maxLen)) throw new Error(`${param} should be atleast ${minLen} characters and max ${maxLen} characters long.`);
     return str
 }
-
+const checkStrCS =(str,param,minLen,maxLen,containNum)=>{
+    if(!(typeof(str) === 'string'))throw new Error(`${param} needs to be string type.`)
+    if(!str) throw new Error(`${param} needed.`);
+    str  = str.trim()
+    if(str.length === 0) throw new Error(`${param} cannot be empty or just spaces.`);
+    if(containNum === false){
+    if(/\d/.test(str))throw new Error(`${param} cannot have any numbers in it.`);
+    }
+    if(!(!minLen && !maxLen))
+    if(!(minLen<= str.length && str.length <= maxLen)) throw new Error(`${param} should be atleast ${minLen} characters and max ${maxLen} characters long.`);
+    return str
+}
 const dateFormat = (dateReleased, param) => {
     if (dateReleased.length !== 10) {
         throw new Error(`parameter ${(param)} is not in proper date format`)
@@ -237,6 +248,8 @@ const checkTypeMaster = (updationInfo) => {
         return check
     });
 
+    if(updationInfo.dob > updationInfo.startDate)throw new Error('Start Date cannot be before Date of birth.');
+
 
     if(!(updationInfo.promoDate === "")){
         check = dateFormat(updationInfo.promoDate);
@@ -246,6 +259,7 @@ const checkTypeMaster = (updationInfo) => {
 
         isValidDate(month, date, year);
         updationInfo.promoDate = String(check[0]) + '-' + String(check[1]) + '-' + String(check[2]);
+        if(updationInfo.promoDate< updationInfo.startDate)throw new Error('Promotion Date cannot be before Start Date.');
     }
 
     numArr = numArr.map((check) => {
@@ -253,6 +267,9 @@ const checkTypeMaster = (updationInfo) => {
         check = numberExistandType(check, `${check}`);
         return check
     });
+
+     updationInfo.primaryAddress= checkStr(updationInfo.primaryAddress,'Primary Address',5,200,true);
+    updationInfo.secondaryAddress = checkStr(updationInfo.secondaryAddressAddress,'Primary Address',5,200,true);
 
     const updateuser = {
         employeeId: updationInfo.employeeId, firstName: strArr[0], lastName: strArr[1], username: updationInfo.username, password: updationInfo.password, gender: updationInfo.gender, maritalStatus: updationInfo.maritalStatus, department: updationInfo.department, role: updationInfo.role, disability: strArr[2], race: strArr[3], countryOfOrigin: strArr[4], startDate: dateArr[0], endDate: updationInfo.endDate,dob: dateArr[1], currentPosition: strArr[5], currentSalary: numArr[0], promoDate: updationInfo.promoDate,subordinates:updationInfo.subordinates,managerId:updationInfo.managerId,email:updationInfo.email,phone:updationInfo.phone,primaryAddress:updationInfo.primaryAddress,secondaryAddress:updationInfo.secondaryAddress
@@ -467,4 +484,4 @@ const validateBoardingDataPatch = (userId, taskId, taskType, updateBoardDataObj)
     return resObj;
 }
 
-export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch ,isValidEmployeeId,checkPassConstraints,isValidEmail,isValidPhoneNumber,bcryptPass}
+export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch ,isValidEmployeeId,checkPassConstraints,isValidEmail,isValidPhoneNumber,bcryptPass,checkStrCS}

@@ -8,35 +8,29 @@ import login from '../data/login.js';
 router.route('/')
 .get(async (req,res) =>{
     try{
-        return res.render('homepage',{Title:'HR-Central'});
+        return res.render('homepage',{title:'Login',hidden: "hidden" });
     }catch(e){
         return res.json({error:e.message});
     }
 })
 .post(async (req,res) =>{
-    try{
-        req.body = req.body
-    }catch(e){
-        res.json({error:e.message});
-    }
-
+  
     try{
         let credentialsCheck =  await login.getUsernameAndValidate(req.body.username,req.body.password);
-        if(!credentialsCheck) return res.json('Invalid username');
-        if(credentialsCheck.credentialsCheckStatus === 'true'){
-            switch(credentialsCheck.role){
-                case 'Admin': return res.redirect('/hrc/admin');
+         req.session.user = credentialsCheck
+        
+            switch(req.session.user.role){
+                case 'admin': return res.redirect('/hrc/admin');
                     
-                case 'HR': return res.redirect('/hrc/hr');
+                case 'hr': return res.redirect('/hrc/hr');
                     
-                case 'Employee': return res.redirect('/hrc/employee');
+                case 'employee': return res.redirect('/hrc/employee');
+                default: return res.status(403).json('Forbidden');
                     
             }
-            
-        }
-        return res.json('Invalid Password');
+        
     }catch(e){
-        return res.json({error:e.message});
+        return res.status(400).render('homepage',{title:'login',message:e.message,hidden: "",username:req.body.username});
     }
 
 
