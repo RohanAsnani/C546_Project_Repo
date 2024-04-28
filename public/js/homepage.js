@@ -236,8 +236,15 @@ $('#createUser-form').submit((event)=>{
     $('#labelConfirmPassword').addClass('error');
     let li= `<li class='error'>Passwords do not match.</li>`;
     $('#errorList').append(li);
+    $('#errorList').show();
     event.preventDefault();
+   }else{
+    $('#password').removeClass('error');
+    $('#labelPassword').removeClass('error');
+    $('#confirmPassword').removeClass('error');
+    $('#labelConfirmPassword').removeClass('error');
    }
+
    try{
     checkPassConstraints($('#password').val(),8);
     $('#password').removeClass('error');
@@ -412,24 +419,24 @@ $('#createUser-form').submit((event)=>{
     $('#currentSalary').val('');
     event.preventDefault();
    }
-
-   try{
-    check = dateFormat($('#promoDate').val().trim(),'Promotion Date');
-    let year = check[0];
-    let month = check[1];
-    let date = check[2];
-    isValidDate(month, date, year);
-    $('#promoDate').removeClass('error');
-    $('#labelPromoDate').removeClass('error');
-   }catch(e){
-    $('#promoDate').addClass('error');
-    $('#labelPromoDate').addClass('error');
-    let li= `<li class='error'>${e.message}</li>`;
-    $('#errorList').append(li);
-    $('#errorList').show();
-    event.preventDefault();
-   } 
-
+   if($('#promoDate').val().trim()){
+        try{
+         check = dateFormat($('#promoDate').val().trim(),'Promotion Date');
+         let year = check[0];
+         let month = check[1];
+         let date = check[2];
+         isValidDate(month, date, year);
+         $('#promoDate').removeClass('error');
+         $('#labelPromoDate').removeClass('error');
+        }catch(e){
+         $('#promoDate').addClass('error');
+         $('#labelPromoDate').addClass('error');
+         let li= `<li class='error'>${e.message}</li>`;
+         $('#errorList').append(li);
+         $('#errorList').show();
+         event.preventDefault();
+        } 
+    }
    if($('#dob').val() > $('#startDate').val()){
     $('#dob').addClass('error');
     $('#labelDob').addClass('error');

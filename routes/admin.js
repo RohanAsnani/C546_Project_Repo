@@ -28,7 +28,7 @@ router
             creationData = validatoin.checkTypeMaster(creationData);
             
         }catch(e){
-           return  res.status(400).render('./data_functions/createUser',{title:'Create User',hidden:''});
+           return  res.status(400).render('./data_functions/createUser',{title:'Create User',hidden:'',message:e.message});
         }
 
         try{

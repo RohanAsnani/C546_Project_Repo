@@ -269,7 +269,7 @@ const checkTypeMaster = (updationInfo) => {
     });
 
      updationInfo.primaryAddress= checkStr(updationInfo.primaryAddress,'Primary Address',5,200,true);
-    updationInfo.secondaryAddress = checkStr(updationInfo.secondaryAddressAddress,'Primary Address',5,200,true);
+    updationInfo.secondaryAddress = checkStr(updationInfo.secondaryAddress,'Primary Address',5,200,true);
 
     const updateuser = {
         employeeId: updationInfo.employeeId, firstName: strArr[0], lastName: strArr[1], username: updationInfo.username, password: updationInfo.password, gender: updationInfo.gender, maritalStatus: updationInfo.maritalStatus, department: updationInfo.department, role: updationInfo.role, disability: strArr[2], race: strArr[3], countryOfOrigin: strArr[4], startDate: dateArr[0], endDate: updationInfo.endDate,dob: dateArr[1], currentPosition: strArr[5], currentSalary: numArr[0], promoDate: updationInfo.promoDate,subordinates:updationInfo.subordinates,managerId:updationInfo.managerId,email:updationInfo.email,phone:updationInfo.phone,primaryAddress:updationInfo.primaryAddress,secondaryAddress:updationInfo.secondaryAddress
