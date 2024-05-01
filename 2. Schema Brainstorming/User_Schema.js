@@ -87,3 +87,29 @@
 /// How we are tackling that which hr does the current employee belong too.
 //// Notes update just 
 /// DEPARTMENT AND HR RELATION SOMETHING LIKE THAT 
+/*
+Leaves and Leave Banks another collection
+Leave Collection---------------------------
+"leave": [
+    {
+      "objectId": ObjectId()
+      "employeeID":string
+      "_start": Date,
+      "_end": Date,
+      "_type": String,
+      "commentsEmployee": String,
+      "_status": String,
+      'commentsReviewer': String,
+      "Reviewer_ID" : ObjectId()
+    }
+  ]
+
+  ------------------------------
+  User's Collection
+  "leaveBank": {
+    "sickDay": Number,
+    "vacation": Number
+  }
+
+
+*/
