@@ -19,7 +19,7 @@
     <label for="confirmPassword" id="labelConfirmPassword">Confirm Password:</label>
     <input type="password" class="confirmPassword" id="confirmPassword" name="confirmPassword" ><br>
 
-    <label for="gender" id="labelGender" >Gender:</label>
+    {{!-- <label for="gender" id="labelGender" >Gender:</label>
     <select id="gender" name="gender">
         <option value="Male">Male</option>
         <option value="Female">Female</option>
@@ -33,7 +33,7 @@
         <option value="Seperated">Seperated</option>
         <option value="Widowed">Widowed</option> 
         <option value="Divorced">Divorced</option>
-    </select><br>
+    </select><br> --}}
 
     <label for="department" id="labelDepartment">Department:</label>
     <select id="department" name="department">
@@ -51,49 +51,50 @@
         <option value="HR">HR</option>
         <option value="Employee">Employee</option>
     </select><br>
-  
+
+    <label for="isManager" id="labelIsManager">Is Manager:</label>
+    <input type="checkbox" id="isManager" name="isManager" value= "true">
     {{!-- 
     Notes
     Status
     Vet 
     --}}
 
-    <label for="disability" id="labelDisability">Disability:</label>
+    {{!-- <label for="disability" id="labelDisability">Disability:</label>
     <input type="text" class="disability" id="disability" name="disability" ><br>
 
     <label for="race" id="labelRace">Race:</label>
     <input type="text" class="race" id="race" name="race"><br>
 
     <label for="countryOfOrigin" id="labelCountryOfOrigin">Country Of Origin:</label>
-    <input type="text" class="countryOfOrigin" id="countryOfOrigin" name="countryOfOrigin" ><br>
+    <input type="text" class="countryOfOrigin" id="countryOfOrigin" name="countryOfOrigin" ><br> --}}
 
     <label for="startDate" id="labelStartDate">Start Date:</label>
     <input type="date" class="startDate" id="startDate" name="startDate" ><br>
   {{!-- <label for="endDate" id="labelEndDate">End Date:</label>
     <input type="date" class="endDate" id="endDate" name="endDate"><br> Intitalise End date as none at first--}}
-
+{{!-- 
     <label for="dob" id="labelDob">Date of Birth:</label>
-    <input type="date" class="dob" id="dob" name="dob" ><br>
+    <input type="date" class="dob" id="dob" name="dob" ><br> --}}
 
-  {{!-- previous Position --}}  
-    <label for="currentPosition" id="labelCurrentPosition">Current Position:</label>
+  
+    {{!-- <label for="currentPosition" id="labelCurrentPosition">Current Position:</label>
     <input type="text" id="currentPosition" name="currentPosition" class="currentPosition" ><br>
 
     <label for="currentSalary" id="labelCurrentSalary">Current Salary:</label>
-    <input type="number" class="currentSalary" id="currentSalary" name="currentSalary" ><br>
+    <input type="number" class="currentSalary" id="currentSalary" name="currentSalary" ><br> --}}
 
-    <label for="promoDate" id="labelPromoDate">Promo Date:</label>
-    <input type="date" class="promoDate" id="promoDate" name="promoDate"><br>
+    
   {{!-- ContactInfo --}}
-     <h4>Contact Info</h4>
+     {{!-- <h4>Contact Info</h4>
     
     <label for="phone" id="labelPhone">Phone Number:</label>
-    <input type="tel" class="phone" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" ><br>
+    <input type="tel" class="phone" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" ><br> --}}
     
     <label for="email" id="labelEmail">Email Id:</label>
     <input type="email" class="email" id="email" name="email" ><br>
 
-    <label for="primaryAddress" id="labelPrimaryAddress">Primary Address:</label>
+    {{!-- <label for="primaryAddress" id="labelPrimaryAddress">Primary Address:</label>
     <input type="text" class="primaryAddress" id="primaryAddress" name="primaryAddress" ><br>
 
     <label for="secondaryAddress" id="labelSecondaryAddress">Secondary Address:</label>
@@ -113,12 +114,12 @@
         <option value="Manager 1">Manager 1</option>
         <option value="Manager 2">Manager 2</option>
         <option value="Manager 3">Manager 3</option>
-    </select>
+    </select> --}}
 
   {{!-- leaves --}}
     {{!-- leaves Bank --}}
     
-     <h6>Leaves and Leave Banks yet to implement</h6><br>
+     {{!-- <h6>Leaves and Leave Banks yet to implement</h6><br> --}}
     <ul id="errorList" name="errorList" hidden> </ul>
 
     <p id="error" name="error" class="error" {{hidden}}>

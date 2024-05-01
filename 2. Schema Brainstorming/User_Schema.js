@@ -26,7 +26,7 @@
   "dob": Date,
   "currentPosition": String,
   "currentSalary": Number,
-  "promoDate": Date,
+  "isManager": Boolean,
   // "appraisal": [
   //   {
   //     "_date": Date,

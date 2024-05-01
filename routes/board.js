@@ -2,6 +2,26 @@ import { Router } from 'express';
 const router = Router();
 import boardData from '../data/board.js';
 import * as validation from '../helpers.js';
+import user_Test from '../data/user_Test.js';
+
+router.route('/')
+.get(async(req,res)=>{
+    try{
+        res.render('./users/hr',{title:'HR',firstName:req.session.user.firstName,role:req.session.user.role});
+    }catch(e){
+        res.status(500).json(e.message);
+    }
+})
+
+router.route('/getonboarding')
+.get(async(req,res)=>{
+    try{
+        let onboardingUsers = await user_Test.getOnboardingHR();
+        res.render('./data_functions/getonboardingusers',{title:"users to be Onboarded",...req.session.user,users:onboardingUsers});
+    }catch(e){
+        res.status(500).json(e.message);
+    }
+})
 
 router
     .route('/getAll')

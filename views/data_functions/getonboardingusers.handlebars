@@ -1,0 +1,14 @@
+<h2>Users Yet to be Onboarded:</h2>
+    <ol class="user">
+        {{#each users}}
+            <li>
+                <a href="/hrc/hr/onboarding/edit" data-employeeId="{{employeeId}}">
+                <h3>{{firstName}} {{lastName}}</h3>
+                </a>
+                <p>Email: {{contactInfo.email}}</p>
+                <p>Department: {{department}}</p>
+                <p>Role: {{role}}</p>
+                <p>Employee Id: {{employeeId}}</p>
+            </li>
+        {{/each}}
+    </ol>

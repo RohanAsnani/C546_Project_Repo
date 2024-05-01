@@ -204,7 +204,61 @@ const isValidPhoneNumber=(phoneNumber) =>{
     if(!(regex.test(phoneNumber)))throw new Error('Phone Number must be in format 012-345-6789');
     return phoneNumber
 }
+const checkMasterUser =(creationInfo)=>{
+    if(creationInfo.password !== creationInfo.confirmPassword)throw new Error("Passwords don't match.");
+    
+    creationInfo.username = checkStrCS(creationInfo.username,'Username',5,20,true);
+    
+    creationInfo.firstName = checkStrCS(creationInfo.firstName,'First Name',5,20,true);
+    
+    creationInfo.lastName = checkStrCS(creationInfo.lastName,'Last Name',5,20,true);
 
+    if(creationInfo.isManager === undefined){
+        creationInfo.isManager = false;
+    }else{
+        creationInfo.isManager = true;
+    }
+    
+    creationInfo.employeeId = isValidEmployeeId(creationInfo.employeeId);
+    
+    creationInfo.department = checkState(creationInfo.department,'Department',['it','finance','human resources','adminstration','research and development','customer service']);
+    
+    creationInfo.role = checkState(creationInfo.role,'role',['admin','hr','employee']);
+    
+    creationInfo.startDate = creationInfo.startDate.trim();
+    
+    creationInfo.startDate = dateFormat(creationInfo.startDate);
+    
+    let year = creationInfo.startDate[0];
+    let month = creationInfo.startDate[1];
+    let date = creationInfo.startDate[2];
+    
+    isValidDate(month, date, year);
+    creationInfo.startDate = String(creationInfo.startDate[0]) + '-' + String(creationInfo.startDate[1]) + '-' + String(creationInfo.startDate[2]);
+          
+    creationInfo.email = isValidEmail(creationInfo.email);
+    creationInfo.gender = "!";
+    creationInfo.maritalStatus = "!";
+    creationInfo.endDate = "!";
+    creationInfo.status = "Onboarding";
+    creationInfo.vet = "!";
+    creationInfo.disability = "!";
+    creationInfo.race = "!";
+    creationInfo.countryOfOrigin = "!";
+    creationInfo.dob = "!";
+    creationInfo.phone = "!";
+    creationInfo.primaryAddress = "!";
+    creationInfo.secondaryAddress = "!";
+    creationInfo.currentSalary = 0;
+    creationInfo.notes = [];
+    creationInfo.managerId = "!";
+    creationInfo.leaveBank = {sickLeaves:5,vacation:5};
+
+    let createUser = {
+        employeeId: creationInfo.employeeId, firstName : creationInfo.firstName,lastName:creationInfo.lastName,username: creationInfo.username,password: creationInfo.password,gender: creationInfo.gender,maritalStatus:creationInfo.maritalStatus,department:creationInfo.department,role:creationInfo.role,notes:creationInfo.notes,status:creationInfo.status,vet:creationInfo.vet,disability:creationInfo.disability,race:creationInfo.race,countryOfOrigin:creationInfo.countryOfOrigin,startDate:creationInfo.startDate,endDate:creationInfo.endDate,dob:creationInfo.dob,currentSalary:creationInfo.currentSalary,contactInfo:{phone:creationInfo.phone,email:creationInfo.email,primaryAddress:creationInfo.primaryAddress,secondaryAddress:creationInfo.secondaryAddress},managerId:creationInfo.managerId,leaveBank:creationInfo.leaveBank
+      }
+      return createUser
+}
 const checkTypeMaster = (updationInfo) => {
     let strArr =[updationInfo.firstName,updationInfo.lastName,updationInfo.disability,updationInfo.race,updationInfo.countryOfOrigin,updationInfo.currentPosition];
 
@@ -484,4 +538,4 @@ const validateBoardingDataPatch = (userId, taskId, taskType, updateBoardDataObj)
     return resObj;
 }
 
-export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch ,isValidEmployeeId,checkPassConstraints,isValidEmail,isValidPhoneNumber,bcryptPass,checkStrCS}
+export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch ,isValidEmployeeId,checkPassConstraints,isValidEmail,isValidPhoneNumber,bcryptPass,checkStrCS,checkMasterUser}

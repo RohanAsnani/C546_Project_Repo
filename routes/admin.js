@@ -1,6 +1,6 @@
 import {Router} from 'express';
 const router = Router();
-import * as validatoin from '../helpers.js';
+import * as validation from '../helpers.js';
 import bcrypt from 'bcryptjs';
 import userTest from '../data/user_Test.js';
 
@@ -19,13 +19,13 @@ router
 router
     .route('/addEmp')
     .get(async(req,res)=>{
-       return res.render('./data_functions/createUser',{title:'Create User',hidden:'hidden'});
+       return res.render('./data_functions/createUser',{title:'Create User',hidden:'hidden',firstName:req.session.user.firstName,role:req.session.user.role});
     })
     .post(async(req,res)=>{
         try{
             //validation
             let creationData = req.body;
-            creationData = validatoin.checkTypeMaster(creationData);
+            creationData = validation.checkMasterUser(creationData);
             
         }catch(e){
            return  res.status(400).render('./data_functions/createUser',{title:'Create User',hidden:'',message:e.message});

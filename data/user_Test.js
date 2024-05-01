@@ -7,24 +7,47 @@ import bcrypt from 'bcryptjs';
 
 const exportedMethods ={
 async create(creationInfo){
-  creationInfo = validation.checkTypeMaster(creationInfo);
+  // creationInfo = validation.checkTypeMaster(creationInfo);
+  
+  if(creationInfo.password !== creationInfo.confirmPassword)throw new Error("Passwords don't match.");
+  
   creationInfo.password = await validation.bcryptPass(creationInfo.password);
-  creationInfo.endDate = "";
-  creationInfo.status = "";
-  creationInfo.vet = "";
-  creationInfo.notes = [];
-  creationInfo.previousPos = [];
-  creationInfo.leave = [];
-  creationInfo.leaveBank = {};
+  
+  creationInfo.username = validation.checkStrCS(creationInfo.username,'Username',5,20,true);
+  
+  creationInfo.firstName = validation.checkStrCS(creationInfo.firstName,'First Name',5,20,true);
+  
+  creationInfo.lastName = validation.checkStrCS(creationInfo.lastName,'Last Name',5,20,true);
+  
+  creationInfo.employeeId = validation.isValidEmployeeId(creationInfo.employeeId);
+  
+  creationInfo.department = validation.checkState(creationInfo.department,'Department',['it','finance','human resources','adminstration','research and development','customer service']);
+  
+  creationInfo.role = validation.checkState(creationInfo.role,'role',['admin','hr','employee']);
+  
+  creationInfo.startDate = creationInfo.startDate.trim();
+  
+  creationInfo.startDate = validation.dateFormat(creationInfo.startDate);
+  
+  let year = creationInfo.startDate[0];
+  let month = creationInfo.startDate[1];
+  let date = creationInfo.startDate[2];
+  
+  validation.isValidDate(month, date, year);
+  creationInfo.startDate = String(creationInfo.startDate[0]) + '-' + String(creationInfo.startDate[1]) + '-' + String(creationInfo.startDate[2]);
+        
+  creationInfo.email = validation.isValidEmail(creationInfo.email);
   
   creationInfo = {
-    employeeId: creationInfo.employeeId, firstName : creationInfo.firstName,lastName:creationInfo.lastName,username: creationInfo.username,password: creationInfo.password,gender: creationInfo.gender,maritalStatus:creationInfo.maritalStatus,department:creationInfo.department,role:creationInfo.role,notes:creationInfo.notes,status:creationInfo.status,vet:creationInfo.vet,disablity:creationInfo.disability,race:creationInfo.race,countryOfOrigin:creationInfo.countryOfOrigin,startDate:creationInfo.startDate,endDate:creationInfo.endDate,dob:creationInfo.dob,currentPosition:creationInfo.currentPosition,currentSalary:creationInfo.currentSalary,promoDate:creationInfo.promoDate,previousPos:creationInfo.previousPos,contactInfo:{phone:creationInfo.phone,email:creationInfo.email,primaryAddress:creationInfo.primaryAddress,secondaryAddress:creationInfo.secondaryAddress},subordinates:creationInfo.subordinates,managerId:creationInfo.managerId,leave:creationInfo.leave,leaveBank:creationInfo.leaveBank
+    employeeId: creationInfo.employeeId, firstName : creationInfo.firstName,lastName:creationInfo.lastName,username: creationInfo.username,password: creationInfo.password,gender: creationInfo.gender,maritalStatus:creationInfo.maritalStatus,department:creationInfo.department,role:creationInfo.role,notes:creationInfo.notes,status:creationInfo.status,vet:creationInfo.vet,disability:creationInfo.disability,race:creationInfo.race,countryOfOrigin:creationInfo.countryOfOrigin,startDate:creationInfo.startDate,endDate:creationInfo.endDate,dob:creationInfo.dob,currentSalary:creationInfo.currentSalary,contactInfo:{phone:creationInfo.phone,email:creationInfo.email,primaryAddress:creationInfo.primaryAddress,secondaryAddress:creationInfo.secondaryAddress},managerId:creationInfo.managerId,leaveBank:creationInfo.leaveBank
   }
   
   const userCollection = await users();
 
   let checkUsername = await userCollection.findOne({username: creationInfo.username})
   if(checkUsername)throw new Error('Username already exists. Try Another Username.');
+  let checkEmployeeId = await userCollection.findOne({employeeId: creationInfo.employeeId})
+  if(checkEmployeeId)throw new Error('EmployeeId already exists with the given EmployeeId.');
   let createdUser = await userCollection.insertOne(creationInfo);
 
   if(!createdUser || typeof(createdUser) === 'null') throw new Error('Could not add User.');
@@ -117,8 +140,23 @@ async updatePatch(updationInfo){
 
   return patchedInfo
 
-}
+},
 
+async getOnboardingHR(){
+  let userCollection = await users();
+  let onboardingUsers = await userCollection.find({status: "Onboarding"},{projection:{password:0}});
+
+  if(!onboardingUsers)return false  
+  
+  return onboardingUsers.toArray();
+},
+
+
+async patchHR(updationInfo){
+
+  if(!updationInfo.employeeId)throw new Error('EmployeeId Needed.');
+
+}
 
 
 
