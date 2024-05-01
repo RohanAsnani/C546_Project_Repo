@@ -3,7 +3,6 @@ const BoardingSchema = {
   "employeeId": ObjectId(),
   "on": [
     {
-      "_id": new ObjectId(),
       "taskName": String,
       "dueDate": Date,
       "completedOn": Date
@@ -11,7 +10,6 @@ const BoardingSchema = {
   ],
   "off": [
     {
-      "_id": new ObjectId(),
       "taskName": String,
       "dueDate": Date,
       "completedOn": Date
