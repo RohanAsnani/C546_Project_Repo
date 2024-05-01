@@ -12,18 +12,20 @@ async create(creationInfo){
   if(creationInfo.password !== creationInfo.confirmPassword)throw new Error("Passwords don't match.");
   
   creationInfo.password = await validation.bcryptPass(creationInfo.password);
+
+  creationInfo.currentPosition = '!';
   
-  creationInfo.username = validation.checkStrCS(creationInfo.username,'Username',5,20,true);
+  creationInfo.username = validation.checkStrCS(creationInfo.username,'Username',2,20,true);
   
-  creationInfo.firstName = validation.checkStrCS(creationInfo.firstName,'First Name',5,20,true);
+  creationInfo.firstName = validation.checkStrCS(creationInfo.firstName,'First Name',2,20,true);
   
-  creationInfo.lastName = validation.checkStrCS(creationInfo.lastName,'Last Name',5,20,true);
+  creationInfo.lastName = validation.checkStrCS(creationInfo.lastName,'Last Name',2,20,true);
   
   creationInfo.employeeId = validation.isValidEmployeeId(creationInfo.employeeId);
   
-  creationInfo.department = validation.checkState(creationInfo.department,'Department',['it','finance','human resources','adminstration','research and development','customer service']);
+  creationInfo.department = validation.checkState(creationInfo.department,'Department',['IT','Finance','Human Resources','Adminstration','Research And Development','Customer Service']);
   
-  creationInfo.role = validation.checkState(creationInfo.role,'role',['admin','hr','employee']);
+  creationInfo.role = validation.checkState(creationInfo.role,'role',['Admin','Hr','Employee']);
   
   creationInfo.startDate = creationInfo.startDate.trim();
   
@@ -39,7 +41,7 @@ async create(creationInfo){
   creationInfo.email = validation.isValidEmail(creationInfo.email);
   
   creationInfo = {
-    employeeId: creationInfo.employeeId, firstName : creationInfo.firstName,lastName:creationInfo.lastName,username: creationInfo.username,password: creationInfo.password,gender: creationInfo.gender,maritalStatus:creationInfo.maritalStatus,department:creationInfo.department,role:creationInfo.role,notes:creationInfo.notes,status:creationInfo.status,vet:creationInfo.vet,disability:creationInfo.disability,race:creationInfo.race,countryOfOrigin:creationInfo.countryOfOrigin,startDate:creationInfo.startDate,endDate:creationInfo.endDate,dob:creationInfo.dob,currentSalary:creationInfo.currentSalary,contactInfo:{phone:creationInfo.phone,email:creationInfo.email,primaryAddress:creationInfo.primaryAddress,secondaryAddress:creationInfo.secondaryAddress},managerId:creationInfo.managerId,leaveBank:creationInfo.leaveBank
+    employeeId: creationInfo.employeeId, firstName : creationInfo.firstName,lastName:creationInfo.lastName,username: creationInfo.username,password: creationInfo.password,gender: creationInfo.gender,maritalStatus:creationInfo.maritalStatus,department:creationInfo.department,role:creationInfo.role,notes:creationInfo.notes,status:creationInfo.status,vet:creationInfo.vet,disability:creationInfo.disability,race:creationInfo.race,countryOfOrigin:creationInfo.countryOfOrigin,startDate:creationInfo.startDate,endDate:creationInfo.endDate,dob:creationInfo.dob,cuurentPosition:creationInfo.currentPosition,currentSalary:creationInfo.currentSalary,contactInfo:{phone:creationInfo.phone,email:creationInfo.email,primaryAddress:creationInfo.primaryAddress,secondaryAddress:creationInfo.secondaryAddress},managerId:creationInfo.managerId,leaveBank:creationInfo.leaveBank
   }
   
   const userCollection = await users();
@@ -82,10 +84,10 @@ async getByObjectId(objectId){
 async getUserById(userId){
 
   if(!userId) throw 'id required';
-  userId = validation.checkStr(userId,'User Id');
+  userId = validation.checkStrCS(userId,'User Id');
 
   const userCollection = await users();
-  let userList = await userCollection.findOne({employeeId: userId},{firstName : 1, lastName: 1/*more projections*/ });
+  let userList = await userCollection.findOne({employeeId: userId},{projection:{password:0}});
 
   if(!userList || userList === null ) throw 'Error : User Not Found.'; 
   return userList;
@@ -149,15 +151,7 @@ async getOnboardingHR(){
   if(!onboardingUsers)return false  
   
   return onboardingUsers.toArray();
-},
-
-
-async patchHR(updationInfo){
-
-  if(!updationInfo.employeeId)throw new Error('EmployeeId Needed.');
-
 }
-
 
 
 }

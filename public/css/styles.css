@@ -1,7 +1,7 @@
 /*
 You will style your page using at least 5 CSS selectors for general CSS styling. You will place the CSS in its own file. 
 */
-h1,h5{
+h1,h5,h2{
     text-align: center;
 }
 
@@ -54,3 +54,17 @@ h1,h5{
     margin-bottom: 3px;
 }
 
+.updateUser{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.updateUser label{
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.updateUser input{
+    margin-bottom: 5px;
+}

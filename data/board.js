@@ -95,7 +95,34 @@ const exportedMethods = {
 
         return patchedInfo
 
-    }
+    },
+    async getManagers(){
+    let userCollection = await users();
+    let managerList = await userCollection.find({isManager: true},{projection:{employeeId:1,firstName:1,lastName:1}})
+    
+    if(!managerList)return "No Managers."
+    return managerList.toArray()
+    },
+
+    async updatePatchOnboardingData(updationInfo){
+
+        if(!updationInfo.employeeId)throw new Error('Missing employee id.');
+
+        
+        
+        let userCollection = await users();
+        let existingData = await userCollection.findOne({employeeId:updationInfo.employeeId})
+        updationInfo = validation.updateValuesOfTwoObjects(existingData,updationInfo);
+        let patchedInfo = await userCollection.findOneAndUpdate({employeeId: updationInfo.employeeId},
+        {$set:updationInfo},
+        {returnDocument: 'after'}
+        );
+      
+        if(!patchedInfo)throw new Error(`Cannot update user with id: ${employeeId}`);
+      
+        return patchedInfo
+      
+      }
 }
 
 const getTaskData = (data) => {

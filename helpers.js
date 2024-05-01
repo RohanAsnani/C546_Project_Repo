@@ -209,9 +209,9 @@ const checkMasterUser =(creationInfo)=>{
     
     creationInfo.username = checkStrCS(creationInfo.username,'Username',5,20,true);
     
-    creationInfo.firstName = checkStrCS(creationInfo.firstName,'First Name',5,20,true);
+    creationInfo.firstName = checkStrCS(creationInfo.firstName,'First Name',2,20,true);
     
-    creationInfo.lastName = checkStrCS(creationInfo.lastName,'Last Name',5,20,true);
+    creationInfo.lastName = checkStrCS(creationInfo.lastName,'Last Name',2,20,true);
 
     if(creationInfo.isManager === undefined){
         creationInfo.isManager = false;
@@ -221,9 +221,9 @@ const checkMasterUser =(creationInfo)=>{
     
     creationInfo.employeeId = isValidEmployeeId(creationInfo.employeeId);
     
-    creationInfo.department = checkState(creationInfo.department,'Department',['it','finance','human resources','adminstration','research and development','customer service']);
+    creationInfo.department = checkState(creationInfo.department,'Department',['It','Finance','Human Resources','Adminstration','Research And Development','Customer Service']);
     
-    creationInfo.role = checkState(creationInfo.role,'role',['admin','hr','employee']);
+    creationInfo.role = checkState(creationInfo.role,'role',['Admin','Hr','Employee']);
     
     creationInfo.startDate = creationInfo.startDate.trim();
     
@@ -255,10 +255,78 @@ const checkMasterUser =(creationInfo)=>{
     creationInfo.leaveBank = {sickLeaves:5,vacation:5};
 
     let createUser = {
-        employeeId: creationInfo.employeeId, firstName : creationInfo.firstName,lastName:creationInfo.lastName,username: creationInfo.username,password: creationInfo.password,gender: creationInfo.gender,maritalStatus:creationInfo.maritalStatus,department:creationInfo.department,role:creationInfo.role,notes:creationInfo.notes,status:creationInfo.status,vet:creationInfo.vet,disability:creationInfo.disability,race:creationInfo.race,countryOfOrigin:creationInfo.countryOfOrigin,startDate:creationInfo.startDate,endDate:creationInfo.endDate,dob:creationInfo.dob,currentSalary:creationInfo.currentSalary,contactInfo:{phone:creationInfo.phone,email:creationInfo.email,primaryAddress:creationInfo.primaryAddress,secondaryAddress:creationInfo.secondaryAddress},managerId:creationInfo.managerId,leaveBank:creationInfo.leaveBank
+        employeeId: creationInfo.employeeId, firstName : creationInfo.firstName,lastName:creationInfo.lastName,username: creationInfo.username,password: creationInfo.password,gender: creationInfo.gender,maritalStatus:creationInfo.maritalStatus,department:creationInfo.department,role:creationInfo.role,isManager:creationInfo.isManager,notes:creationInfo.notes,status:creationInfo.status,vet:creationInfo.vet,disability:creationInfo.disability,race:creationInfo.race,countryOfOrigin:creationInfo.countryOfOrigin,startDate:creationInfo.startDate,endDate:creationInfo.endDate,dob:creationInfo.dob,currentSalary:creationInfo.currentSalary,contactInfo:{phone:creationInfo.phone,email:creationInfo.email,primaryAddress:creationInfo.primaryAddress,secondaryAddress:creationInfo.secondaryAddress},managerId:creationInfo.managerId,leaveBank:creationInfo.leaveBank
       }
       return createUser
 }
+const checkTypeUserHR =(patchInfo)=>{
+    patchInfo.firstName = checkStrCS(patchInfo.firstName,'First Name',2,20,false)
+    patchInfo.lastName = checkStrCS(patchInfo.lastName,'First Name',2,20,false)
+    patchInfo.employeeId = isValidEmployeeId(patchInfo.employeeId);
+    patchInfo.username = checkStr(patchInfo.username,'Username',5,20,true);
+
+    patchInfo.department = checkState(patchInfo.department,'Department',['It','Finance','Human Resources','Adminstration','Research And Development','Customer Service']);
+    
+    patchInfo.role = checkState(patchInfo.role,'role',['Admin','HR','Employee']);
+    
+    patchInfo.startDate = patchInfo.startDate.trim();
+    
+    patchInfo.startDate = dateFormat(patchInfo.startDate);
+    
+    let year = patchInfo.startDate[0];
+    let month = patchInfo.startDate[1];
+    let date = patchInfo.startDate[2];
+    
+    isValidDate(month, date, year);
+    patchInfo.startDate = String(patchInfo.startDate[0]) + '-' + String(patchInfo.startDate[1]) + '-' + String(patchInfo.startDate[2]);
+          
+    patchInfo.email = isValidEmail(patchInfo.email);
+    
+    patchInfo.isManager = checkState(patchInfo.isManager.toString(),'isManager',['true','false']);
+    patchInfo.isManager = Boolean(patchInfo.isManager);
+
+    patchInfo.managerId = isValidEmployeeId(patchInfo.managerId);
+    
+    patchInfo.gender = "!";
+    patchInfo.maritalStatus = "!";
+    patchInfo.endDate = "!";
+    patchInfo.status = "Onboarding(Employee-Side)";
+    patchInfo.vet = "!";
+    patchInfo.disability = "!";
+    patchInfo.race = "!";
+    patchInfo.countryOfOrigin = "!";
+    patchInfo.dob = "!";
+    patchInfo.phone = "!";
+    patchInfo.primaryAddress = "!";
+    patchInfo.secondaryAddress = "!";
+    patchInfo.currentPosition = checkStrCS(patchInfo.currentPosition,'Current Position',5,20,true);
+    patchInfo.currentSalary= Number(patchInfo.currentSalary);
+    patchInfo.currentSalary = numberExistandType(patchInfo.currentSalary,`Salary`);
+    patchInfo.notes = [];
+    patchInfo.leaveBank = {sickLeaves:5,vacation:5};
+
+    let updateUser = {
+        employeeId: patchInfo.employeeId, firstName : patchInfo.firstName,lastName:patchInfo.lastName,username: patchInfo.username,password: patchInfo.password,gender: patchInfo.gender,maritalStatus:patchInfo.maritalStatus,department:patchInfo.department,role:patchInfo.role,isManager:patchInfo.isManager,notes:patchInfo.notes,status:patchInfo.status,vet:patchInfo.vet,disability:patchInfo.disability,race:patchInfo.race,countryOfOrigin:patchInfo.countryOfOrigin,startDate:patchInfo.startDate,endDate:patchInfo.endDate,dob:patchInfo.dob,currentSalary:patchInfo.currentSalary,contactInfo:{phone:patchInfo.phone,email:patchInfo.email,primaryAddress:patchInfo.primaryAddress,secondaryAddress:patchInfo.secondaryAddress},managerId:patchInfo.managerId,leaveBank:patchInfo.leaveBank
+      }
+
+      return updateUser
+
+}
+
+const updateValuesOfTwoObjects = (obj1, obj2)=> {
+    for (let key in obj1) {
+      // Check if the key exists in both objects and if the value in obj2 is an object
+      if (obj2.hasOwnProperty(key) && typeof obj2[key] === 'object' && typeof obj1[key] === 'object') {
+        // Recursively update nested objects
+        updateValuesOfTwoObjects(obj1[key], obj2[key]);
+      } else if (obj2.hasOwnProperty(key)) {
+        // Update the value in obj1 with the value from obj2
+        obj1[key] = obj2[key];
+      }
+    }
+
+    return obj1
+  }
 const checkTypeMaster = (updationInfo) => {
     let strArr =[updationInfo.firstName,updationInfo.lastName,updationInfo.disability,updationInfo.race,updationInfo.countryOfOrigin,updationInfo.currentPosition];
 
@@ -334,7 +402,6 @@ const checkTypeMaster = (updationInfo) => {
 const checkState =(val,param,arr) =>{
     if(!(typeof(val) === 'string'))throw new Error(`${param} needs to be string type.`)
     val=val.trim();
-    val=val.toLowerCase();
     if(!(arr.includes(val)))throw new Error(`${param} should be ${[...arr]} nothing else.`);
     return val
 
@@ -538,4 +605,4 @@ const validateBoardingDataPatch = (userId, taskId, taskType, updateBoardDataObj)
     return resObj;
 }
 
-export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch ,isValidEmployeeId,checkPassConstraints,isValidEmail,isValidPhoneNumber,bcryptPass,checkStrCS,checkMasterUser}
+export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch ,isValidEmployeeId,checkPassConstraints,isValidEmail,isValidPhoneNumber,bcryptPass,checkStrCS,checkMasterUser,checkTypeUserHR,updateValuesOfTwoObjects}

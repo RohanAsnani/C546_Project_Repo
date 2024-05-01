@@ -1,0 +1,80 @@
+
+<form id="updateUser" name="updateUser" method="POST" class="updateUser">
+<h2>New User Details</h2>
+
+    <h4>Personal Details</h4>
+    <label for="firstName" id="labelFirstName">First Name:</label>
+    <input  type="text" class="firstName" id="firstName" name="firstName" value="{{firstName}}"><br>
+
+    <label for="lastName" id="labelLastName">Last Name:</label>
+    <input type="text" class="lastName" id="lastName" name="lastName" value="{{lastName}}"><br>
+
+    <label for="employeeId" id="labelEmployeeId">Employee Id:</label>
+    <input type="text" class="employeeId" id="employeeId" name="employeeId" value="{{employeeId}}"><br>
+
+    <label for="username" id="labelUsername">Username:</label>
+    <input type="text" class="username" id="username" name="username" value="{{username}}"><br>
+
+
+    
+
+    <label for="department" id="labelDepartment">Department:</label>
+    <select id="department" name="department">
+        <option value="IT">IT</option>
+        <option value="Finance">Finance</option>
+        <option value="Human Resources">Human Resources</option>
+        <option value="Adminstration">Adminstration</option>
+        <option value="Research And Development">Research And Developement</option>
+        <option value="Customer Service">Customer Service</option>
+    </select><br>
+
+    <label for="role" id="labelId">Role:</label>
+    <select id="role" name="role">
+        <option value="Admin">Admin</option>
+        <option value="HR">HR</option>
+        <option value="Employee">Employee</option>
+    </select><br>
+
+    <label for="isManager" id="labelIsManager">Is Manager:</label>
+    <input type="checkbox" id="isManager" name="isManager" value= "true">
+  
+
+    
+
+    <label for="startDate" id="labelStartDate">Start Date:</label>
+    <input type="date" class="startDate" id="startDate" name="startDate" ><br>
+  
+
+  
+    <label for="currentPosition" id="labelCurrentPosition">Current Position:</label>
+    <input type="text" id="currentPosition" name="currentPosition" class="currentPosition" ><br>
+
+    <label for="currentSalary" id="labelCurrentSalary">Current Salary:</label>
+    <input type="number" class="currentSalary" id="currentSalary" name="currentSalary"><br>
+
+    
+
+    <label for="email" id="labelEmail">Email Id:</label>
+    <input type="email" class="email" id="email" name="email" value="{{contactInfo.email}}" ><br>
+
+    
+    {{!-- dynamically populating  --}}
+    <label for="managerId" id="labelManagerId">Assign Manager:</label>
+    <select id="managerId" name="managerId" >
+        {{#each manager}}
+        <option value="{{employeeId}}">{{firstName}} {{lastName}}</option>
+        {{/each}}
+    </select><br> 
+    <button type="submit" class="submitButton" id="submitButton" name="submitButton">Submit</button><br>
+    
+</form>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  
+  <script>
+    $('#department').val("{{department}}");
+    $('#role').val("{{role}}");
+    if(Boolean("{{isManager}}")=== true){
+        $('#isManager').prop("checked",true);
+    }
+    $('#startDate').val("{{startDate}}");
+  </script>
