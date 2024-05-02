@@ -1,0 +1,58 @@
+<form id="createTask-form" name="createTask-form" class="createTask-form" action="../createTask" method="POST">
+    <h2>Create New Task</h2>
+    <h4>Task Details</h4>
+
+    <label for="firstName" id="labelFirstName">First Name:</label>
+    <input type="text" class="firstName" id="firstName" name="firstName" value="{{firstName}}" readonly="readonly"><br>
+
+    <label for="lastName" id="labelLastName">Last Name:</label>
+    <input type="text" class="lastName" id="lastName" name="lastName" value="{{lastName}}" readonly="readonly"><br>
+
+    <label for="employeeId" id="labelEmployeeId">Employee Id:</label>
+    <input type="text" class="employeeId" id="employeeId" name="employeeId" value="{{employeeId}}"
+        readonly="readonly"><br>
+
+    <label for="username" id="labelUsername">Username:</label>
+    <input type="text" class="username" id="username" name="username" value="{{username}}" readonly="readonly"><br>
+
+
+    {{!-- Task Name --}}
+    <label for="taskName" id="labelTaskName">Task Name:</label>
+    <input type="text" class="taskName" id="taskName" name="taskName"><br>
+
+    {{!-- Task Description --}}
+    <label for="taskDesc" id="labelTaskName">Task Description:</label>
+    <textarea class="taskDesc" id="taskDesc" name="taskDesc"></textarea><br>
+
+    {{!-- Due Date --}}
+    <label for="dueDate" id="labelDueDate">Due Date:</label>
+    <input type="date" class="dueDate" id="dueDate" name="dueDate"><br>
+
+    {{!-- Task Type - string --}}
+    {{!-- <label for="taskType" id="labelTaskType">Task Type:</label>
+    <input type="text" class="taskType" id="taskType" name="taskType"><br> --}}
+
+    {{!-- Task Type - Radio button--}}
+    <p>Please select a task type:</p>
+    <input type="radio" id="onboard" name="taskType" value="onboard">
+    <label for="onboard">Onboard</label><br>
+    <input type="radio" id="offboard" name="taskType" value="offboard">
+    <label for="offboard">Offboard</label>
+
+
+    <ul id="errorList" name="errorList" hidden> </ul>
+
+    <p id="error" name="error" class="error" {{hidden}}>
+        {{message}}
+    </p>
+
+    <button type="submit" class="submitButton" id="submitButton" name="submitButton">Create</button><br>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+
+    <script src="../../public/js/createTask.js"></script>
+
+
+</form>
+<a class="page-link" id="logoutLink" href="/hrc/logout">Logout</a>

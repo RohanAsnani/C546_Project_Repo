@@ -4,6 +4,7 @@ import boardRoutes from './board.js';
 import login from './login.js';
 import logout from './logout.js';
 import admin from './admin.js';
+import employee from './employee.js';
 import path from 'path';
 import { static as staticDir } from 'express';
 
@@ -13,6 +14,7 @@ const constructorMethod = (app) => {
   app.use('/hrc/admin', admin);
   app.use('/hrc/users', user_Test);
   app.use('/hrc/hr', boardRoutes);
+  app.use('/hrc/employee', employee);
   app.use('/hrc/', user_Test);
   app.use('*', (req, res) => {
     res.redirect('/hrc/login');

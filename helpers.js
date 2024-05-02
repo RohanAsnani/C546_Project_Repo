@@ -484,14 +484,18 @@ let checkUndefinedOrNull = (obj, variable) => {
     if (obj === undefined || obj === null) throw `All fields need to have valid values. Input for '${variable || 'provided variable'}' param is undefined or null.`;
 };
 
-const validateBoardingData = (existingBoardData, userId, taskName, dueDate, taskType, isUpdate) => {
+const validateBoardingData = (existingBoardData, userId, taskName, taskDesc, dueDate, taskType, isUpdate) => {
     checkUndefinedOrNull(userId, 'userId');
     checkUndefinedOrNull(taskName, 'taskName');
+    checkUndefinedOrNull(taskDesc, 'taskDesc');
     checkUndefinedOrNull(dueDate, 'dueDate');
     checkUndefinedOrNull(taskType, 'taskType');
 
-    userId = validObject(userId);
-    taskName = stringExistandType(taskName);
+    userId = checkStrCS(userId, 'Employee Id', 0, 100, true);
+
+
+    taskName = checkStrCS(taskName, 'Task Name', 0, 100, true);
+    taskDesc = checkStrCS(taskDesc, 'Task Description', 0, 100, true);
 
     // let dateArr = dateFormat(dueDate.trim(), 'dueDate');
     // let month = dateArr[0];
@@ -500,10 +504,11 @@ const validateBoardingData = (existingBoardData, userId, taskName, dueDate, task
     // isValidDate(month, date, year, 'dueDate');
     dueDate = dueDate.trim();
 
-    taskType = stringExistandType(taskType);
+    taskType = checkStrCS(taskType, 'Task Type', 0, 100, true);
     let task = {
         _id: new ObjectId(),
         taskName: taskName,
+        taskDesc: taskDesc,
         dueDate: dueDate,
         completedOn: null
     }
@@ -511,7 +516,7 @@ const validateBoardingData = (existingBoardData, userId, taskName, dueDate, task
     taskArr.push(task);
     let boardTask;
     if (isUpdate) {
-        if (taskType === 'onboard') {
+        if (taskType.toLowerCase() === 'onboard') {
             if (!existingBoardData.on || existingBoardData.on === null) {
                 existingBoardData.on = taskArr;
             }
@@ -520,7 +525,7 @@ const validateBoardingData = (existingBoardData, userId, taskName, dueDate, task
                 onTaskArr.push(task);
                 existingBoardData.on = onTaskArr;
             }
-        } else if (taskType === 'offboard') {
+        } else if (taskType.toLowerCase() === 'offboard') {
             if (!existingBoardData.off || existingBoardData.off === null) {
                 existingBoardData.off = taskArr;
             }
@@ -531,12 +536,12 @@ const validateBoardingData = (existingBoardData, userId, taskName, dueDate, task
             }
         }
     } else {//create
-        if (taskType === 'onboard') {
+        if (taskType.toLowerCase() === 'onboard') {
             boardTask = {
                 employeeId: userId,
                 on: taskArr
             }
-        } else if (taskType === 'offboard') {
+        } else if (taskType.toLowerCase() === 'offboard') {
             boardTask = {
                 employeeId: userId,
                 off: taskArr
@@ -605,4 +610,10 @@ const validateBoardingDataPatch = (userId, taskId, taskType, updateBoardDataObj)
     return resObj;
 }
 
-export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch ,isValidEmployeeId,checkPassConstraints,isValidEmail,isValidPhoneNumber,bcryptPass,checkStrCS,checkMasterUser,checkTypeUserHR,updateValuesOfTwoObjects}
+
+const convertDateFormat = (inputDate) => {
+    var parts = inputDate.split('-');
+    return parts[2] + '-' + parts[1] + '-' + parts[0];
+};
+
+export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch, isValidEmployeeId, checkPassConstraints, isValidEmail, isValidPhoneNumber, bcryptPass, checkStrCS, checkMasterUser, checkTypeUserHR, updateValuesOfTwoObjects, convertDateFormat }

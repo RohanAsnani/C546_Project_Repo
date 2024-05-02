@@ -1,0 +1,23 @@
+<article>
+
+    <table class="taskTable">
+        <tr>
+            <th>Task Name</th>
+            <th>Task Description</th>
+            <th>Due date</th>
+            {{!-- <th>Completed On</th> --}}
+            <th>Action</th>
+        </tr>
+        {{#each taskList}}
+        <tr>
+            <td>{{taskName}}</td>
+            <td>{{taskDesc}}</td>
+            <td>{{dueDate}}</td>
+            <td><a class="completeTask" data-id="taskId">Mark as complete</a></td>
+        </tr>
+        {{/each}}
+    </table>
+    <p>{{noDataPresentMsg}}</p>
+    <script src="../../public/js/completeTask.js"></script>
+</article>
+<a class="page-link" id="logoutLink" href="/hrc/logout">Logout</a>

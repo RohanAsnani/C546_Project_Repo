@@ -8,7 +8,7 @@ const exportedMethods = {
 
         let resObj = getTaskData(data);
 
-        let boardData = validation.validateBoardingData(null, userId, resObj.taskName, resObj.dueDate, resObj.taskType, false);
+        let boardData = validation.validateBoardingData(null, userId, resObj.taskName, resObj.taskDesc, resObj.dueDate, resObj.taskType, false);
 
         const boardingCollection = await boarding();
         let createdInfo = await boardingCollection.insertOne(boardData);
@@ -44,7 +44,7 @@ const exportedMethods = {
     async getboardingDataByEmpId(userId) {
 
         if (!userId) throw 'id is required';
-        userId = validation.stringExistandType(userId, 'User Id');
+        userId = validation.checkStrCS(userId, 'Employee Id', 0, 100, true);
 
         const boardingCollection = await boarding();
         let userData = await boardingCollection.findOne({ employeeId: userId });
@@ -61,7 +61,7 @@ const exportedMethods = {
 
         let resObj = getTaskData(data);
 
-        let boardData = validation.validateBoardingData(existingBoardData, data.employeeId, resObj.taskName, resObj.dueDate, resObj.taskType, true);
+        let boardData = validation.validateBoardingData(existingBoardData, data.employeeId, resObj.taskName, resObj.taskDesc, resObj.dueDate, resObj.taskType, true);
 
         const boardingCollection = await boarding();
         let updatedInfo = await boardingCollection.findOneAndReplace(
