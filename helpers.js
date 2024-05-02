@@ -212,8 +212,8 @@ const checkMasterUser =(creationInfo)=>{
     creationInfo.firstName = checkStrCS(creationInfo.firstName,'First Name',2,20,true);
     
     creationInfo.lastName = checkStrCS(creationInfo.lastName,'Last Name',2,20,true);
-
-    if(creationInfo.isManager === undefined){
+    creationInfo.isManager = Boolean(creationInfo.isManager);
+    if(creationInfo.isManager === false){
         creationInfo.isManager = false;
     }else{
         creationInfo.isManager = true;
@@ -223,7 +223,7 @@ const checkMasterUser =(creationInfo)=>{
     
     creationInfo.department = checkState(creationInfo.department,'Department',['It','Finance','Human Resources','Adminstration','Research And Development','Customer Service']);
     
-    creationInfo.role = checkState(creationInfo.role,'role',['Admin','Hr','Employee']);
+    creationInfo.role = checkState(creationInfo.role,'role',['Admin','HR','Employee']);
     
     creationInfo.startDate = creationInfo.startDate.trim();
     
@@ -306,7 +306,7 @@ const checkTypeUserHR =(patchInfo)=>{
     patchInfo.leaveBank = {sickLeaves:5,vacation:5};
 
     let updateUser = {
-        employeeId: patchInfo.employeeId, firstName : patchInfo.firstName,lastName:patchInfo.lastName,username: patchInfo.username,password: patchInfo.password,gender: patchInfo.gender,maritalStatus:patchInfo.maritalStatus,department:patchInfo.department,role:patchInfo.role,isManager:patchInfo.isManager,notes:patchInfo.notes,status:patchInfo.status,vet:patchInfo.vet,disability:patchInfo.disability,race:patchInfo.race,countryOfOrigin:patchInfo.countryOfOrigin,startDate:patchInfo.startDate,endDate:patchInfo.endDate,dob:patchInfo.dob,currentSalary:patchInfo.currentSalary,contactInfo:{phone:patchInfo.phone,email:patchInfo.email,primaryAddress:patchInfo.primaryAddress,secondaryAddress:patchInfo.secondaryAddress},managerId:patchInfo.managerId,leaveBank:patchInfo.leaveBank
+        employeeId: patchInfo.employeeId, firstName : patchInfo.firstName,lastName:patchInfo.lastName,username: patchInfo.username,gender: patchInfo.gender,maritalStatus:patchInfo.maritalStatus,department:patchInfo.department,role:patchInfo.role,isManager:patchInfo.isManager,notes:patchInfo.notes,status:patchInfo.status,vet:patchInfo.vet,disability:patchInfo.disability,race:patchInfo.race,countryOfOrigin:patchInfo.countryOfOrigin,startDate:patchInfo.startDate,endDate:patchInfo.endDate,dob:patchInfo.dob,currentPosition:patchInfo.currentPosition,currentSalary:patchInfo.currentSalary,contactInfo:{phone:patchInfo.phone,email:patchInfo.email,primaryAddress:patchInfo.primaryAddress,secondaryAddress:patchInfo.secondaryAddress},managerId:patchInfo.managerId,leaveBank:patchInfo.leaveBank
       }
 
       return updateUser

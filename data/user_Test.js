@@ -15,7 +15,7 @@ async create(creationInfo){
 
   creationInfo.currentPosition = '!';
   
-  creationInfo.username = validation.checkStrCS(creationInfo.username,'Username',2,20,true);
+  creationInfo.username = validation.checkStr(creationInfo.username,'Username',2,20,true);
   
   creationInfo.firstName = validation.checkStrCS(creationInfo.firstName,'First Name',2,20,true);
   
@@ -25,7 +25,7 @@ async create(creationInfo){
   
   creationInfo.department = validation.checkState(creationInfo.department,'Department',['IT','Finance','Human Resources','Adminstration','Research And Development','Customer Service']);
   
-  creationInfo.role = validation.checkState(creationInfo.role,'role',['Admin','Hr','Employee']);
+  creationInfo.role = validation.checkState(creationInfo.role,'role',['Admin','HR','Employee']);
   
   creationInfo.startDate = creationInfo.startDate.trim();
   
@@ -41,7 +41,7 @@ async create(creationInfo){
   creationInfo.email = validation.isValidEmail(creationInfo.email);
   
   creationInfo = {
-    employeeId: creationInfo.employeeId, firstName : creationInfo.firstName,lastName:creationInfo.lastName,username: creationInfo.username,password: creationInfo.password,gender: creationInfo.gender,maritalStatus:creationInfo.maritalStatus,department:creationInfo.department,role:creationInfo.role,notes:creationInfo.notes,status:creationInfo.status,vet:creationInfo.vet,disability:creationInfo.disability,race:creationInfo.race,countryOfOrigin:creationInfo.countryOfOrigin,startDate:creationInfo.startDate,endDate:creationInfo.endDate,dob:creationInfo.dob,cuurentPosition:creationInfo.currentPosition,currentSalary:creationInfo.currentSalary,contactInfo:{phone:creationInfo.phone,email:creationInfo.email,primaryAddress:creationInfo.primaryAddress,secondaryAddress:creationInfo.secondaryAddress},managerId:creationInfo.managerId,leaveBank:creationInfo.leaveBank
+    employeeId: creationInfo.employeeId, firstName : creationInfo.firstName,lastName:creationInfo.lastName,username: creationInfo.username,password: creationInfo.password,gender: creationInfo.gender,maritalStatus:creationInfo.maritalStatus,department:creationInfo.department,role:creationInfo.role,notes:creationInfo.notes,status:creationInfo.status,vet:creationInfo.vet,disability:creationInfo.disability,race:creationInfo.race,countryOfOrigin:creationInfo.countryOfOrigin,startDate:creationInfo.startDate,endDate:creationInfo.endDate,dob:creationInfo.dob,currentPosition:creationInfo.currentPosition,isManager:creationInfo.isManager,currentSalary:creationInfo.currentSalary,contactInfo:{phone:creationInfo.phone,email:creationInfo.email,primaryAddress:creationInfo.primaryAddress,secondaryAddress:creationInfo.secondaryAddress},managerId:creationInfo.managerId,leaveBank:creationInfo.leaveBank
   }
   
   const userCollection = await users();

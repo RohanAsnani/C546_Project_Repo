@@ -1,0 +1,61 @@
+<h2>User Succesfully created</h2>
+
+
+<p name="viewemployeeId" id="viewemployeeId">EmployeeId: {{employeeId}}
+</p>
+
+
+<p name="viewfirstName" id="viewfirstName">First Name: {{firstName}}
+</p>
+
+
+<p name="viewlastName" id="viewlastName">Last Name: {{lastName}}
+</p>
+
+
+<p name="viewusername" id="viewusername">Username: {{username}}
+</p>
+
+<p name="viewemailId" id="viewemailId">Email ID: {{contactInfo.email}}
+</p>
+
+
+<p name="viewdepartment" id="viewdepartment">Department: {{department}}
+</p>
+
+
+<p name="viewrole" id="viewrole">Role: {{role}}
+</p>
+
+
+<p name="viewstartDate" id="viewstartDate">Start Date: {{startDate}}
+</p>
+
+<p name="isManager" id="isManager">Is Manager:  {{isManager}}
+</p>
+
+{{#if hrView}}
+<p name="viewcurrentPosition" id="viewcurrentPosition">Current Position:  {{currentPosition}}
+</p>
+
+<p name="viewcurrentSalary" id="viewcurrentSalary">Current Salary:  {{currentSalary}}
+</p>
+{{/if}}
+
+<a href="/hrc/admin/addEmp" {{adminButtons}}>
+    <button>Create Another User</button>
+</a>
+
+<a href="/hrc/admin" {{adminButtons}}>
+
+    <button>Homepage</button>
+</a>
+
+<a href="/hrc/hr/getonboarding" {{hrButtons}}>
+    <button>Initiate Another Onboarding</button>
+</a>
+
+<a href="/hrc/hr" {{hrButtons}}>
+
+    <button>Homepage</button>
+</a>

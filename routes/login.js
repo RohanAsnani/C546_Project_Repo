@@ -20,11 +20,11 @@ router.route('/')
          req.session.user = credentialsCheck
         
             switch(req.session.user.role){
-                case 'admin': return res.redirect('/hrc/admin');
+                case 'Admin': return res.redirect('/hrc/admin');
                     
-                case 'hr': return res.redirect('/hrc/hr');
+                case 'HR': return res.redirect('/hrc/hr');
                     
-                case 'employee': return res.redirect('/hrc/employee');
+                case 'Employee': return res.redirect('/hrc/employee');
                 default: return res.status(403).json('Forbidden');
                     
             }

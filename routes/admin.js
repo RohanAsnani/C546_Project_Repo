@@ -34,7 +34,10 @@ router
         try {
             let creationData = req.body;
             let createdUser = await userTest.create(creationData);
-            return res.json(createdUser);
+            delete createdUser.password;
+            return res.render('./data_functions/newAdded',{title:"Created User",...createdUser,hrView:false,hrButtons:'hidden'})
+            
+
         } catch (e) {
             return res.json(e.message);
         }

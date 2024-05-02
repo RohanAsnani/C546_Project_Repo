@@ -41,11 +41,11 @@ app.use(session({
 app.use('/hrc/login',(req,res,next)=>{
   if(req.session.user){
     switch(req.session.user.role){
-      case 'admin':
+      case 'Admin':
         return res.redirect('/hrc/admin');
-      case 'employee': 
+      case 'Employee': 
         return res.redirect('/hrc/employee');
-      case 'hr':
+      case 'HR':
         return res.redirect('/hrc/hr');
       default:
         return res.render('error',{message:'Forbidden',title:'Forbidden',class:'error',previous_Route:'hrc/login',linkMessage:'Click Here to Login.'})
@@ -56,7 +56,7 @@ app.use('/hrc/login',(req,res,next)=>{
 
 app.use('/hrc/admin',(req,res,next)=>{
   if(req.session.user){
-    if(req.session.user.role !== 'admin'){
+    if(req.session.user.role !== 'Admin'){
       return res.status(403).render('error',{message:'Forbidden',title:'Forbidden',class:'error',previous_Route:'hrc/login',linkMessage:'Click Here to Login.'});
     }
     next();
@@ -67,7 +67,7 @@ app.use('/hrc/admin',(req,res,next)=>{
 
 app.use('/hrc/employee',(req,res,next)=>{
   if(req.session.user){
-    if(req.session.user.role !== 'employee'){
+    if(req.session.user.role !== 'Employee'){
       return res.status(403).render('error',{message:'Forbidden',title:'Forbidden',class:'error',previous_Route:'hrc/login',linkMessage:'Click Here to Login.'});
     }
     next();
@@ -78,7 +78,7 @@ app.use('/hrc/employee',(req,res,next)=>{
 
 app.use('/hrc/hr',(req,res,next)=>{
   if(req.session.user){
-    if(req.session.user.role !== 'hr'){
+    if(req.session.user.role !== 'HR'){
       return res.status(403).render('error',{message:'Forbidden',title:'Forbidden',class:'error',previous_Route:'hrc/login',linkMessage:'Click Here to Login.'});
     }
     next();
@@ -96,11 +96,11 @@ app.use('/',(req,res,next)=>{
     if(req.originalUrl === '/'){
     if(req.session.user){
       switch(req.session.user.role){
-        case 'admin':
+        case 'Admin':
           return res.redirect('/admin');
-        case 'hr':
+        case 'HR':
           return res.redirect('/hr');
-        case 'employee':
+        case 'Employee':
           return res.redirect('/employee');
         
       }
