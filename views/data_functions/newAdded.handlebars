@@ -42,20 +42,17 @@
 </p>
 {{/if}}
 
-<a href="/hrc/admin/addEmp" {{adminButtons}}>
-    <button>Create Another User</button>
-</a>
 
-<a href="/hrc/admin" {{adminButtons}}>
+    <button onclick="window.location.href='/hrc/admin/addEmp'"{{adminButtons}}>Create Another User</button>
 
-    <button>Homepage</button>
-</a>
 
-<a href="/hrc/hr/getonboarding" {{hrButtons}}>
-    <button>Initiate Another Onboarding</button>
-</a>
+    <button onclick="window.location.href='/hrc/admin'"{{adminButtons}}>Homepage</button>
 
-<a href="/hrc/hr" {{hrButtons}}>
 
-    <button>Homepage</button>
-</a>
+
+    <button onclick="window.location.href='/hrc/hr/getonboarding'"{{hrButtons}}>Initiate Another Onboarding</button>
+
+
+
+    <button onclick="window.location.href='/hrc/hr'"{{hrButtons}}>Homepage</button>
+

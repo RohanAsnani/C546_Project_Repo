@@ -1,4 +1,18 @@
 // clientside JS
+
+const checkStrCS =(str,param,minLen,maxLen,containNum)=>{
+    if(!(typeof(str) === 'string'))throw new Error(`${param} needs to be string type.`)
+    if(!str) throw new Error(`${param} needed.`);
+    str  = str.trim()
+    if(str.length === 0) throw new Error(`${param} cannot be empty or just spaces.`);
+    if(containNum === false){
+    if(/\d/.test(str))throw new Error(`${param} cannot have any numbers in it.`);
+    }
+    if(!(!minLen && !maxLen))
+    if(!(minLen<= str.length && str.length <= maxLen)) throw new Error(`${param} should be atleast ${minLen} characters and max ${maxLen} characters long.`);
+    return str
+}
+
 const isValidEmail = (email) =>{
     email = checkStr(email,'Email',5,35,true);
     if(!(email.includes('@')))throw new Error('Email id should contain @ in it.');
@@ -104,7 +118,6 @@ const isValidDate = (month, date, year, param) => {
 const checkState =(val,param,arr) =>{
     if(!(typeof(val) === 'string'))throw new Error(`${param} needs to be string type.`)
     val=val.trim();
-    val=val.toLowerCase();
     if(!(arr.includes(val)))throw new Error(`${param} should be ${[...arr]} nothing else.`);
     return val
 
@@ -171,93 +184,93 @@ $('#loginForm').submit((event)=>{
 
 });
 
-// $('#createUser-form').submit((event)=>{
-//     //firstName
-//     $('#errorList li').remove();
-//    try{
-//     checkStr($('#firstName').val(),'First Name',2,20,false);
-//     $('#firstName').removeClass('error');
-//     $('#labelFirstName').removeClass('error');
-//    }catch(e){
-//     $('#firstName').addClass('error');
-//     $('#labelFirstName').addClass('error');
-//     let li= `<li class='error'>${e.message}</li>`;
-//     $('#errorList').append(li);
-//     $('#errorList').show();
-//     $('#firstName').val('');
-//     event.preventDefault();
-//    }
+$('#createUser-form').submit((event)=>{
+    //firstName
+    $('#errorList li').remove();
+   try{
+    checkStrCS($('#firstName').val(),'First Name',2,20,false);
+    $('#firstName').removeClass('error');
+    $('#labelFirstName').removeClass('error');
+   }catch(e){
+    $('#firstName').addClass('error');
+    $('#labelFirstName').addClass('error');
+    let li= `<li class='error'>${e.message}</li>`;
+    $('#errorList').append(li);
+    $('#errorList').show();
+    $('#firstName').val('');
+    event.preventDefault();
+   }
 
-//    try{
-//     checkStr($('#lastName').val(),'Last Name',2,20,false);
-//     $('#lastName').removeClass('error');
-//     $('#labelLastName').removeClass('error');
-//    }catch(e){
-//     $('#lastName').addClass('error');
-//     $('#labelLastName').addClass('error');
-//     let li= `<li class='error'>${e.message}</li>`;
-//     $('#errorList').append(li);
-//     $('#errorList').show();
-//     $('#lastName').val('');
-//     event.preventDefault();
-//    }
+   try{
+    checkStrCS($('#lastName').val(),'Last Name',2,20,false);
+    $('#lastName').removeClass('error');
+    $('#labelLastName').removeClass('error');
+   }catch(e){
+    $('#lastName').addClass('error');
+    $('#labelLastName').addClass('error');
+    let li= `<li class='error'>${e.message}</li>`;
+    $('#errorList').append(li);
+    $('#errorList').show();
+    $('#lastName').val('');
+    event.preventDefault();
+   }
 
-//    try{
-//     isValidEmployeeId($('#employeeId').val());
-//     $('#employeeId').removeClass('error');
-//     $('#labelEmployeeId').removeClass('error');
-//    }catch(e){
-//     $('#employeeId').addClass('error');
-//     $('#labelEmployeeId').addClass('error');
-//     let li= `<li class='error'>${e.message}</li>`;
-//     $('#errorList').append(li);
-//     $('#errorList').show();
-//     $('#employeeId').val('');
-//     event.preventDefault();
-//    }
+   try{
+    isValidEmployeeId($('#employeeId').val());
+    $('#employeeId').removeClass('error');
+    $('#labelEmployeeId').removeClass('error');
+   }catch(e){
+    $('#employeeId').addClass('error');
+    $('#labelEmployeeId').addClass('error');
+    let li= `<li class='error'>${e.message}</li>`;
+    $('#errorList').append(li);
+    $('#errorList').show();
+    $('#employeeId').val('');
+    event.preventDefault();
+   }
 
-//    try{
-//     checkStr($('#username').val(),'Username',5,20,true);
-//     $('#username').removeClass('error');
-//     $('#labelUsername').removeClass('error');
-//    }catch(e){
-//     $('#username').addClass('error');
-//     $('#labelUsername').addClass('error');
-//     let li= `<li class='error'>${e.message}</li>`;
-//     $('#errorList').append(li);
-//     $('#errorList').show();
-//     $('#username').val('');
-//     event.preventDefault();
-//    }
-//    if($('#password').val() !== $('#confirmPassword').val()){
-//     $('#password').addClass('error');
-//     $('#labelPassword').addClass('error');
-//     $('#confirmPassword').addClass('error');
-//     $('#labelConfirmPassword').addClass('error');
-//     let li= `<li class='error'>Passwords do not match.</li>`;
-//     $('#errorList').append(li);
-//     $('#errorList').show();
-//     event.preventDefault();
-//    }else{
-//     $('#password').removeClass('error');
-//     $('#labelPassword').removeClass('error');
-//     $('#confirmPassword').removeClass('error');
-//     $('#labelConfirmPassword').removeClass('error');
-//    }
+   try{
+    checkStrCS($('#username').val(),'Username',5,20,true);
+    $('#username').removeClass('error');
+    $('#labelUsername').removeClass('error');
+   }catch(e){
+    $('#username').addClass('error');
+    $('#labelUsername').addClass('error');
+    let li= `<li class='error'>${e.message}</li>`;
+    $('#errorList').append(li);
+    $('#errorList').show();
+    $('#username').val('');
+    event.preventDefault();
+   }
+   if($('#password').val() !== $('#confirmPassword').val()){
+    $('#password').addClass('error');
+    $('#labelPassword').addClass('error');
+    $('#confirmPassword').addClass('error');
+    $('#labelConfirmPassword').addClass('error');
+    let li= `<li class='error'>Passwords do not match.</li>`;
+    $('#errorList').append(li);
+    $('#errorList').show();
+    event.preventDefault();
+   }else{
+    $('#password').removeClass('error');
+    $('#labelPassword').removeClass('error');
+    $('#confirmPassword').removeClass('error');
+    $('#labelConfirmPassword').removeClass('error');
+   }
 
-//    try{
-//     checkPassConstraints($('#password').val(),8);
-//     $('#password').removeClass('error');
-//     $('#labelPassword').removeClass('error');
-//    }catch(e){
-//     $('#password').addClass('error');
-//     $('#labelPassword').addClass('error');
-//     let li= `<li class='error'>${e.message}</li>`;
-//     $('#errorList').append(li);
-//     $('#errorList').show();
-//     $('#password').val('');
-//     event.preventDefault();
-//    }
+   try{
+    checkPassConstraints($('#password').val(),8);
+    $('#password').removeClass('error');
+    $('#labelPassword').removeClass('error');
+   }catch(e){
+    $('#password').addClass('error');
+    $('#labelPassword').addClass('error');
+    let li= `<li class='error'>${e.message}</li>`;
+    $('#errorList').append(li);
+    $('#errorList').show();
+    $('#password').val('');
+    event.preventDefault();
+   }
 
 //    try{
 //     checkState($('#gender').val(),'Gender',['male','female','other']);
@@ -287,33 +300,33 @@ $('#loginForm').submit((event)=>{
 //     event.preventDefault();
 //    }
 
-//    try{
-//     checkState($('#department').val(),'Department',['finance','it','human resources','adminstration','research and development']);
-//     $('#department').removeClass('error');
-//     $('#labelDepartment').removeClass('error');
-//    }catch(e){
-//     $('#department').addClass('error');
-//     $('#labelDepartment').addClass('error');
-//     let li= `<li class='error'>${e.message}</li>`;
-//     $('#errorList').append(li);
-//     $('#errorList').show();
-//     $('#department').val('');
-//     event.preventDefault();
-//    }
+   try{
+    checkState($('#department').val(),'Department',['Finance','IT','Human Resources','Adminstration','Research and Development']);
+    $('#department').removeClass('error');
+    $('#labelDepartment').removeClass('error');
+   }catch(e){
+    $('#department').addClass('error');
+    $('#labelDepartment').addClass('error');
+    let li= `<li class='error'>${e.message}</li>`;
+    $('#errorList').append(li);
+    $('#errorList').show();
+    $('#department').val('');
+    event.preventDefault();
+   }
 
-//    try{
-//     checkState($('#role').val(),'Role',['admin','hr','employee']);
-//     $('#role').removeClass('error');
-//     $('#labelrole').removeClass('error');
-//    }catch(e){
-//     $('#role').addClass('error');
-//     $('#labelrole').addClass('error');
-//     let li= `<li class='error'>${e.message}</li>`;
-//     $('#errorList').append(li);
-//     $('#errorList').show();
-//     $('#role').val('');
-//     event.preventDefault();
-//    }
+   try{
+    checkState($('#role').val(),'Role',['Admin','HR','Employee']);
+    $('#role').removeClass('error');
+    $('#labelrole').removeClass('error');
+   }catch(e){
+    $('#role').addClass('error');
+    $('#labelrole').addClass('error');
+    let li= `<li class='error'>${e.message}</li>`;
+    $('#errorList').append(li);
+    $('#errorList').show();
+    $('#role').val('');
+    event.preventDefault();
+   }
 
 //    try{
 //     checkStr($('#disability').val(),'Disability',2,20,false);
@@ -357,22 +370,22 @@ $('#loginForm').submit((event)=>{
 //     event.preventDefault();
 //    }
 
-//    try{
-//     check = dateFormat($('#startDate').val().trim(),'Start Date');
-//     let year = check[0];
-//     let month = check[1];
-//     let date = check[2];
-//     isValidDate(month, date, year);
-//     $('#startDate').removeClass('error');
-//     $('#labelStartDate').removeClass('error');
-//    }catch(e){
-//     $('#startDate').addClass('error');
-//     $('#labelStartDate').addClass('error');
-//     let li= `<li class='error'>${e.message}</li>`;
-//     $('#errorList').append(li);
-//     $('#errorList').show();
-//     event.preventDefault();
-//    } 
+   try{
+    check = dateFormat($('#startDate').val().trim(),'Start Date');
+    let year = check[0];
+    let month = check[1];
+    let date = check[2];
+    isValidDate(month, date, year);
+    $('#startDate').removeClass('error');
+    $('#labelStartDate').removeClass('error');
+   }catch(e){
+    $('#startDate').addClass('error');
+    $('#labelStartDate').addClass('error');
+    let li= `<li class='error'>${e.message}</li>`;
+    $('#errorList').append(li);
+    $('#errorList').show();
+    event.preventDefault();
+   } 
 
 //    try{
 //     check = dateFormat($('#dob').val().trim(),'Date Of Birth');
@@ -419,24 +432,7 @@ $('#loginForm').submit((event)=>{
 //     $('#currentSalary').val('');
 //     event.preventDefault();
 //    }
-//    if($('#promoDate').val().trim()){
-//         try{
-//          check = dateFormat($('#promoDate').val().trim(),'Promotion Date');
-//          let year = check[0];
-//          let month = check[1];
-//          let date = check[2];
-//          isValidDate(month, date, year);
-//          $('#promoDate').removeClass('error');
-//          $('#labelPromoDate').removeClass('error');
-//         }catch(e){
-//          $('#promoDate').addClass('error');
-//          $('#labelPromoDate').addClass('error');
-//          let li= `<li class='error'>${e.message}</li>`;
-//          $('#errorList').append(li);
-//          $('#errorList').show();
-//          event.preventDefault();
-//         } 
-//     }
+   
 //    if($('#dob').val() > $('#startDate').val()){
 //     $('#dob').addClass('error');
 //     $('#labelDob').addClass('error');
@@ -445,81 +441,215 @@ $('#loginForm').submit((event)=>{
 //     $('#errorList').show();
 //     event.preventDefault();
 //    }
-//    if($('#promoDate').val()){
-//     if($('#promoDate').val() < $('#startDate').val()){
-//      $('#promoDate').addClass('error');
-//      $('#labelpromoDate').addClass('error');
-//      let li= `<li class='error'>Promotion Date cannot be before Start Date.</li>`;
-//      $('#errorList').append(li);
-//      $('#errorList').show();
-//      event.preventDefault();
-//         }
-//     }
    
-//     try{
-//         isValidPhoneNumber($('#phone').val());
-//         $('#phone').removeClass('error');
-//         $('#labelPhone').removeClass('error');
-//     }catch(e){
-//         $('#phone').addClass('error');
-//         $('#labelPhone').addClass('error');
-//         let li= `<li class ='error'>${e.message}</li>`;
-//         $('#errorList').append(li);
-//         $('#errorList').show();
-//         event.preventDefault();
-//     }
+   
+    // try{
+    //     isValidPhoneNumber($('#phone').val());
+    //     $('#phone').removeClass('error');
+    //     $('#labelPhone').removeClass('error');
+    // }catch(e){
+    //     $('#phone').addClass('error');
+    //     $('#labelPhone').addClass('error');
+    //     let li= `<li class ='error'>${e.message}</li>`;
+    //     $('#errorList').append(li);
+    //     $('#errorList').show();
+    //     event.preventDefault();
+    // }
 
-//     try{
-//         isValidEmail($('#email').val());
-//         $('#email').removeClass('error');
-//         $('#labelEmail').removeClass('error');
-//     }catch(e){
-//         $('#email').addClass('error');
-//         $('#labelEmail').addClass('error');
-//         let li= `<li class ='error'>${e.message}</li>`;
-//         $('#errorList').append(li);
-//         $('#errorList').show();
-//         event.preventDefault();
-//     }
+    try{
+        isValidEmail($('#email').val());
+        $('#email').removeClass('error');
+        $('#labelEmail').removeClass('error');
+    }catch(e){
+        $('#email').addClass('error');
+        $('#labelEmail').addClass('error');
+        let li= `<li class ='error'>${e.message}</li>`;
+        $('#errorList').append(li);
+        $('#errorList').show();
+        event.preventDefault();
+    }
 
-//     try{
-//         isValidEmail($('#email').val());
-//         $('#email').removeClass('error');
-//         $('#labelEmail').removeClass('error');
-//     }catch(e){
-//         $('#email').addClass('error');
-//         $('#labelEmail').addClass('error');
-//         let li= `<li class ='error'>${e.message}</li>`;
-//         $('#errorList').append(li);
-//         $('#errorList').show();
-//         event.preventDefault();
-//     }
 
-//     try{
-//         checkStr($('#primaryAddress').val(),'Primary Address',5,200,true);
-//         $('#primaryAddress').removeClass('error');
-//         $('#labelPrimaryAddress').removeClass('error');
-//     }
-//     catch(e){
-//         $('#primaryAddress').addClass('error');
-//         $('#labelPrimaryAddress').addClass('error');
-//         let li= `<li class ='error'>${e.message}</li>`;
-//         $('#errorList').append(li);
-//         $('#errorList').show();
-//         event.preventDefault();
-//     }
-//     try{
-//         checkStr($('#secondaryAddress').val(),'Secondary Address',5,200,true);
-//         $('#secondaryAddress').removeClass('error');
-//         $('#labelSecondaryAddress').removeClass('error');
-//     }
-//     catch(e){
-//         $('#secondaryAddress').addClass('error');
-//         $('#labelSecondaryAddress').addClass('error');
-//         let li= `<li class ='error'>${e.message}</li>`;
-//         $('#errorList').append(li);
-//         $('#errorList').show();
-//         event.preventDefault();
-//     }
+    // try{
+    //     checkStr($('#primaryAddress').val(),'Primary Address',5,200,true);
+    //     $('#primaryAddress').removeClass('error');
+    //     $('#labelPrimaryAddress').removeClass('error');
+    // }
+    // catch(e){
+    //     $('#primaryAddress').addClass('error');
+    //     $('#labelPrimaryAddress').addClass('error');
+    //     let li= `<li class ='error'>${e.message}</li>`;
+    //     $('#errorList').append(li);
+    //     $('#errorList').show();
+    //     event.preventDefault();
+    // }
+    // try{
+    //     checkStr($('#secondaryAddress').val(),'Secondary Address',5,200,true);
+    //     $('#secondaryAddress').removeClass('error');
+    //     $('#labelSecondaryAddress').removeClass('error');
+    // }
+    // catch(e){
+    //     $('#secondaryAddress').addClass('error');
+    //     $('#labelSecondaryAddress').addClass('error');
+    //     let li= `<li class ='error'>${e.message}</li>`;
+    //     $('#errorList').append(li);
+    //     $('#errorList').show();
+    //     event.preventDefault();
+    // }
 
-// });
+});
+
+$('#updateUser').submit((event)=>{
+    $('#errorList li').remove();
+    try{
+        checkStrCS($('#firstName').val(),'First Name',2,20,false);
+        $('#firstName').removeClass('error');
+        $('#labelFirstName').removeClass('error');
+       }catch(e){
+        $('#firstName').addClass('error');
+        $('#labelFirstName').addClass('error');
+        let li= `<li class='error'>${e.message}</li>`;
+        $('#errorList').append(li);
+        $('#errorList').show();
+        $('#firstName').val('');
+        event.preventDefault();
+       }
+    
+       try{
+        checkStrCS($('#lastName').val(),'Last Name',2,20,false);
+        $('#lastName').removeClass('error');
+        $('#labelLastName').removeClass('error');
+       }catch(e){
+        $('#lastName').addClass('error');
+        $('#labelLastName').addClass('error');
+        let li= `<li class='error'>${e.message}</li>`;
+        $('#errorList').append(li);
+        $('#errorList').show();
+        $('#lastName').val('');
+        event.preventDefault();
+       }
+    
+       try{
+        isValidEmployeeId($('#employeeId').val());
+        $('#employeeId').removeClass('error');
+        $('#labelEmployeeId').removeClass('error');
+       }catch(e){
+        $('#employeeId').addClass('error');
+        $('#labelEmployeeId').addClass('error');
+        let li= `<li class='error'>${e.message}</li>`;
+        $('#errorList').append(li);
+        $('#errorList').show();
+        $('#employeeId').val('');
+        event.preventDefault();
+       }
+    
+       try{
+        checkStrCS($('#username').val(),'Username',5,20,true);
+        $('#username').removeClass('error');
+        $('#labelUsername').removeClass('error');
+       }catch(e){
+        $('#username').addClass('error');
+        $('#labelUsername').addClass('error');
+        let li= `<li class='error'>${e.message}</li>`;
+        $('#errorList').append(li);
+        $('#errorList').show();
+        $('#username').val('');
+        event.preventDefault();
+       }
+
+       try{
+        checkState($('#department').val(),'Department',['Finance','IT','Human Resources','Adminstration','Research and Development']);
+        $('#department').removeClass('error');
+        $('#labelDepartment').removeClass('error');
+       }catch(e){
+        $('#department').addClass('error');
+        $('#labelDepartment').addClass('error');
+        let li= `<li class='error'>${e.message}</li>`;
+        $('#errorList').append(li);
+        $('#errorList').show();
+        $('#department').val('');
+        event.preventDefault();
+       }
+    
+       try{
+        checkState($('#role').val(),'Role',['Admin','HR','Employee']);
+        $('#role').removeClass('error');
+        $('#labelrole').removeClass('error');
+       }catch(e){
+        $('#role').addClass('error');
+        $('#labelrole').addClass('error');
+        let li= `<li class='error'>${e.message}</li>`;
+        $('#errorList').append(li);
+        $('#errorList').show();
+        $('#role').val('');
+        event.preventDefault();
+       }
+
+       try{
+        if(!($('#isManager').val().toString() ==='true' || $('#isManager').val().toString() === 'false' ))throw new Error('Is Manager should be boolean value.')
+       }catch(e){
+        let li= `<li class='error'>${e.message}</li>`;
+        $('#errorList').append(li);
+        $('#errorList').show();
+        event.preventDefault();
+       }
+
+       try{
+        check = dateFormat($('#startDate').val().trim(),'Start Date');
+        let year = check[0];
+        let month = check[1];
+        let date = check[2];
+        isValidDate(month, date, year);
+        $('#startDate').removeClass('error');
+        $('#labelStartDate').removeClass('error');
+       }catch(e){
+        $('#startDate').addClass('error');
+        $('#labelStartDate').addClass('error');
+        let li= `<li class='error'>${e.message}</li>`;
+        $('#errorList').append(li);
+        $('#errorList').show();
+        event.preventDefault();
+       } 
+
+       try{
+        checkStr($('#currentPosition').val(),'Current Position',2,20,false);
+        $('#currentPosition').removeClass('error');
+        $('#labelCurrentPosition').removeClass('error');
+       }catch(e){
+        $('#currentPosition').addClass('error');
+        $('#labelCurrentPosition').addClass('error');
+        let li= `<li class='error'>${e.message}</li>`;
+        $('#errorList').append(li);
+        $('#errorList').show();
+        $('#currentPosition').val('');
+        event.preventDefault();
+       }
+    
+       try{
+        check = parseInt($('#currentSalary').val());
+        numberExistandType(check, `Current Salary`);
+        $('#currentSalary').removeClass('error');
+        $('#labelCurrentSalary').removeClass('error');
+       }catch(e){
+        $('#currentSalary').addClass('error');
+        $('#labelCurrentSalary').addClass('error');
+        let li= `<li class='error'>${e.message}</li>`;
+        $('#errorList').append(li);
+        $('#errorList').show();
+        $('#currentSalary').val('');
+        event.preventDefault();
+       }
+       
+       try{
+        isValidEmail($('#email').val());
+        $('#email').removeClass('error');
+        $('#labelEmail').removeClass('error');
+    }catch(e){
+        $('#email').addClass('error');
+        $('#labelEmail').addClass('error');
+        let li= `<li class ='error'>${e.message}</li>`;
+        $('#errorList').append(li);
+        $('#errorList').show();
+        event.preventDefault();
+    }
+})

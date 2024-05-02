@@ -9,11 +9,11 @@
     <label for="lastName" id="labelLastName">Last Name:</label>
     <input type="text" class="lastName" id="lastName" name="lastName" value="{{lastName}}"><br>
 
-    <label for="employeeId" id="labelEmployeeId">Employee Id:</label>
-    <input type="text" class="employeeId" id="employeeId" name="employeeId" value="{{employeeId}}"><br>
+    <label for="employeeId" id="labelEmployeeId" >Employee Id:</label>
+    <input type="text" class="employeeId" id="employeeId" name="employeeId" value="{{employeeId}}" disabled><br>
 
     <label for="username" id="labelUsername">Username:</label>
-    <input type="text" class="username" id="username" name="username" value="{{username}}"><br>
+    <input type="text" class="username" id="username" name="username" value="{{username}}" disabled><br>
 
 
     
@@ -68,6 +68,11 @@
     <button type="submit" class="submitButton" id="submitButton" name="submitButton">Submit</button><br>
     
 </form>
+     <ul id="errorList" name="errorList" hidden> </ul>
+
+    <p id="error" name="error" class="error" {{hidden}}>
+        {{message}}
+    </p>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  
   <script>
@@ -78,3 +83,4 @@
     }
     $('#startDate').val("{{startDate}}");
   </script>
+   <script src="../../../public/js/homepage.js"></script>

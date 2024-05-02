@@ -271,7 +271,7 @@ router
             return res.render('./data_funstions/getTaskList', { taskList: taskList, firstName: req.session.user.firstName, role: req.session.user.role, noDataPresentMsg: msg });
             // return res.json(boardUserData);
         } catch (e) {
-            return res.status(500).json({ error: e });
+            return res.status(500).json(e.message);
         }
     });
 export default router;
