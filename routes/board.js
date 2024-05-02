@@ -58,7 +58,48 @@ router
     .get(async (req, res) => {
         try {
             const boardUserData = await boardData.getAll();
-            return res.json(boardUserData);
+            let taskList = [];
+            let msg;
+            if (boardUserData.length > 0) {
+                let map = {};
+                let empIdArr = [];
+                boardUserData.forEach((value) => {
+                    //console.log(value);
+                    let employeeId = value.employeeId;
+                    empIdArr.push(employeeId);
+                    if (value.on) {
+                        value.on.forEach((value) => {
+                            value.employeeId = employeeId;
+                            taskList.push(value);
+                        });
+                    }
+                    if (value.off) {
+                        value.off.forEach((value) => {
+                            value.employeeId = employeeId;
+                            taskList.push(value);
+                        });
+                    }
+                    if ((!(value.on)) && (!(value.off))) {
+                        msg = `No tasks assigned.`;
+                    }
+                });
+                for (let i = 0; i < empIdArr.length; i++) {
+                    let empData = await user_Test.getUserById(empIdArr[i]);
+                    map[empIdArr[i]] = empData;
+                }
+                if (!msg) {
+                    for (let i = 0; i < taskList.length; i++) {
+                        let currEle = taskList[i];
+                        let userData = map[currEle.employeeId];
+                        currEle.username = userData.username;
+                        currEle.firstName = userData.firstName;
+                        currEle.lastName = userData.lastName;
+                        taskList[i] = currEle;
+                    }
+                }
+            }
+            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg });
+            //return res.json(boardUserData);
         } catch (e) {
             return res.status(500).json({ error: e });
         }

@@ -1,7 +1,11 @@
 <article>
-
+    <h2>Task List</h2>
     <table class="taskTable">
         <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Username</th>
+            <th>Employee ID</th>
             <th>Task Name</th>
             <th>Task Description</th>
             <th>Due date</th>
@@ -10,10 +14,14 @@
         </tr>
         {{#each taskList}}
         <tr>
+            <td>{{firstName}}</td>
+            <td>{{lastName}}</td>
+            <td>{{username}}</td>
+            <td>{{employeeId}}</td>
             <td>{{taskName}}</td>
             <td>{{taskDesc}}</td>
             <td>{{dueDate}}</td>
-            <td><a class="completeTask" data-id="taskId">Mark as complete</a></td>
+            <td><a href="" class="completeTask" data-id="taskId">Mark as complete</a></td>
         </tr>
         {{/each}}
     </table>

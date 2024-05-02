@@ -128,19 +128,23 @@ const exportedMethods = {
 const getTaskData = (data) => {
     let resObj = {};
     let taskName;
+    let taskDesc;
     let dueDate;
     let taskType;
     if (data.on) {
         taskName = data.on[0].taskName;
+        taskDesc = data.on[0].taskDesc;
         dueDate = data.on[0].dueDate;
         taskType = "onboard";
     } else {
         taskName = data.off[0].taskName;
+        taskDesc = data.off[0].taskDesc;
         dueDate = data.off[0].dueDate;
         taskType = "offboard";
     }
 
     resObj.taskName = taskName;
+    resObj.taskDesc = taskDesc;
     resObj.dueDate = dueDate;
     resObj.taskType = taskType;
 
