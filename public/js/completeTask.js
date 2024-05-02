@@ -1,11 +1,11 @@
 (function ($) {
 
-    let createTaskForm = $('#createTask-form'),
-        taskName = $('#taskName'),
-        taskDesc = $('#taskDesc'),
-        dueDate = $('#dueData'),
-        taskType = $('#taskType'),
-        errorList = $('#errorList'),
+    let createTaskForm = $('#createTask-form');
+        taskName = $('#taskName');
+        taskDesc = $('#taskDesc');
+        dueDate = $('#dueData');
+        taskType = $('#taskType');
+        errorList = $('#errorList');
         errorDiv = $('#error');
 
     errorList.hide();
