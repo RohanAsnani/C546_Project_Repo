@@ -3,7 +3,6 @@ import express from 'express';
 const app = express();
 import configRoutes from './routes/index.js';
 import exphbs from 'express-handlebars';
-import {dbConnection, closeConnection} from './config/mongoConnection.js';
 
 // const rewriteUnsupportedBrowserMethods = (req, res, next) => {
 //   // If the user posts to the server with a property called _method, rewrite the request's method
@@ -18,7 +17,7 @@ import {dbConnection, closeConnection} from './config/mongoConnection.js';
 //   next();
 // };
 
-const db = await dbConnection();
+// const db = await dbConnection();
 
 app.use('/public', express.static('public'));
 app.use(express.json());
@@ -35,14 +34,14 @@ const server = app.listen(3000, () => {
   console.log('Your routes will be running on http://localhost:3000');
 });
 
-// Listen for server close event
-server.on('close', () => {
-  // Close the database connection
-  closeConnection()
-    .then(() => {
-      console.log("Database connection closed.");
-    })
-    .catch((error) => {
-      console.error("Error while closing database connection:", error);
-    });
-});
+// // Listen for server close event
+// server.on('close', () => {
+//   // Close the database connection
+//   closeConnection()
+//     .then(() => {
+//       console.log("Database connection closed.");
+//     })
+//     .catch((error) => {
+//       console.error("Error while closing database connection:", error);
+//     });
+// });
