@@ -164,11 +164,13 @@ router
             if (!existingBoardData || existingBoardData === null) {
                 //create
                 let createdBoardUserData = await boardData.createBoardingTask(data.employeeId, data);
-                return res.json(createdBoardUserData);
+                return res.render('./data_functions/newTaskAdded', { title: "Created Task" });
+                //return res.json(createdBoardUserData);
             } else {
                 //update - PUT
                 let updatedBoardUserData = await boardData.updatePutBoardingTask(existingBoardData, data);
-                return res.json(updatedBoardUserData);
+                return res.render('./data_functions/newTaskAdded', { title: "Created Task" });
+                //return res.json(updatedBoardUserData);
             }
 
         } catch (e) {
