@@ -14,12 +14,6 @@
 
     createTaskForm.submit(function (event) {
 
-
-        // taskName = taskName.val().trim();
-        // taskDesc = taskDesc.val().trim();
-        // dueDate = dueDate.val().trim();
-        // taskType = taskType.val().trim();
-
         let errors = [];
         let inputsArr = [employeeId, taskName, taskDesc, dueDate, taskType];
         let inputNamesArr = ['Employee Id', 'Task Name', 'Task Description', 'Due Date', 'Task Type'];

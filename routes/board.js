@@ -70,15 +70,25 @@ router
                     if (value.on) {
                         value.on.forEach((valueOn) => {
                             valueOn.employeeId = employeeId;
-                            if (valueOn.completedOn == null)
-                                taskList.push(valueOn);
+                            if (valueOn.completedOn == null) {
+                                valueOn.status = 'To Do';
+                                valueOn.completedOn = "-";
+                            } else {
+                                valueOn.status = 'Done';
+                            }
+                            taskList.push(valueOn);
                         });
                     }
                     if (value.off) {
                         value.off.forEach((valueOff) => {
                             valueOff.employeeId = employeeId;
-                            if (valueOff.completedOn == null)
-                                taskList.push(valueOff);
+                            if (valueOff.completedOn == null) {
+                                valueOff.status = 'To Do';
+                                valueOff.completedOn = "-";
+                            } else {
+                                valueOff.status = 'Done';
+                            }
+                            taskList.push(valueOff);
                         });
                     }
                     if ((!(value.on)) && (!(value.off))) {
@@ -96,6 +106,7 @@ router
                         currEle.username = userData.username;
                         currEle.firstName = userData.firstName;
                         currEle.lastName = userData.lastName;
+                        currEle.taskId = currEle._id.toString();
                         taskList[i] = currEle;
                     }
                 }
@@ -246,6 +257,40 @@ router
 
     });
 
+router
+    .route('/completeTask/:employeeId/:taskId')
+    .patch(async (req, res) => {
+        try {
+            if (!req.params.employeeId || req.params.employeeId.trim() === '' || !req.params.taskId || req.params.taskId.trim() === '') {
+                res.status(400)
+                //res.render('home', { hasError400Id: true });
+                return;
+            }
+        } catch (e) {
+            return res.status(400).json({ error: e });
+        }
+        let updateBoardData = req.body;
+        //make sure there is something present in the req.body
+        if (!updateBoardData || Object.keys(updateBoardData).length === 0) {
+            return res
+                .status(400)
+                .json({ error: 'There are no fields in the request body' });
+        }
+        try {
+            updateBoardData = validation.validateBoardingDataPatch(updateBoardData.employeeId, updateBoardData.taskId, updateBoardData.taskType, updateBoardData.updateBoardDataObj);
+        } catch (e) {
+            return res.status(400).json({ error: e.message });
+        }
+
+        try {
+            let patchedInfo = await boardData.updatePatchBoardingTask(updateBoardData);
+
+            return res.json(patchedInfo);
+        } catch (e) {
+            return res.status(404).json({ error: e.message });
+        }
+
+    });
 
 router
     .route('/getAllByEmpId')

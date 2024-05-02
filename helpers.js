@@ -613,7 +613,7 @@ const validateBoardingDataPatch = (userId, taskId, taskType, updateBoardDataObj)
 
 const convertDateFormat = (inputDate) => {
     var parts = inputDate.split('-');
-    return parts[2] + '-' + parts[1] + '-' + parts[0];
+    return parts[1] + '-' + parts[2] + '-' + parts[0];
 };
 
 export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch, isValidEmployeeId, checkPassConstraints, isValidEmail, isValidPhoneNumber, bcryptPass, checkStrCS, checkMasterUser, checkTypeUserHR, updateValuesOfTwoObjects, convertDateFormat }

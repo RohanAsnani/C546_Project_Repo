@@ -10,7 +10,7 @@ router
     .get(async (req, res) => {
 
         try {
-            return res.render('./users/employee', { title: 'Employee', firstName: req.session.user.firstName, role: req.session.user.role });
+            return res.render('./users/employee', { title: 'Employee', firstName: req.session.user.firstName, role: req.session.user.role, employeeId: req.session.user.employeeId });
         } catch (e) {
             return res.json('Not yet Set Up');
         }

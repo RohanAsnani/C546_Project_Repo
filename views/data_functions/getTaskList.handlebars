@@ -8,9 +8,11 @@
             <th>Employee ID</th>
             <th>Task Name</th>
             <th>Task Description</th>
-            <th>Due date</th>
-            {{!-- <th>Completed On</th> --}}
-            <th>Action</th>
+            <th>Due Date</th>
+            <th>Completed On</th>
+            <th>Status</th>
+            {{!-- To be added for employee not for HR --}}
+            {{!-- <th>Action</th> --}}
         </tr>
         {{#each taskList}}
         <tr>
@@ -21,17 +23,22 @@
             <td>{{taskName}}</td>
             <td>{{taskDesc}}</td>
             <td>{{dueDate}}</td>
-            <td><a href="" class="completeTask" data-id="taskId">Mark as complete</a></td>
+            <td>{{completedOn}}</td>
+            <td>{{status}}</td>
+            {{!-- To be added for employee not for HR --}}
+            {{!-- <td><a href="/hrc/hr/completeTask" method="PATCH" id="completeTask" name="completeTask"
+                    class="completeTask" data-id="{{taskId}}">Mark as
+                    complete</a></td> --}}
         </tr>
         {{/each}}
     </table>
     <p>{{noDataPresentMsg}}</p>
-      <script src="https://code.jquery.com/jquery-3.5.1.js"
+    {{!--
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
         integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-    <script src="../../../public/js/completeTask.js"></script>
+    <script src="../../../public/js/completeTask.js"></script> --}}
 </article>
-<a href="/hrc/hr">
 
-    <button>Homepage</button>
-</a>
+<button onclick="window.location.href='/hrc/hr'">Homepage</button>
+
 <a class="page-link" id="logoutLink" href="/hrc/logout">Logout</a>
