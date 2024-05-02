@@ -65,10 +65,16 @@ app.use('/hrc/admin',(req,res,next)=>{
   }
 });
 
-app.use('/hrc/employee',(req,res,next)=>{
-  if(req.session.user){
-    if(req.session.user.role !== 'Employee'){
-      return res.status(403).render('error',{message:'Forbidden',title:'Forbidden',class:'error',previous_Route:'hrc/login',linkMessage:'Click Here to Login.'});
+app.use('/hrc/employee', (req, res, next) => {
+  if (req.session.user) {
+    if (req.session.user.role !== 'Employee') {
+      return res.status(403).render('error', { message: 'Forbidden', title: 'Forbidden', class: 'error', previous_Route: 'hrc/login', linkMessage: 'Click Here to Login.' });
+    } else {
+      if (req.originalUrl.startsWith('/hrc/employee/completeTask')) {
+        if (req.method == 'GET') {
+          req.method = 'PATCH';
+        }
+      }
     }
     next();
   }else{

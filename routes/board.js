@@ -61,57 +61,15 @@ router
             let taskList = [];
             let msg;
             if (boardUserData.length > 0) {
-                let map = {};
-                let empIdArr = [];
-                boardUserData.forEach((value) => {
-                    //console.log(value);
-                    let employeeId = value.employeeId;
-                    empIdArr.push(employeeId);
-                    if (value.on) {
-                        value.on.forEach((valueOn) => {
-                            valueOn.employeeId = employeeId;
-                            if (valueOn.completedOn == null) {
-                                valueOn.status = 'To Do';
-                                valueOn.completedOn = "-";
-                            } else {
-                                valueOn.status = 'Done';
-                            }
-                            taskList.push(valueOn);
-                        });
-                    }
-                    if (value.off) {
-                        value.off.forEach((valueOff) => {
-                            valueOff.employeeId = employeeId;
-                            if (valueOff.completedOn == null) {
-                                valueOff.status = 'To Do';
-                                valueOff.completedOn = "-";
-                            } else {
-                                valueOff.status = 'Done';
-                            }
-                            taskList.push(valueOff);
-                        });
-                    }
-                    if ((!(value.on)) && (!(value.off))) {
-                        msg = `No tasks assigned.`;
-                    }
-                });
-                for (let i = 0; i < empIdArr.length; i++) {
-                    let empData = await user_Test.getUserById(empIdArr[i]);
-                    map[empIdArr[i]] = empData;
+                let res = await validation.getTaskList(boardUserData, taskList, msg, false);
+                if (res.taskList) {
+                    taskList = res.taskList;
                 }
-                if (!msg) {
-                    for (let i = 0; i < taskList.length; i++) {
-                        let currEle = taskList[i];
-                        let userData = map[currEle.employeeId];
-                        currEle.username = userData.username;
-                        currEle.firstName = userData.firstName;
-                        currEle.lastName = userData.lastName;
-                        currEle.taskId = currEle._id.toString();
-                        taskList[i] = currEle;
-                    }
+                if (res.msg) {
+                    msg = res.msg;
                 }
             }
-            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg });
+            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false });
             //return res.json(boardUserData);
         } catch (e) {
             return res.status(500).json({ error: e });
@@ -257,66 +215,6 @@ router
 
     });
 
-router
-    .route('/completeTask/:employeeId/:taskId')
-    .patch(async (req, res) => {
-        try {
-            if (!req.params.employeeId || req.params.employeeId.trim() === '' || !req.params.taskId || req.params.taskId.trim() === '') {
-                res.status(400)
-                //res.render('home', { hasError400Id: true });
-                return;
-            }
-        } catch (e) {
-            return res.status(400).json({ error: e });
-        }
-        let updateBoardData = req.body;
-        //make sure there is something present in the req.body
-        if (!updateBoardData || Object.keys(updateBoardData).length === 0) {
-            return res
-                .status(400)
-                .json({ error: 'There are no fields in the request body' });
-        }
-        try {
-            updateBoardData = validation.validateBoardingDataPatch(updateBoardData.employeeId, updateBoardData.taskId, updateBoardData.taskType, updateBoardData.updateBoardDataObj);
-        } catch (e) {
-            return res.status(400).json({ error: e.message });
-        }
 
-        try {
-            let patchedInfo = await boardData.updatePatchBoardingTask(updateBoardData);
 
-            return res.json(patchedInfo);
-        } catch (e) {
-            return res.status(404).json({ error: e.message });
-        }
-
-    });
-
-router
-    .route('/getAllByEmpId')
-    .get(async (req, res) => {
-        try {
-            let employeeId = req.session.user.employeeId;
-            const boardUserData = await boardData.getboardingDataByEmpId(employeeId);
-            let taskList = [];
-            let msg;
-            if (boardUserData.on) {
-                boardUserData.on.forEach((value) => {
-                    taskList.push(value);
-                });
-                //taskList.append(boardUserData.on);
-            } else if (boardUserData.off) {
-                boardUserData.off.forEach((value) => {
-                    taskList.push(value);
-                });
-                //taskList.append(boardUserData.off);
-            } else {
-                msg = `No tasks assigned.`;
-            }
-            return res.render('./data_funstions/getTaskList', { taskList: taskList, firstName: req.session.user.firstName, role: req.session.user.role, noDataPresentMsg: msg });
-            // return res.json(boardUserData);
-        } catch (e) {
-            return res.status(500).json(e.message);
-        }
-    });
 export default router;

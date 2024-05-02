@@ -19,10 +19,10 @@
         let inputNamesArr = ['Employee Id', 'Task Name', 'Task Description', 'Due Date', 'Task Type'];
         errorDiv.hide();
         errorDiv.textContent = "";
-        for (let i = 0; i < inputFieldsArr.length; i++) {
+        for (let i = 0; i < inputsArr.length; i++) {
             try {
                 checkUndefinedOrNull(inputsArr[i], inputNamesArr[i]);
-                inputsArr[i] = checkisValidString(inputFieldsArr[i], inputNamesArr[i]);
+                inputsArr[i] = checkisValidString(inputsArr[i], inputNamesArr[i]);
                 if (inputNamesArr[i] === 'Due Date') {
                     inputsArr[i] = dateFormat(inputsArr[i], 'Due Date');
                 }

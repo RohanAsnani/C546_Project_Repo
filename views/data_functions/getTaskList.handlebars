@@ -9,11 +9,16 @@
             <th>Task Name</th>
             <th>Task Description</th>
             <th>Due Date</th>
+            {{#if viewAll}}
             <th>Completed On</th>
             <th>Status</th>
+            {{else}}
             {{!-- To be added for employee not for HR --}}
-            {{!-- <th>Action</th> --}}
+            <th>Action</th>
+            {{/if}}
+
         </tr>
+        {{#if viewAll}}
         {{#each taskList}}
         <tr>
             <td>{{firstName}}</td>
@@ -25,12 +30,23 @@
             <td>{{dueDate}}</td>
             <td>{{completedOn}}</td>
             <td>{{status}}</td>
-            {{!-- To be added for employee not for HR --}}
-            {{!-- <td><a href="/hrc/hr/completeTask" method="PATCH" id="completeTask" name="completeTask"
-                    class="completeTask" data-id="{{taskId}}">Mark as
-                    complete</a></td> --}}
         </tr>
         {{/each}}
+        {{else}}
+        {{#each taskList}}
+        <tr>
+            <td>{{firstName}}</td>
+            <td>{{lastName}}</td>
+            <td>{{username}}</td>
+            <td>{{employeeId}}</td>
+            <td>{{taskName}}</td>
+            <td>{{taskDesc}}</td>
+            <td>{{dueDate}}</td>
+            <td><a href="/hrc/employee/completeTask/{{employeeId}}/{{taskId}}/{{taskType}}" id="completeTask"
+                    name="completeTask" class="completeTask" data-id="{{taskId}}">Mark as complete</a></td>
+        </tr>
+        {{/each}}
+        {{/if}}
     </table>
     <p>{{noDataPresentMsg}}</p>
     {{!--
@@ -38,7 +54,10 @@
         integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     <script src="../../../public/js/completeTask.js"></script> --}}
 </article>
-
+{{#if isEmp}}
+<button onclick="window.location.href='/hrc/employee'">Homepage</button>
+{{else}}
 <button onclick="window.location.href='/hrc/hr'">Homepage</button>
+{{/if}}
 
 <a class="page-link" id="logoutLink" href="/hrc/logout">Logout</a>
