@@ -68,15 +68,17 @@ router
                     let employeeId = value.employeeId;
                     empIdArr.push(employeeId);
                     if (value.on) {
-                        value.on.forEach((value) => {
-                            value.employeeId = employeeId;
-                            taskList.push(value);
+                        value.on.forEach((valueOn) => {
+                            valueOn.employeeId = employeeId;
+                            if (valueOn.completedOn == null)
+                                taskList.push(valueOn);
                         });
                     }
                     if (value.off) {
-                        value.off.forEach((value) => {
-                            value.employeeId = employeeId;
-                            taskList.push(value);
+                        value.off.forEach((valueOff) => {
+                            valueOff.employeeId = employeeId;
+                            if (valueOff.completedOn == null)
+                                taskList.push(valueOff);
                         });
                     }
                     if ((!(value.on)) && (!(value.off))) {
