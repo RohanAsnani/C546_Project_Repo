@@ -82,7 +82,7 @@ router
     .get(async (req, res) => {
         try {
             let employeeId = req.session.user.employeeId;
-            const boardUserData = await boardData.getboardingDataByEmpId(employeeId);
+            const boardUserData = await board.getboardingDataByEmpId(employeeId);
             let taskList = [];
             let msg;
             if (boardUserData) {
@@ -110,7 +110,7 @@ router
     .get(async (req, res) => {
         try {
             let employeeId = req.session.user.employeeId;
-            const boardUserData = await boardData.getboardingDataByEmpId(employeeId);
+            const boardUserData = await board.getboardingDataByEmpId(employeeId);
             let taskList = [];
             let msg;
             if (boardUserData) {
@@ -148,7 +148,7 @@ router
         }
 
         try {
-            let patchedInfo = await boardData.updatePatchBoardingCompleteTask(req.params.employeeId, req.params.taskId, req.params.taskType);
+            let patchedInfo = await board.updatePatchBoardingCompleteTask(req.params.employeeId, req.params.taskId, req.params.taskType);
             return res.redirect('/hrc/employee/getAllToDoByEmpId');
             //return res.json(patchedInfo);
         } catch (e) {
