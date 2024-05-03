@@ -1,17 +1,28 @@
 <h2>{{title}}</h2>
 <ol class="user">
+    {{#if isOnboarding}}
     {{#each users}}
     <li>
-        {{#if isOnboarding}}
         <a href="/hrc/hr/onboarding/{{employeeId}}" data-employeeId="{{employeeId}}">
             <h3>{{firstName}} {{lastName}}</h3>
         </a>
-        {{else}}
+        <a href="/hrc/hr/createTask/onboard/{{employeeId}}" data-employeeId="{{employeeId}}">
+            <h3>Assign Task</h3>
+        </a>
+
+        <p>Email: {{contactInfo.email}}</p>
+        <p>Department: {{department}}</p>
+        <p>Role: {{role}}</p>
+        <p>Employee Id: {{employeeId}}</p>
+    </li>
+    {{/each}}
+    {{else}}
+    {{#each users}}
+    <li>
         <a href="/hrc/hr/offboarding/{{employeeId}}" data-employeeId="{{employeeId}}">
             <h3>{{firstName}} {{lastName}}</h3>
         </a>
-        {{/if}}
-        <a href="/hrc/hr/createTask/{{taskType}}/{{employeeId}}" data-employeeId="{{employeeId}}">
+        <a href="/hrc/hr/createTask/offboard/{{employeeId}}" data-employeeId="{{employeeId}}">
             <h3>Assign Task</h3>
         </a>
         <p>Email: {{contactInfo.email}}</p>
@@ -20,5 +31,7 @@
         <p>Employee Id: {{employeeId}}</p>
     </li>
     {{/each}}
+    {{/if}}
 </ol>
+<button onclick="window.location.href='/hrc/hr'">Back</button>
 <a class="page-link" id="logoutLink" href="/hrc/logout">Logout</a>

@@ -1,0 +1,32 @@
+<article>
+    <h2>{{title}}</h2>
+    <table class="taskTable">
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Username</th>
+            <th>Employee ID</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        {{#each empList}}
+        <tr>
+            <td>{{firstName}}</td>
+            <td>{{lastName}}</td>
+            <td>{{username}}</td>
+            <td>{{employeeId}}</td>
+            <td>{{status}}</td>
+            <td><a href="/hrc/hr/getEmpDetails/{{employeeId}}" id="getEmpDetails" name="getEmpDetails"
+                    class="getEmpDetails" data-id="{{employeeId}}">Get details</a></td>
+        </tr>
+        {{/each}}
+    </table>
+    <p>{{noDataPresentMsg}}</p>
+</article>
+{{#if isEmp}}
+<button onclick="window.location.href='/hrc/employee'">Homepage</button>
+{{else}}
+<button onclick="window.location.href='/hrc/hr'">Homepage</button>
+{{/if}}
+
+<a class="page-link" id="logoutLink" href="/hrc/logout">Logout</a>

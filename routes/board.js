@@ -6,13 +6,34 @@ import user_Test from '../data/user_Test.js';
 import xss from 'xss';
 
 router.route('/')
-.get(async(req,res)=>{
-    try{
-       return res.render('./users/hr',{title:'HR',firstName:req.session.user.firstName,role:req.session.user.role});
-    }catch(e){
-        return res.status(500).json(e.message);
-    }
-})
+    .get(async (req, res) => {
+        try {
+            return res.render('./users/hr', { title: 'HR', firstName: req.session.user.firstName, role: req.session.user.role });
+        } catch (e) {
+            return res.status(500).json(e.message);
+        }
+    });
+
+router.route('/getAllEmployees')
+    .get(async (req, res) => {
+        try {
+            const userdata = await user_Test.getAll();
+            return res.render('./data_functions/getAllEmp', { title: 'Employee Details', empList: userdata, firstName: req.session.user.firstName, role: req.session.user.role });
+        } catch (e) {
+            return res.status(500).json(e.message);
+        }
+    });
+
+router.route('/getEmpDetails/:employeeId')
+    .get(async (req, res) => {
+        try {
+            let employeeId = req.params.employeeId;
+            let employeeDetails = await user_Test.getUserById(employeeId);
+            return res.render('./data_functions/patchFormHR', { title: 'Onboarding Edit User', ...employeeDetails, manager: managerDetails });
+        } catch (e) {
+            return res.status(500).json(e.message);
+        }
+    });
 
 router.route('/getonboarding')
     .get(async (req, res) => {
@@ -130,7 +151,7 @@ router
             return res.status(400).json({ error: e });
         }
         let empData = await user_Test.getUserById(req.params.employeeId);
-        return res.render('./data_functions/createTask', { title: 'Create Task', hidden: 'hidden', firstName: empData.firstName, lastName: empData.lastName, username: empData.username, employeeId: empData.employeeId, taskType: taskType });
+        return res.render('./data_functions/createTask', { title: ((req.params.taskType === 'onboard') ? 'Create New Onboard Task' : 'Create New Offboard Task'), hidden: 'hidden', firstName: empData.firstName, lastName: empData.lastName, username: empData.username, employeeId: empData.employeeId, taskType: req.params.taskType, isOnboard: ((req.params.taskType === 'onboard') ? true : false) });
     });
 
 router

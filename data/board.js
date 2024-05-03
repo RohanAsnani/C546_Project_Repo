@@ -45,7 +45,7 @@ const exportedMethods = {
     async getboardingDataByEmpId(userId) {
 
         if (!userId) throw 'id is required';
-        userId = validation.checkStrCS(userId, 'Employee Id', 0, 100, true),false;
+        userId = validation.checkStrCS(userId, 'Employee Id', 0, 100, true);
 
         const boardingCollection = await boarding();
         let userData = await boardingCollection.findOne({ employeeId: userId });
