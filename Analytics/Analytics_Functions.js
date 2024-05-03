@@ -1,4 +1,4 @@
-import { users } from "../config/mongoCollections.js"
+import { users, boarding } from "../config/mongoCollections.js"
 import moment from 'moment';
 
 
@@ -57,3 +57,26 @@ export async function getAverageTenure() {
     }
 }
 
+export async function getIncompleteBoardingTasks() {
+    try {
+        const boardingCollection = await boarding() 
+        let tasks = await boardingCollection.find({ "on.completionOn": null }).toArray();
+        const incompleteTasks = tasks.map(task => {
+            return {
+                employeeId: task.employeeId,
+                dueDates: task.on.filter(t => !t.completionOn).map(t => t.dueDate)
+            };
+        });
+
+        console.log("Total incomplete boarding tasks:", incompleteTasks.length);
+        console.log("Details:", incompleteTasks);
+
+        return {
+            count: incompleteTasks.length,
+            details: incompleteTasks
+        };
+    } catch (error) {
+        console.error("Error fetching incomplete boarding tasks:", error);
+        throw error;
+    }
+}

@@ -221,28 +221,32 @@ router
 // HR Dashboard route to display analytics
 router
     .route('/hr-dashboard')
-    .get( async (req, res) => {
+    .get(async (req, res) => {
         try {
             const totalEmployees = await analytics.getTotalEmployees();
             const employeesByDepartment = await analytics.getEmployeesByDepartment();
             const averageTenureResult = await analytics.getAverageTenure();
-            console.log(totalEmployees, employeesByDepartment, averageTenureResult);
+            const incompleteBoardingTasks = await analytics.getIncompleteBoardingTasks(); 
+
+            console.log(totalEmployees, employeesByDepartment, averageTenureResult, incompleteBoardingTasks);
+
             const labels = employeesByDepartment.map(dept => dept._id);
             const data = employeesByDepartment.map(dept => dept.count);
+            const boardingLabels = incompleteBoardingTasks.details.map(task => task.employeeId);
+            const boardingData = incompleteBoardingTasks.details.map(task => task.dueDates.join(', ')); 
 
             res.render('./data_functions/hr_dashboard', {
-            totalEmployees,
-            departments: JSON.stringify({ labels, data }), // serialize here
-            averageTenureResult
-        });
+                totalEmployees,
+                departments: JSON.stringify({ labels, data }), 
+                averageTenureResult,
+                incompleteBoardingTasks: JSON.stringify({ labels: boardingLabels, data: boardingData }) 
+            });
 
         } catch (e) {
             console.error("Failed to load HR dashboard:", e);
             res.status(500).json({ error: e.message });
         }
     });
-
-
 
 
 export default router;
