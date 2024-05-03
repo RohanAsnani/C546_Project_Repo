@@ -51,7 +51,15 @@ router.route('/onboarding/:employeeId')
         let patchInfo =  validation.checkTypeUserHR(req.body);
         console.log(patchInfo);
     }catch(e){
-        return res.status(400).json(e.message);
+        let employeeId = req.params.employeeId;
+        let employeeDetails = await user_Test.getUserById(employeeId);
+        let managerDetails = await boardData.getManagers();
+        managerDetails = managerDetails.filter((data)=>{
+            if(data.employeeId !== employeeDetails.employeeId){
+                return data
+            }
+        })
+        return res.status(400).render('./data_functions/patchFormHR',{title:'Onboarding Edit User',...employeeDetails,manager:managerDetails,hidden:'',message:e.message})
     }
 
     try{

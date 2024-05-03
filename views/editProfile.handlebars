@@ -1,0 +1,124 @@
+<h2>Edit Profile</h2>
+
+<form action="" method="POST" id="editForm" class="editForm">
+
+<label for="employeeId">Employee Id:</label>
+<input type="text" id="employeeId" name="employeeId" value="{{employeeId}}" readonly><br>
+
+<label for="firstName">First Name:</label>
+<input type="text" id="firstName" name="firstName" value="{{firstName}}"><br>
+
+<label for="lastName">Last Name:</label>
+<input type="text" id="lastName" name="lastName" value="{{lastName}}"><br>
+
+<label for="gender" id="labelGender" name="labelGender">Gender:</label>
+<select id="gender" name="gender">
+    <option value="none" selected disabled hidden></option>
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+    <option value="Other">Other</option>
+</select>
+    
+
+<label for="maritalStatus" id="labelMaritalStatus">Marital Status:</label>
+    <select id="maritalStatus" name="maritalStatus">
+        <option value="none" selected disabled hidden></option>
+        <option value="Single">Single</option>
+        <option value="Married">Married</option>
+        <option value="Seperated">Seperated</option>
+        <option value="Widowed">Widowed</option>
+        <option value="Divorced">Divorced</option>
+    </select><br>
+
+<label for="vet" id="labelVet" name="labelVet">Veteran:</label>
+<input type="text" id="vet" name="vet" value="{{vet}}"><br>
+
+<label for="disability" id="labelDisability" name="labelDisability">Disability:</label>
+<input type="text" id="disability" name="disability" value="{{disability}}"><br>
+
+<label for="race" id="labelRace" name="labelRace">Race:</label>
+<input type="text" id="race" name="race" value="{{race}}"><br>
+
+<label for="countryOfOrigin" id="labelCountryOfOrigin" name="labelCountryOfOrigin">Country Of Origin:</label>
+<input type="text" id="countryOfOrigin" name="countryOfOrigin" value="{{countryOfOrigin}}"><br>
+
+<label for="dob" id="labelDob">Date Of Birth:</label><input type="date" class="dob" id="dob" name="dob" ><br>
+
+<label for="currentPosition">Current Position:</label>
+<input type="text" id="currentPosition" name="currentPosition" value="{{currentPosition}}" disabled><br>
+
+<label for="currentSalary">Current Salary:</label>
+<input type="text" id="currentSalary" name="currentSalary" value="{{currentSalary}}" disabled><br>
+
+<label for="startDate" id="labelStartDate">Start Date:</label>    <input type="date" class="startDate" id="startDate" name="startDate" readonly><br>
+
+<label for="username">Username:</label>
+<input type="text" id="username" name="username" value="{{username}}" disabled><br>
+
+<label for="department" id="labelDepartment">Department:</label>
+    <select id="department" name="department" disabled>
+        <option value="IT">IT</option>
+        <option value="Finance">Finance</option>
+        <option value="Human Resources">Human Resources</option>
+        <option value="Adminstration">Adminstration</option>
+        <option value="Research And Development">Research And Developement</option>
+        <option value="Customer Service">Customer Service</option>
+    </select><br>
+
+    <label for="role" id="labelId">Role:</label>
+    <select id="role" name="role" disabled>
+        <option value="Admin">Admin</option>
+        <option value="HR">HR</option>
+        <option value="Employee">Employee</option>
+    </select><br>
+
+<label for="status">Status:</label>
+<input type="text" id="status" name="status" value="{{status}}" disabled><br>
+
+ <label for="isManager" id="labelIsManager">Is Manager:</label>
+    <input type="checkbox" id="isManager" name="isManager" value= "true" disabled><br>
+
+<label for="phone" id="labelPhone" name="labelPhone">Phone Number:</label>
+<input type="text" id="phone" name="phone" value="{{contactInfo.phone}}"><br>   
+
+<label for="email">Email Id:</label>
+<input type="text" id="email" name="email" 
+value="{{contactInfo.email}}"
+ readonly><br>
+
+<label for="personalEmail" id="labelPersonalEmail" name="labelPersonalEmail">Personal Email:</label>
+<input type="text" id="personalEmail" name="personalEmail" value="{{contactInfo.personalEmail}}"><br>
+
+
+<label for="primaryAddress" id="labelPrimaryAddress" name="labelPrimaryAddress">Primary Address:</label>
+<input type="text" id="primaryAddress" name="primaryAddress" value="{{contactInfo.primaryAddress}}"><br>
+
+<label for="secondaryAddress" id="labelSecondaryAddress"  name="labelSecondaryAddress">Secondary Address:</label>
+<input type="text" id="secondaryAddress" name="secondaryAddress" value="{{contactInfo.secondaryAddress}}"><br>
+
+ <ul id="errorList" name="errorList" hidden> </ul>
+
+    <p id="error" name="error" class="error" {{hidden}}>
+        {{message}}
+    </p>
+
+<button type="submit">Submit</button>
+</form>
+
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  
+  <script>
+    if("{{gender}}"){
+    $('#gender').val("{{gender}}");
+    }
+    if("{{maritalStatus}}"){
+    $('#maritalStatus').val("{{maritalStatus}}");
+    }
+    $('#department').val("{{department}}");
+    $('#role').val("{{role}}");
+    if("{{isManager}}"=== 'true'){
+        $('#isManager').prop("checked",true);
+    }
+    $('#startDate').val("{{startDate}}");
+    $('#dob').val("{{dob}}");
+  </script>
+  <script src="/public/js/homepage.js"></script>

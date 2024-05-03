@@ -15,19 +15,25 @@ const checkStr = (str, param, minLen, maxLen, containNum) => {
         if (!(minLen <= str.length && str.length <= maxLen)) throw new Error(`${param} should be atleast ${minLen} characters and max ${maxLen} characters long.`);
     return str
 }
-const checkStrCS = (str, param, minLen, maxLen, containNum) => {
-    if (!(typeof (str) === 'string')) throw new Error(`${param} needs to be string type.`)
-    if (!str) throw new Error(`${param} needed.`);
-    str = str.trim()
-    if (str.length === 0) throw new Error(`${param} cannot be empty or just spaces.`);
-    if (containNum === false) {
-        if (/\d/.test(str)) throw new Error(`${param} cannot have any numbers in it.`);
+const checkStrCS =(str,param,minLen,maxLen,containNum,containSpecialChar)=>{
+    if(!(typeof(str) === 'string'))throw new Error(`${param} needs to be string type.`)
+    if(!str) throw new Error(`${param} needed.`);
+    str  = str.trim()
+    if(str.length === 0) throw new Error(`${param} cannot be empty or just spaces.`);
+    if(containNum === false){
+    if(/\d/.test(str))throw new Error(`${param} cannot have any numbers in it.`);
     }
-    if (!(!minLen && !maxLen))
-        if (!(minLen <= str.length && str.length <= maxLen)) throw new Error(`${param} should be atleast ${minLen} characters and max ${maxLen} characters long.`);
+    if(containSpecialChar === false){
+        if(/[!@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]/.test(str))throw new Error(`${param} cannot have special characters in it.`);
+    }
+    if(!(!minLen && !maxLen))
+    if(!(minLen<= str.length && str.length <= maxLen)) throw new Error(`${param} should be atleast ${minLen} characters and max ${maxLen} characters long.`);
     return str
 }
 const dateFormat = (dateReleased, param) => {
+   if(dateReleased === null || typeof(dateReleased)=== 'undefined')throw new Error(`${param}is Undefined or Null.`);
+   if(typeof(dateReleased) !== 'string')throw new Error(`${param} Needs to be string type.`);
+  if(!dateReleased)throw new Error(`${param} cannot be just empty spaces.`);
     if (dateReleased.length !== 10) {
         throw new Error(`parameter ${(param)} is not in proper date format`)
     }
@@ -188,6 +194,20 @@ const isValidEmployeeId = (employeeId) => {
     if (!(regex.test(employeeId))) throw new Error('Employee Id must be in format of HRC followed by 2 Uppercase Characters and ending with 4 digits. Eg: HRCNS0001 , HRCST0002');
     return employeeId
 }
+const isDateBeforeToday=(dateString)=> {
+    // Parse the input date string
+    const inputDate = new Date(dateString);
+  
+    // Get today's date
+    const today = new Date();
+  
+    // Check if the input date is before today
+    if (inputDate < today) {
+      return true; // The input date is before today
+    } else {
+      return false; // The input date is not before today
+    }
+  }
 
 const checkPassConstraints = (str, minLen) => {
     str = str.trim(); //should we trim this??
@@ -205,14 +225,14 @@ const isValidPhoneNumber = (phoneNumber) => {
     if (!(regex.test(phoneNumber))) throw new Error('Phone Number must be in format 012-345-6789');
     return phoneNumber
 }
-const checkMasterUser = (creationInfo) => {
-    if (creationInfo.password !== creationInfo.confirmPassword) throw new Error("Passwords don't match.");
-
-    creationInfo.username = checkStrCS(creationInfo.username, 'Username', 5, 20, true);
-
-    creationInfo.firstName = checkStrCS(creationInfo.firstName, 'First Name', 2, 20, true);
-
-    creationInfo.lastName = checkStrCS(creationInfo.lastName, 'Last Name', 2, 20, true);
+const checkMasterUser =(creationInfo)=>{
+    if(creationInfo.password !== creationInfo.confirmPassword)throw new Error("Passwords don't match.");
+    
+    creationInfo.username = checkStr(creationInfo.username,'Username',5,20,true);
+    
+    creationInfo.firstName = checkStrCS(creationInfo.firstName,'First Name',2,20,true,false);
+    
+    creationInfo.lastName = checkStrCS(creationInfo.lastName,'Last Name',2,20,true,false);
     creationInfo.isManager = Boolean(creationInfo.isManager);
     if (creationInfo.isManager === false) {
         creationInfo.isManager = false;
@@ -221,15 +241,15 @@ const checkMasterUser = (creationInfo) => {
     }
 
     creationInfo.employeeId = isValidEmployeeId(creationInfo.employeeId);
-
-    creationInfo.department = checkState(creationInfo.department, 'Department', ['It', 'Finance', 'Human Resources', 'Adminstration', 'Research And Development', 'Customer Service']);
-
-    creationInfo.role = checkState(creationInfo.role, 'role', ['Admin', 'HR', 'Employee']);
-
+    
+    creationInfo.department = checkState(creationInfo.department,'Department',['IT','Finance','Human Resources','Adminstration','Research And Development','Customer Service']);
+    
+    creationInfo.role = checkState(creationInfo.role,'role',['Admin','HR','Employee']);
+    
     creationInfo.startDate = creationInfo.startDate.trim();
-
-    creationInfo.startDate = dateFormat(creationInfo.startDate);
-
+    
+    creationInfo.startDate = dateFormat(creationInfo.startDate,'Start Date');
+    
     let year = creationInfo.startDate[0];
     let month = creationInfo.startDate[1];
     let date = creationInfo.startDate[2];
@@ -238,38 +258,40 @@ const checkMasterUser = (creationInfo) => {
     creationInfo.startDate = String(creationInfo.startDate[0]) + '-' + String(creationInfo.startDate[1]) + '-' + String(creationInfo.startDate[2]);
 
     creationInfo.email = isValidEmail(creationInfo.email);
-    creationInfo.gender = "!";
-    creationInfo.maritalStatus = "!";
-    creationInfo.endDate = "!";
+    creationInfo.personalEmail = "";
+    creationInfo.gender = "";
+    creationInfo.maritalStatus = "";
+    creationInfo.endDate = "";
     creationInfo.status = "Onboarding";
-    creationInfo.vet = "!";
-    creationInfo.disability = "!";
-    creationInfo.race = "!";
-    creationInfo.countryOfOrigin = "!";
-    creationInfo.dob = "!";
-    creationInfo.phone = "!";
-    creationInfo.primaryAddress = "!";
-    creationInfo.secondaryAddress = "!";
+    creationInfo.vet = "";
+    creationInfo.disability = "";
+    creationInfo.race = "";
+    creationInfo.countryOfOrigin = "";
+    creationInfo.dob = "";
+    creationInfo.phone = "";
+    creationInfo.primaryAddress = "";
+    creationInfo.secondaryAddress = "";
+    creationInfo.currentPosition = "";
     creationInfo.currentSalary = 0;
     creationInfo.notes = [];
-    creationInfo.managerId = "!";
-    creationInfo.leaveBank = { sickLeaves: 5, vacation: 5 };
+    creationInfo.managerId = "";
+    creationInfo.leaveBank = {sickLeaves:5,vacation:5};
 
     let createUser = {
-        employeeId: creationInfo.employeeId, firstName: creationInfo.firstName, lastName: creationInfo.lastName, username: creationInfo.username, password: creationInfo.password, gender: creationInfo.gender, maritalStatus: creationInfo.maritalStatus, department: creationInfo.department, role: creationInfo.role, isManager: creationInfo.isManager, notes: creationInfo.notes, status: creationInfo.status, vet: creationInfo.vet, disability: creationInfo.disability, race: creationInfo.race, countryOfOrigin: creationInfo.countryOfOrigin, startDate: creationInfo.startDate, endDate: creationInfo.endDate, dob: creationInfo.dob, currentSalary: creationInfo.currentSalary, contactInfo: { phone: creationInfo.phone, email: creationInfo.email, primaryAddress: creationInfo.primaryAddress, secondaryAddress: creationInfo.secondaryAddress }, managerId: creationInfo.managerId, leaveBank: creationInfo.leaveBank
-    }
-    return createUser
+        employeeId: creationInfo.employeeId, firstName : creationInfo.firstName,lastName:creationInfo.lastName,username: creationInfo.username,password: creationInfo.password,gender: creationInfo.gender,maritalStatus:creationInfo.maritalStatus,department:creationInfo.department,role:creationInfo.role,isManager:creationInfo.isManager,notes:creationInfo.notes,status:creationInfo.status,vet:creationInfo.vet,disability:creationInfo.disability,race:creationInfo.race,countryOfOrigin:creationInfo.countryOfOrigin,startDate:creationInfo.startDate,endDate:creationInfo.endDate,dob:creationInfo.dob,currentPosition:creationInfo.currentPosition,currentSalary:creationInfo.currentSalary,contactInfo:{phone:creationInfo.phone,email:creationInfo.email,
+        personalEmail:creationInfo.personalEmail,primaryAddress:creationInfo.primaryAddress,secondaryAddress:creationInfo.secondaryAddress},managerId:creationInfo.managerId,leaveBank:creationInfo.leaveBank
+      }
+      return createUser
 }
-const checkTypeUserHR = (patchInfo) => {
-    patchInfo.firstName = checkStrCS(patchInfo.firstName, 'First Name', 2, 20, false)
-    patchInfo.lastName = checkStrCS(patchInfo.lastName, 'First Name', 2, 20, false)
+const checkTypeUserHR =(patchInfo)=>{
+    patchInfo.firstName = checkStrCS(patchInfo.firstName,'First Name',2,20,false,false)
+    patchInfo.lastName = checkStrCS(patchInfo.lastName,'First Name',2,20,false,false)
     patchInfo.employeeId = isValidEmployeeId(patchInfo.employeeId);
-    patchInfo.username = checkStr(patchInfo.username, 'Username', 5, 20, true);
 
-    patchInfo.department = checkState(patchInfo.department, 'Department', ['It', 'Finance', 'Human Resources', 'Adminstration', 'Research And Development', 'Customer Service']);
-
-    patchInfo.role = checkState(patchInfo.role, 'role', ['Admin', 'HR', 'Employee']);
-
+    patchInfo.department = checkState(patchInfo.department,'Department',['IT','Finance','Human Resources','Adminstration','Research And Development','Customer Service']);
+    
+    patchInfo.role = checkState(patchInfo.role,'role',['Admin','HR','Employee']);
+    
     patchInfo.startDate = patchInfo.startDate.trim();
 
     patchInfo.startDate = dateFormat(patchInfo.startDate);
@@ -287,34 +309,71 @@ const checkTypeUserHR = (patchInfo) => {
     patchInfo.isManager = Boolean(patchInfo.isManager);
 
     patchInfo.managerId = isValidEmployeeId(patchInfo.managerId);
-
-    patchInfo.gender = "!";
-    patchInfo.maritalStatus = "!";
-    patchInfo.endDate = "!";
+    
+    patchInfo.gender = "";
+    patchInfo.maritalStatus = "";
+    patchInfo.endDate = "";
     patchInfo.status = "Onboarding(Employee-Side)";
-    patchInfo.vet = "!";
-    patchInfo.disability = "!";
-    patchInfo.race = "!";
-    patchInfo.countryOfOrigin = "!";
-    patchInfo.dob = "!";
-    patchInfo.phone = "!";
-    patchInfo.primaryAddress = "!";
-    patchInfo.secondaryAddress = "!";
-    patchInfo.currentPosition = checkStrCS(patchInfo.currentPosition, 'Current Position', 5, 20, true);
-    patchInfo.currentSalary = Number(patchInfo.currentSalary);
-    patchInfo.currentSalary = numberExistandType(patchInfo.currentSalary, `Salary`);
+    patchInfo.vet = "";
+    patchInfo.disability = "";
+    patchInfo.race = "";
+    patchInfo.countryOfOrigin = "";
+    patchInfo.dob = "";
+    patchInfo.phone = "";
+    patchInfo.primaryAddress = "";
+    patchInfo.secondaryAddress = "";
+    patchInfo.currentPosition = checkStrCS(patchInfo.currentPosition,'Current Position',5,20,true,false);
+    patchInfo.currentSalary= Number(patchInfo.currentSalary);
+    patchInfo.currentSalary = numberExistandType(patchInfo.currentSalary,`Salary`);
     patchInfo.notes = [];
     patchInfo.leaveBank = { sickLeaves: 5, vacation: 5 };
 
     let updateUser = {
-        employeeId: patchInfo.employeeId, firstName: patchInfo.firstName, lastName: patchInfo.lastName, username: patchInfo.username, gender: patchInfo.gender, maritalStatus: patchInfo.maritalStatus, department: patchInfo.department, role: patchInfo.role, isManager: patchInfo.isManager, notes: patchInfo.notes, status: patchInfo.status, vet: patchInfo.vet, disability: patchInfo.disability, race: patchInfo.race, countryOfOrigin: patchInfo.countryOfOrigin, startDate: patchInfo.startDate, endDate: patchInfo.endDate, dob: patchInfo.dob, currentPosition: patchInfo.currentPosition, currentSalary: patchInfo.currentSalary, contactInfo: { phone: patchInfo.phone, email: patchInfo.email, primaryAddress: patchInfo.primaryAddress, secondaryAddress: patchInfo.secondaryAddress }, managerId: patchInfo.managerId, leaveBank: patchInfo.leaveBank
-    }
+        employeeId: patchInfo.employeeId, firstName : patchInfo.firstName,lastName:patchInfo.lastName,gender: patchInfo.gender,maritalStatus:patchInfo.maritalStatus,department:patchInfo.department,role:patchInfo.role,isManager:patchInfo.isManager,notes:patchInfo.notes,status:patchInfo.status,vet:patchInfo.vet,disability:patchInfo.disability,race:patchInfo.race,countryOfOrigin:patchInfo.countryOfOrigin,startDate:patchInfo.startDate,endDate:patchInfo.endDate,dob:patchInfo.dob,currentPosition:patchInfo.currentPosition,currentSalary:patchInfo.currentSalary,contactInfo:{phone:patchInfo.phone,email:patchInfo.email,primaryAddress:patchInfo.primaryAddress,secondaryAddress:patchInfo.secondaryAddress},managerId:patchInfo.managerId,leaveBank:patchInfo.leaveBank
+      }
+
+      return updateUser
+
+}
+const checkTypeUserEmployee =(patchInfo)=>{
+    patchInfo.firstName = checkStrCS(patchInfo.firstName,'First Name',2,20,false,false)
+    patchInfo.lastName = checkStrCS(patchInfo.lastName,'First Name',2,20,false,false)
+    
+    patchInfo.dob =     dateFormat(patchInfo.dob,'Date of Birth');
+
+    let year = patchInfo.dob[0];
+    let month = patchInfo.dob[1];
+    let date = patchInfo.dob[2];
+    
+    isValidDate(month, date, year);
+    patchInfo.dob = String(patchInfo.dob[0]) + '-' + String(patchInfo.dob[1]) + '-' + String(patchInfo.dob[2]);
+          
+    patchInfo.personalEmail = isValidEmail(patchInfo.personalEmail);
+    
+    
+    patchInfo.gender = checkState(patchInfo.gender,'Gender',['Male','Female','Other']);
+    patchInfo.maritalStatus = checkState(patchInfo.maritalStatus,'Marital Status',['Single','Married','Divorced','Seperated','Widowed']);
+   
+    patchInfo.status = "Active";
+    patchInfo.vet = checkStrCS(patchInfo.vet,'Veteran',2,15,false);
+    patchInfo.disability = checkStrCS(patchInfo.disability,'Disability',2,15,false,false);
+    patchInfo.race = checkStrCS(patchInfo.race,'Race',2,10,false,false);
+    patchInfo.countryOfOrigin = checkStrCS(patchInfo.countryOfOrigin,'Country Of Origin',2,25,false,false);
+
+    patchInfo.phone = isValidPhoneNumber(patchInfo.phone);
+    patchInfo.primaryAddress = checkStrCS(patchInfo.primaryAddress,'Primary Address',5,30,true,true);
+    patchInfo.secondaryAddress = checkStrCS(patchInfo.secondaryAddress,'Secondary Address',5,30,true,true);
+
+    let updateUser = {
+         employeeId: patchInfo.employeeId,firstName : patchInfo.firstName,lastName:patchInfo.lastName,gender: patchInfo.gender,maritalStatus:patchInfo.maritalStatus,status:patchInfo.status,vet:patchInfo.vet,disability:patchInfo.disability,race:patchInfo.race,countryOfOrigin:patchInfo.countryOfOrigin,dob:patchInfo.dob,contactInfo:{phone:patchInfo.phone,personalEmail:patchInfo.personalEmail,primaryAddress:patchInfo.primaryAddress,secondaryAddress:patchInfo.secondaryAddress}
+      }
 
     return updateUser
 
 }
 
-const updateValuesOfTwoObjects = (obj1, obj2) => {
+
+const updateValuesOfTwoObjects = (obj1, obj2)=> {
     for (let key in obj1) {
         // Check if the key exists in both objects and if the value in obj2 is an object
         if (obj2.hasOwnProperty(key) && typeof obj2[key] === 'object' && typeof obj1[key] === 'object') {
@@ -492,7 +551,7 @@ const validateBoardingData = (existingBoardData, userId, taskName, taskDesc, due
     checkUndefinedOrNull(dueDate, 'dueDate');
     checkUndefinedOrNull(taskType, 'taskType');
 
-    userId = checkStrCS(userId, 'Employee Id', 0, 100, true);
+    userId = checkStrCS(userId, 'Employee Id', 0, 100, true,false);
 
 
     taskName = checkStrCS(taskName, 'Task Name', 0, 100, true);
@@ -710,4 +769,4 @@ const getCurrDate = () => {
     return `${month}-${day}-${year}`;
 };
 
-export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch, isValidEmployeeId, checkPassConstraints, isValidEmail, isValidPhoneNumber, bcryptPass, checkStrCS, checkMasterUser, checkTypeUserHR, updateValuesOfTwoObjects, convertDateFormat, getTaskList, getCurrDate }
+export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch, isValidEmployeeId, checkPassConstraints, isValidEmail, isValidPhoneNumber, bcryptPass, checkStrCS, checkMasterUser, checkTypeUserHR, updateValuesOfTwoObjects, convertDateFormat,checkTypeUserEmployee,isDateBeforeToday }

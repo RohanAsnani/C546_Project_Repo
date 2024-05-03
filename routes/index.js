@@ -12,7 +12,7 @@ const constructorMethod = (app) => {
   app.use('/hrc/login', login);
   app.use('/hrc/logout', logout);
   app.use('/hrc/admin', admin);
-  app.use('/hrc/users', user_Test);
+  // app.use('/hrc/users', user_Test);
   app.use('/hrc/hr', boardRoutes);
   app.use('/hrc/employee', employee);
   app.use('/hrc/', user_Test);

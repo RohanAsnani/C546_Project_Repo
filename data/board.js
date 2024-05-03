@@ -2,6 +2,7 @@ import axios from "axios";
 import * as validation from "../helpers.js"
 import { boarding, users } from "../config/mongoCollections.js"
 import { ObjectId } from "mongodb"
+import user_Test from '../data/user_Test.js';
 
 const exportedMethods = {
     async createBoardingTask(userId, data) {
@@ -44,7 +45,7 @@ const exportedMethods = {
     async getboardingDataByEmpId(userId) {
 
         if (!userId) throw 'id is required';
-        userId = validation.checkStrCS(userId, 'Employee Id', 0, 100, true);
+        userId = validation.checkStrCS(userId, 'Employee Id', 0, 100, true),false;
 
         const boardingCollection = await boarding();
         let userData = await boardingCollection.findOne({ employeeId: userId });
@@ -145,8 +146,38 @@ const exportedMethods = {
       
         return patchedInfo
       
-      }
+      },
+
+      async patchEmployeeData(patchData){
+        patchData = validation.checkTypeUserEmployee(patchData);
+    
+        let userCollection =    await users();
+        
+        let checkPhone = await userCollection.findOne({'contactInfo.phone': patchData.contactInfo.phone});
+
+        if(checkPhone)throw new Error('Phone number already exists try another one.');
+        let checkPersonalEmail = await userCollection.findOne({'contactInfo.personalEmail': patchData.contactInfo.personalEmail})
+
+        if(checkPersonalEmail)throw new Error('email Id already Exists , try another Personal Email Id')
+
+        let existingData = await userCollection.findOne({employeeId: patchData.employeeId});
+
+        patchData = validation.updateValuesOfTwoObjects(existingData,patchData);
+
+        let updatedData = await userCollection.findOneAndUpdate({employeeId: patchData.employeeId},
+            {$set:patchData},
+            {returnDocument: 'after'}
+            )
+        
+        if(!updatedData)throw new Error('Could not Update data in the system.')
+        
+        updatedData = await user_Test.getUserById(patchData.employeeId);
+
+        return updatedData
+    }
 }
+
+
 
 const getTaskData = (data) => {
     let resObj = {};

@@ -1,12 +1,29 @@
 // clientside JS
 
-const checkStrCS =(str,param,minLen,maxLen,containNum)=>{
+function isDateBeforeToday(dateString) {
+    // Parse the input date string
+    const inputDate = new Date(dateString);
+  
+    // Get today's date
+    const today = new Date();
+  
+    // Check if the input date is before today
+    if (inputDate < today) {
+      return true; // The input date is before today
+    } else {
+      return false; // The input date is not before today
+    }
+  }
+  const checkStrCS =(str,param,minLen,maxLen,containNum,containSpecialChar)=>{
     if(!(typeof(str) === 'string'))throw new Error(`${param} needs to be string type.`)
     if(!str) throw new Error(`${param} needed.`);
     str  = str.trim()
     if(str.length === 0) throw new Error(`${param} cannot be empty or just spaces.`);
     if(containNum === false){
     if(/\d/.test(str))throw new Error(`${param} cannot have any numbers in it.`);
+    }
+    if(containSpecialChar === false){
+        if(/[!@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]/.test(str))throw new Error(`${param} cannot have special characters in it.`);
     }
     if(!(!minLen && !maxLen))
     if(!(minLen<= str.length && str.length <= maxLen)) throw new Error(`${param} should be atleast ${minLen} characters and max ${maxLen} characters long.`);
@@ -122,7 +139,7 @@ const checkState =(val,param,arr) =>{
     return val
 
 }
-const checkStr =(str,param,minLen,maxLen,containNum)=>{
+const checkStr =(str,param,minLen,maxLen,containNum,containSpecialChar)=>{
     if(!(typeof(str) === 'string'))throw new Error(`${param} needs to be string type.`)
     if(!str) throw new Error(`${param} cannot be empty or just blank spaces.`);
     str  = str.trim()
@@ -130,6 +147,9 @@ const checkStr =(str,param,minLen,maxLen,containNum)=>{
     if(str.length === 0) throw new Error(`${param} cannot be empty or be just spaces.`);
     if(containNum === false){
     if(/\d/.test(str))throw new Error(`${param} cannot have any numbers in it.`);
+    }
+    if(containSpecialChar === false){
+        if(/[!@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]/.test(str))throw new Error(`${param} cannot have special characters in it.`);
     }
     if(!(!minLen && !maxLen))
     if(!(minLen<= str.length && str.length <= maxLen)) throw new Error(`${param} should be atleast ${minLen} characters and max ${maxLen} characters long.`);
@@ -165,7 +185,7 @@ $('#loginForm').submit((event)=>{
 
 
     try{
-        checkPassConstraints($('#password').val(),8);
+        if(!$('#password').val())throw new Error('Password Needed.');
         passwordStatus = true;
         $('#password').removeClass('error');
         $('#labelPassword').removeClass('error');
@@ -188,7 +208,7 @@ $('#createUser-form').submit((event)=>{
     //firstName
     $('#errorList li').remove();
    try{
-    checkStrCS($('#firstName').val(),'First Name',2,20,false);
+    checkStrCS($('#firstName').val(),'First Name',2,20,false,false);
     $('#firstName').removeClass('error');
     $('#labelFirstName').removeClass('error');
    }catch(e){
@@ -202,7 +222,7 @@ $('#createUser-form').submit((event)=>{
    }
 
    try{
-    checkStrCS($('#lastName').val(),'Last Name',2,20,false);
+    checkStrCS($('#lastName').val(),'Last Name',2,20,false,false);
     $('#lastName').removeClass('error');
     $('#labelLastName').removeClass('error');
    }catch(e){
@@ -230,7 +250,7 @@ $('#createUser-form').submit((event)=>{
    }
 
    try{
-    checkStrCS($('#username').val(),'Username',5,20,true);
+    checkStrCS($('#username').val(),'Username',5,20,true,true);
     $('#username').removeClass('error');
     $('#labelUsername').removeClass('error');
    }catch(e){
@@ -301,7 +321,7 @@ $('#createUser-form').submit((event)=>{
 //    }
 
    try{
-    checkState($('#department').val(),'Department',['Finance','IT','Human Resources','Adminstration','Research and Development']);
+    checkState($('#department').val(),'Department',['Finance','IT','Human Resources','Adminstration','Research and Development','Customer Service']);
     $('#department').removeClass('error');
     $('#labelDepartment').removeClass('error');
    }catch(e){
@@ -376,6 +396,7 @@ $('#createUser-form').submit((event)=>{
     let month = check[1];
     let date = check[2];
     isValidDate(month, date, year);
+    if(isDateBeforeToday($('#startDate').val().toString()))throw new Error("Start Date Cannot be before Today's Date.");
     $('#startDate').removeClass('error');
     $('#labelStartDate').removeClass('error');
    }catch(e){
@@ -502,7 +523,7 @@ $('#createUser-form').submit((event)=>{
 $('#updateUser').submit((event)=>{
     $('#errorList li').remove();
     try{
-        checkStrCS($('#firstName').val(),'First Name',2,20,false);
+        checkStrCS($('#firstName').val(),'First Name',2,20,false,false);
         $('#firstName').removeClass('error');
         $('#labelFirstName').removeClass('error');
        }catch(e){
@@ -516,7 +537,7 @@ $('#updateUser').submit((event)=>{
        }
     
        try{
-        checkStrCS($('#lastName').val(),'Last Name',2,20,false);
+        checkStrCS($('#lastName').val(),'Last Name',2,20,false,false);
         $('#lastName').removeClass('error');
         $('#labelLastName').removeClass('error');
        }catch(e){
@@ -544,7 +565,7 @@ $('#updateUser').submit((event)=>{
        }
     
        try{
-        checkStrCS($('#username').val(),'Username',5,20,true);
+        checkStrCS($('#username').val(),'Username',5,20,true,true);
         $('#username').removeClass('error');
         $('#labelUsername').removeClass('error');
        }catch(e){
@@ -558,7 +579,7 @@ $('#updateUser').submit((event)=>{
        }
 
        try{
-        checkState($('#department').val(),'Department',['Finance','IT','Human Resources','Adminstration','Research and Development']);
+        checkState($('#department').val(),'Department',['Finance','IT','Human Resources','Adminstration','Research and Development','Customer Service']);
         $('#department').removeClass('error');
         $('#labelDepartment').removeClass('error');
        }catch(e){
@@ -652,4 +673,178 @@ $('#updateUser').submit((event)=>{
         $('#errorList').show();
         event.preventDefault();
     }
+})
+
+$('#editForm').submit((event)=>{
+    $('#errorList li').remove();
+    try{
+        checkStrCS($('#firstName').val(),'First Name',2,20,false,false);
+        $('#firstName').removeClass('error');
+        $('#labelFirstName').removeClass('error');
+       }catch(e){
+        $('#firstName').addClass('error');
+        $('#labelFirstName').addClass('error');
+        let li= `<li class='error'>${e.message}</li>`;
+        $('#errorList').append(li);
+        $('#errorList').show();
+        $('#firstName').val('');
+        event.preventDefault();
+       }
+    
+    try{
+     checkStrCS($('#lastName').val(),'Last Name',2,20,false,false);
+     $('#lastName').removeClass('error');
+     $('#labelLastName').removeClass('error');
+    }catch(e){
+     $('#lastName').addClass('error');
+     $('#labelLastName').addClass('error');
+     let li= `<li class='error'>${e.message}</li>`;
+     $('#errorList').append(li);
+     $('#errorList').show();
+     $('#lastName').val('');
+     event.preventDefault();
+    }
+
+    try{
+         checkState($('#gender').val(),'Gender',['Male','Female','Other']);
+         $('#gender').removeClass('error');
+         $('#labelGender').removeClass('error');
+        }catch(e){
+         $('#gender').addClass('error');
+         $('#labelGender').addClass('error');
+         let li= `<li class='error'>${e.message}</li>`;
+         $('#errorList').append(li);
+         $('#errorList').show();
+         $('#gender').val('');
+         event.preventDefault();
+        }
+        
+           try{
+            checkState($('#maritalStatus').val(),'Marital Status',['Single','Married','Seperated','Widowed','Divorced']);
+            $('#maritalStatus').removeClass('error');
+            $('#labelMaritalStatus').removeClass('error');
+           }catch(e){
+            $('#maritalStatus').addClass('error');
+            $('#labelMaritalStatus').addClass('error');
+            let li= `<li class='error'>${e.message}</li>`;
+            $('#errorList').append(li);
+            $('#errorList').show();
+            $('#maritalStatus').val('');
+            event.preventDefault();
+           }
+
+           try{
+                checkStr($('#disability').val(),'Disability',2,20,true,true);
+                $('#disability').removeClass('error');
+                $('#labelDisability').removeClass('error');
+               }catch(e){
+                $('#disability').addClass('error');
+                $('#labelDisability').addClass('error');
+                let li= `<li class='error'>${e.message}</li>`;
+                $('#errorList').append(li);
+                $('#errorList').show();
+                $('#disability').val('');
+                event.preventDefault();
+               } 
+               
+         try{
+            checkStr($('#race').val(),'Race',2,20,false,false);
+            $('#race').removeClass('error');
+            $('#labelRace').removeClass('error');
+        }catch(e){
+            $('#race').addClass('error');
+            $('#labelRace').addClass('error');
+            let li= `<li class='error'>${e.message}</li>`;
+            $('#errorList').append(li);
+            $('#errorList').show();
+            $('#race').val('');
+            event.preventDefault();
+        }
+
+     try{
+      checkStrCS($('#countryOfOrigin').val(),'Country Of Origin',2,20,false,false);
+      $('#countryOfOrigin').removeClass('error');
+      $('#labelCountryOfOrigin').removeClass('error');
+     }catch(e){
+      $('#countryOfOrigin').addClass('error');
+      $('#labelCountryOfOrigin').addClass('error');
+      let li= `<li class='error'>${e.message}</li>`;
+      $('#errorList').append(li);
+      $('#errorList').show();
+      $('#countryOfOrigin').val('');
+      event.preventDefault();
+     }
+
+     try{
+        if(!$('#dob').val())throw new Error('Date Of Birth Needed.');
+        let dob = new Date($('#dob').val())
+        let startDate = new Date($('#startDate').val())
+        if(startDate <= dob)throw new Error('Date of Birth cannot be After Start Date.');
+        $('#labelDob').removeClass('error');
+        $('#dob').removeClass('error');
+     }catch(e){
+      $('#dob').addClass('error');
+      $('#labelDob').addClass('error');
+      let li= `<li class='error'>${e.message}</li>`;
+      $('#errorList').append(li);
+      $('#errorList').show();
+      $('#dob').val('');
+      event.preventDefault();
+     }
+
+     try{
+        isValidPhoneNumber($('#phone').val());
+        $('#phone').removeClass('error');
+        $('#LabelPhone').removeClass('error');
+     }
+     catch(e){
+        $('#phone').addClass('error');
+        $('#labelPhone').addClass('error');
+        let li= `<li class='error'>${e.message}</li>`;
+        $('#errorList').append(li);
+        $('#errorList').show();
+        $('#phone').val('');
+        event.preventDefault();
+     }
+
+     try{
+        isValidEmail($('#personalEmail').val());
+        $('#personalEmail').removeClass('error');
+        $('#labelPersonalEmail').removeClass('error');
+    }catch(e){
+        $('#personalEmail').addClass('error');
+        $('#labelPersonalEmail').addClass('error');
+        let li= `<li class ='error'>${e.message}</li>`;
+        $('#errorList').append(li);
+        $('#errorList').show();
+        event.preventDefault();
+    }  
+    try{
+        checkStr($('#primaryAddress').val(),'Primary Address',5,200,true);
+        $('#primaryAddress').removeClass('error');
+        $('#labelPrimaryAddress').removeClass('error');
+    }
+    catch(e){
+        $('#primaryAddress').addClass('error');
+        $('#labelPrimaryAddress').addClass('error');
+        let li= `<li class ='error'>${e.message}</li>`;
+        $('#errorList').append(li);
+        $('#errorList').show();
+        event.preventDefault();
+    }
+    try{
+        checkStr($('#secondaryAddress').val(),'Secondary Address',5,200,true);
+        $('#secondaryAddress').removeClass('error');
+        $('#labelSecondaryAddress').removeClass('error');
+    }
+    catch(e){
+        $('#secondaryAddress').addClass('error');
+        $('#labelSecondaryAddress').addClass('error');
+        let li= `<li class ='error'>${e.message}</li>`;
+        $('#errorList').append(li);
+        $('#errorList').show();
+        event.preventDefault();
+    }
+
+
 })

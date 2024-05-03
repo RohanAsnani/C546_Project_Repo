@@ -2,19 +2,19 @@
     <h2>Create New User</h2>
     <h4>Account Details</h4>
     <label for="firstName" id="labelFirstName">First Name:</label>
-    <input type="text" class="firstName" id="firstName" name="firstName"><br>
+    <input type="text" class="firstName" id="firstName" name="firstName" value="{{firstName}}"><br>
 
     <label for="lastName" id="labelLastName">Last Name:</label>
-    <input type="text" class="lastName" id="lastName" name="lastName"><br>
+    <input type="text" class="lastName" id="lastName" name="lastName" value="{{lastName}}"><br>
 
     <label for="employeeId" id="labelEmployeeId">Employee Id:</label>
-    <input type="text" class="employeeId" id="employeeId" name="employeeId"><br>
+    <input type="text" class="employeeId" id="employeeId" name="employeeId" value="{{employeeId}}"><br>
 
     <label for="username" id="labelUsername">Username:</label>
-    <input type="text" class="username" id="username" name="username"><br>
+    <input type="text" class="username" id="username" name="username" value="{{username}}"><br>
 
     <label for="password" id="labelPassword">Password:</label>
-    <input type="password" class="password" id="password" name="password"><br>
+    <input type="password" class="password" id="password" name="password" ><br>
 
     <label for="confirmPassword" id="labelConfirmPassword">Confirm Password:</label>
     <input type="password" class="confirmPassword" id="confirmPassword" name="confirmPassword"><br>
@@ -37,6 +37,7 @@
 
     <label for="department" id="labelDepartment">Department:</label>
     <select id="department" name="department">
+        <option value="none" selected disabled hidden></option>
         <option value="IT">IT</option>
         <option value="Finance">Finance</option>
         <option value="Human Resources">Human Resources</option>
@@ -47,6 +48,7 @@
 
     <label for="role" id="labelId">Role:</label>
     <select id="role" name="role">
+         <option value="none" selected disabled hidden></option>
         <option value="Admin">Admin</option>
         <option value="HR">HR</option>
         <option value="Employee">Employee</option>
@@ -70,7 +72,7 @@
     <input type="text" class="countryOfOrigin" id="countryOfOrigin" name="countryOfOrigin"><br> --}}
 
     <label for="startDate" id="labelStartDate">Start Date:</label>
-    <input type="date" class="startDate" id="startDate" name="startDate"><br>
+    <input type="date" class="startDate" id="startDate" name="startDate" value="{{startDate}}"><br>
     {{!-- <label for="endDate" id="labelEndDate">End Date:</label>
     <input type="date" class="endDate" id="endDate" name="endDate"><br> Intitalise End date as none at first--}}
     {{!--
@@ -92,7 +94,7 @@
     <input type="tel" class="phone" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"><br> --}}
 
     <label for="email" id="labelEmail">Email Id:</label>
-    <input type="email" class="email" id="email" name="email"><br>
+    <input type="email" class="email" id="email" name="email" value="{{email}}"><br>
 
     {{!-- <label for="primaryAddress" id="labelPrimaryAddress">Primary Address:</label>
     <input type="text" class="primaryAddress" id="primaryAddress" name="primaryAddress"><br>
@@ -131,7 +133,18 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js"
         integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 
-    <script src="../../public/js/homepage.js"></script>
+    <script>
+      $('#department').val("{{department}}");
+      $('#role').val("{{role}}");
+     
+      if('{{isManager}}'=== 'true'){
+          $('#isManager').prop("checked",true);
+      }else{
+          $('#isManager').prop("checked",false);
+      }
+      $('#startDate').val("{{startDate}}");
+    </script>
+    <script src="/public/js/homepage.js"></script>
 
 
 </form>

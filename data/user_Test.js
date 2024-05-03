@@ -13,13 +13,13 @@ async create(creationInfo){
   
   creationInfo.password = await validation.bcryptPass(creationInfo.password);
 
-  creationInfo.currentPosition = '!';
+  creationInfo.currentPosition = '';
   
   creationInfo.username = validation.checkStr(creationInfo.username,'Username',2,20,true);
   
-  creationInfo.firstName = validation.checkStrCS(creationInfo.firstName,'First Name',2,20,true);
+  creationInfo.firstName = validation.checkStrCS(creationInfo.firstName,'First Name',2,20,true,false);
   
-  creationInfo.lastName = validation.checkStrCS(creationInfo.lastName,'Last Name',2,20,true);
+  creationInfo.lastName = validation.checkStrCS(creationInfo.lastName,'Last Name',2,20,true,false);
   
   creationInfo.employeeId = validation.isValidEmployeeId(creationInfo.employeeId);
   
@@ -41,7 +41,7 @@ async create(creationInfo){
   creationInfo.email = validation.isValidEmail(creationInfo.email);
   
   creationInfo = {
-    employeeId: creationInfo.employeeId, firstName : creationInfo.firstName,lastName:creationInfo.lastName,username: creationInfo.username,password: creationInfo.password,gender: creationInfo.gender,maritalStatus:creationInfo.maritalStatus,department:creationInfo.department,role:creationInfo.role,notes:creationInfo.notes,status:creationInfo.status,vet:creationInfo.vet,disability:creationInfo.disability,race:creationInfo.race,countryOfOrigin:creationInfo.countryOfOrigin,startDate:creationInfo.startDate,endDate:creationInfo.endDate,dob:creationInfo.dob,currentPosition:creationInfo.currentPosition,isManager:creationInfo.isManager,currentSalary:creationInfo.currentSalary,contactInfo:{phone:creationInfo.phone,email:creationInfo.email,primaryAddress:creationInfo.primaryAddress,secondaryAddress:creationInfo.secondaryAddress},managerId:creationInfo.managerId,leaveBank:creationInfo.leaveBank
+    employeeId: creationInfo.employeeId, firstName : creationInfo.firstName,lastName:creationInfo.lastName,username: creationInfo.username,password: creationInfo.password,gender: creationInfo.gender,maritalStatus:creationInfo.maritalStatus,department:creationInfo.department,role:creationInfo.role,notes:creationInfo.notes,status:creationInfo.status,vet:creationInfo.vet,disability:creationInfo.disability,race:creationInfo.race,countryOfOrigin:creationInfo.countryOfOrigin,startDate:creationInfo.startDate,endDate:creationInfo.endDate,dob:creationInfo.dob,currentPosition:creationInfo.currentPosition,isManager:creationInfo.isManager,currentSalary:creationInfo.currentSalary,contactInfo:{phone:creationInfo.phone,email:creationInfo.email,personalEmail:creationInfo.personalEmail,primaryAddress:creationInfo.primaryAddress,secondaryAddress:creationInfo.secondaryAddress},managerId:creationInfo.managerId,leaveBank:creationInfo.leaveBank
   }
   
   const userCollection = await users();
@@ -84,7 +84,7 @@ async getByObjectId(objectId){
 async getUserById(userId){
 
   if(!userId) throw 'id required';
-  userId = validation.checkStrCS(userId,'User Id');
+  userId = validation.checkStrCS(userId,'User Id',5,20,true,false);
 
   const userCollection = await users();
   let userList = await userCollection.findOne({employeeId: userId},{projection:{password:0}});
