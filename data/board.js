@@ -2,6 +2,7 @@ import axios from "axios";
 import * as validation from "../helpers.js"
 import { boarding, users } from "../config/mongoCollections.js"
 import { ObjectId } from "mongodb"
+import user_Test from '../data/user_Test.js';
 
 const exportedMethods = {
     async createBoardingTask(userId, data) {
@@ -96,12 +97,35 @@ const exportedMethods = {
         return patchedInfo
 
     },
-    async getManagers(){
-    let userCollection = await users();
-    let managerList = await userCollection.find({isManager: true},{projection:{employeeId:1,firstName:1,lastName:1}})
-    
-    if(!managerList)return "No Managers."
-    return managerList.toArray()
+
+    async updatePatchBoardingCompleteTask(employeeId, taskId, taskType) {
+        employeeId = validation.checkStrCS(employeeId, 'Employee Id', 0, 100, true);
+        taskId = validation.validObject(taskId);
+        taskType = validation.checkStrCS(taskType, 'Task Type', 0, 100, true);
+
+        const boardingCollection = await boarding();
+        const totBoardingData = await this.getboardingDataByEmpId(employeeId);
+        let updatedObj = updatedBoardObj(totBoardingData, taskId, taskType);
+
+        let patchedInfo;
+
+        patchedInfo = await boardingCollection.findOneAndUpdate({ employeeId: employeeId },
+            { $set: updatedObj },
+            { returnDocument: 'after' }
+        );
+
+        if (!patchedInfo) throw new Error(`Cannot update task for user with id: ${updationPatchInfo.employeeId}`);
+
+        return patchedInfo
+
+    },
+
+    async getManagers() {
+        let userCollection = await users();
+        let managerList = await userCollection.find({ isManager: true }, { projection: { employeeId: 1, firstName: 1, lastName: 1 } })
+
+        if (!managerList) return "No Managers."
+        return managerList.toArray()
     },
 
     async updatePatchOnboardingData(updationInfo){
@@ -122,8 +146,38 @@ const exportedMethods = {
       
         return patchedInfo
       
-      }
+      },
+
+      async patchEmployeeData(patchData){
+        patchData = validation.checkTypeUserEmployee(patchData);
+    
+        let userCollection =    await users();
+        
+        let checkPhone = await userCollection.findOne({'contactInfo.phone': patchData.contactInfo.phone});
+
+        if(checkPhone)throw new Error('Phone number already exists try another one.');
+        let checkPersonalEmail = await userCollection.findOne({'contactInfo.personalEmail': patchData.contactInfo.personalEmail})
+
+        if(checkPersonalEmail)throw new Error('email Id already Exists , try another Personal Email Id')
+
+        let existingData = await userCollection.findOne({employeeId: patchData.employeeId});
+
+        patchData = validation.updateValuesOfTwoObjects(existingData,patchData);
+
+        let updatedData = await userCollection.findOneAndUpdate({employeeId: patchData.employeeId},
+            {$set:patchData},
+            {returnDocument: 'after'}
+            )
+        
+        if(!updatedData)throw new Error('Could not Update data in the system.')
+        
+        updatedData = await user_Test.getUserById(patchData.employeeId);
+
+        return updatedData
+    }
 }
+
+
 
 const getTaskData = (data) => {
     let resObj = {};
@@ -151,40 +205,24 @@ const getTaskData = (data) => {
     return resObj;
 }
 
-let updatedBoardObj = (oldObj, newObj) => {
+let updatedBoardObj = (oldObj, taskId, taskType) => {
     let updatedBoardObj = oldObj;
-    if (newObj.taskType === "onboard") {
+    if (taskType === "Onboard") {
         let onArr = [];
         onArr = updatedBoardObj.on;
         for (let i = 0; i < onArr.length; i++) {
-            if (onArr[i]._id.toString() === newObj.taskId) {
-                if (newObj.updateBoardDataObj.taskName) {
-                    onArr[i].taskName = newObj.updateBoardDataObj.taskName;
-                }
-                if (newObj.updateBoardDataObj.dueDate) {
-                    onArr[i].dueDate = newObj.updateBoardDataObj.dueDate.trim();
-                }
-                if (newObj.updateBoardDataObj.completedOn) {
-                    onArr[i].completedOn = newObj.updateBoardDataObj.completedOn;
-                }
+            if (onArr[i]._id.toString() === taskId) {
+                let currDate = validation.getCurrDate();
+                onArr[i].completedOn = currDate;
             }
         }
-
     } else {
         let offArr = [];
         offArr = updatedBoardObj.off;
         for (let i = 0; i < offArr.length; i++) {
-            if (offArr[i]._id.toString() === newObj.taskId) {
-                if (newObj.updateBoardDataObj.taskName) {
-                    offArr[i].taskName = newObj.updateBoardDataObj.taskName;
-                }
-                if (newObj.updateBoardDataObj.dueDate) {
-
-                    offArr[i].dueDate = newObj.updateBoardDataObj.dueDate.trim();
-                }
-                if (newObj.updateBoardDataObj.completedOn) {
-                    offArr[i].completedOn = newObj.updateBoardDataObj.completedOn;
-                }
+            if (offArr[i]._id.toString() === taskId) {
+                let currDate = validation.getCurrDate();
+                offArr[i].completedOn = currDate;
             }
         }
     }

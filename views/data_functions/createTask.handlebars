@@ -1,5 +1,5 @@
-<form id="createTask-form" name="createTask-form" class="createTask-form" action="../createTask" method="POST">
-    <h2>Create New Task</h2>
+<form id="createTask-form" name="createTask-form" class="createTask-form" action="../" method="POST">
+    <h2>{{title}}</h2>
     <h4>Task Details</h4>
 
     <label for="firstName" id="labelFirstName">First Name:</label>
@@ -29,15 +29,16 @@
     <input type="date" class="dueDate" id="dueDate" name="dueDate"><br>
 
     {{!-- Task Type - string --}}
-    {{!-- <label for="taskType" id="labelTaskType">Task Type:</label>
-    <input type="text" class="taskType" id="taskType" name="taskType"><br> --}}
+    <label for="taskType" id="labelTaskType" hidden>Task Type:</label>
+    <input type="text" class="taskType" id="taskType" name="taskType" value="{{taskType}}" readonly="readonly"
+        hidden><br>
 
     {{!-- Task Type - Radio button--}}
-    <p>Please select a task type:</p>
+    {{!-- <p>Please select a task type:</p>
     <input type="radio" id="onboard" name="taskType" value="onboard">
     <label for="onboard">Onboard</label><br>
     <input type="radio" id="offboard" name="taskType" value="offboard">
-    <label for="offboard">Offboard</label>
+    <label for="offboard">Offboard</label> --}}
 
 
     <ul id="errorList" name="errorList" hidden> </ul>
@@ -51,8 +52,13 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js"
         integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 
-    <script src="../../../public/js/createTask.js"></script>
+    <script src="../../../../public/js/createTask.js"></script>
 
 
 </form>
+{{#if isOnboard}}
+<button onclick="window.location.href='/hrc/hr/getonboarding'">Back</button>
+{{else}}
+<button onclick="window.location.href='/hrc/hr/getoffboarding'">Back</button>
+{{/if}}
 <a class="page-link" id="logoutLink" href="/hrc/logout">Logout</a>

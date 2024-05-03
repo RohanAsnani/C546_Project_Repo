@@ -1,2 +1,41 @@
-<h1>Welcome {{firstName}}</h1>
-<h5>You are logged in as {{role}}</h5>
+<button onclick="window.location.href='/hrc/employee/profile/edit'">Edit Details</button>
+<div>
+<h2>Employee Details</h2>
+<p>Employee Id: {{employeeId}}</p>
+<p>First Name: {{firstName}}</p>
+<p>Last Name: {{lastName}}</p>
+<p>Gender: {{gender}}</p>
+<p>Marital Status: {{maritalStatus}}</p>
+<p>Veteran: {{vet}}</p>
+<p>Disability: {{disability}}</p>
+<p>Race: {{race}}</p>
+<p>Country Of Origin: {{countryOfOrigin}}</p>
+<p>Date of Birth: {{dob}}</p>
+<p>Gender: {{gender}}</p>
+<p>Current Position: {{currentPosition}}</p>
+<p>Current Salary: {{currentSalary}}</p>
+<p>Start Date: {{startDate}}</p>
+{{#if endDate}}
+<p>End Date: {{endDate}}</p>
+{{/if}}
+</div>
+
+<div>
+<h2>Account Details</h2>
+<p>Username: {{username}}</p>
+<p>Department: {{department}}</p>
+<p>Role: {{role}}</p>
+<p>Status: {{status}}</p>
+<p>Is Manager: {{isManager}}</p>
+</div>
+
+<div>
+<h2>Contact Info</h2>
+<p>Phone Number: {{contactInfo.phone}}</p>
+<p>Email: {{contactInfo.email}}</p>
+<p>Personal Email: {{contactInfo.personalEmail}}</p>
+<p>Primary Address: {{contactInfo.primaryAddress}}</p>
+<p>Secondary Address: {{contactInfo.secondaryAddress}}</p><br>
+</div>
+
+<button onclick="window.location.href='/hrc/employee'">Homepage</button>

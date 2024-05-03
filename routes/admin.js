@@ -19,7 +19,7 @@ router
 router
     .route('/addEmp')
     .get(async (req, res) => {
-        return res.render('./data_functions/createUser', { title: 'Create User', hidden: 'hidden', firstName: req.session.user.firstName, role: req.session.user.role });
+        return res.render('./data_functions/createUser', { title: 'Create User', hidden: 'hidden'});
     })
     .post(async (req, res) => {
         try {
@@ -28,7 +28,7 @@ router
             creationData = validation.checkMasterUser(creationData);
 
         } catch (e) {
-            return res.status(400).render('./data_functions/createUser', { title: 'Create User', hidden: '', message: e.message });
+            return res.status(400).render('./data_functions/createUser', { title: 'Create User', hidden: '', message: e.message ,...req.body});
         }
 
         try {
@@ -39,7 +39,7 @@ router
             
 
         } catch (e) {
-            return res.json(e.message);
+            return res.status(400).render('./data_functions/createUser', { title: 'Create User', hidden: '', message: e.message ,...req.body });
         }
     })
 

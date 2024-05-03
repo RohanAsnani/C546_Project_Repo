@@ -12,12 +12,12 @@ async getUsernameAndValidate(username,pass){
     if(!username || !pass)throw new Error('username and password needed.');
 
     username =  validation.checkStr(username,'username',5,20,true);
-    pass = validation.checkPassConstraints(pass,8);
+    
 
     const userCollection = await users();
     let credentialsCheck = await userCollection.findOne({username : username});
 
-    if(credentialsCheck === null)throw new Error('No user exists with that username.')
+    if(credentialsCheck === null)throw new Error('Username Or Password is Incorrect.')
 
     let checkPass = await bcrypt.compare(pass,credentialsCheck.password);
    

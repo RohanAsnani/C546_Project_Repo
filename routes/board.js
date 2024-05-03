@@ -6,23 +6,54 @@ import user_Test from '../data/user_Test.js';
 import xss from 'xss';
 
 router.route('/')
-.get(async(req,res)=>{
-    try{
-       return res.render('./users/hr',{title:'HR',firstName:req.session.user.firstName,role:req.session.user.role});
-    }catch(e){
-        return res.status(500).json(e.message);
-    }
-})
+    .get(async (req, res) => {
+        try {
+            return res.render('./users/hr', { title: 'HR', firstName: req.session.user.firstName, role: req.session.user.role });
+        } catch (e) {
+            return res.status(500).json(e.message);
+        }
+    });
+
+router.route('/getAllEmployees')
+    .get(async (req, res) => {
+        try {
+            const userdata = await user_Test.getAll();
+            return res.render('./data_functions/getAllEmp', { title: 'Employee Details', empList: userdata, firstName: req.session.user.firstName, role: req.session.user.role });
+        } catch (e) {
+            return res.status(500).json(e.message);
+        }
+    });
+
+router.route('/getEmpDetails/:employeeId')
+    .get(async (req, res) => {
+        try {
+            let employeeId = req.params.employeeId;
+            let employeeDetails = await user_Test.getUserById(employeeId);
+            return res.render('./data_functions/patchFormHR', { title: 'Onboarding Edit User', ...employeeDetails, manager: managerDetails });
+        } catch (e) {
+            return res.status(500).json(e.message);
+        }
+    });
 
 router.route('/getonboarding')
-.get(async(req,res)=>{
-    try{
-        let onboardingUsers = await user_Test.getOnboardingHR();
-       return  res.render('./data_functions/getonboardingusers',{title:"users to be Onboarded",...req.session.user,users:onboardingUsers});
-    }catch(e){
-        return res.status(500).json(e.message);
-    }
-})
+    .get(async (req, res) => {
+        try {
+            let onboardingUsers = await user_Test.getOnboardingHR();
+            return res.render('./data_functions/getboardingusers', { title: "Users Yet to be Onboarded", ...req.session.user, users: onboardingUsers, isOnboarding: true, taskType: 'onboard' });
+        } catch (e) {
+            return res.status(500).json(e.message);
+        }
+    });
+
+router.route('/getoffboarding')
+    .get(async (req, res) => {
+        try {
+            let offboardingUsers = await user_Test.getOffboardingHR();
+            return res.render('./data_functions/getboardingusers', { title: "Users Yet to be Offboarded", ...req.session.user, users: offboardingUsers, isOnboarding: false, taskType: 'offboard' });
+        } catch (e) {
+            return res.status(500).json(e.message);
+        }
+    });
 
 router.route('/onboarding/:employeeId')
 .get(async (req,res)=>{
@@ -41,7 +72,15 @@ router.route('/onboarding/:employeeId')
         let patchInfo =  validation.checkTypeUserHR(req.body);
         console.log(patchInfo);
     }catch(e){
-        return res.status(400).json(e.message);
+        let employeeId = req.params.employeeId;
+        let employeeDetails = await user_Test.getUserById(employeeId);
+        let managerDetails = await boardData.getManagers();
+        managerDetails = managerDetails.filter((data)=>{
+            if(data.employeeId !== employeeDetails.employeeId){
+                return data
+            }
+        })
+        return res.status(400).render('./data_functions/patchFormHR',{title:'Onboarding Edit User',...employeeDetails,manager:managerDetails,hidden:'',message:e.message})
     }
 
     try{
@@ -54,132 +93,56 @@ router.route('/onboarding/:employeeId')
 })
 
 router
-    .route('/getAll')
+    .route('/getAllOnBoadingTask')
     .get(async (req, res) => {
         try {
             const boardUserData = await boardData.getAll();
             let taskList = [];
             let msg;
             if (boardUserData.length > 0) {
-                let map = {};
-                let empIdArr = [];
-                boardUserData.forEach((value) => {
-                    //console.log(value);
-                    let employeeId = value.employeeId;
-                    empIdArr.push(employeeId);
-                    if (value.on) {
-                        value.on.forEach((valueOn) => {
-                            valueOn.employeeId = employeeId;
-                            if (valueOn.completedOn == null) {
-                                valueOn.status = 'To Do';
-                                valueOn.completedOn = "-";
-                            } else {
-                                valueOn.status = 'Done';
-                            }
-                            taskList.push(valueOn);
-                        });
-                    }
-                    if (value.off) {
-                        value.off.forEach((valueOff) => {
-                            valueOff.employeeId = employeeId;
-                            if (valueOff.completedOn == null) {
-                                valueOff.status = 'To Do';
-                                valueOff.completedOn = "-";
-                            } else {
-                                valueOff.status = 'Done';
-                            }
-                            taskList.push(valueOff);
-                        });
-                    }
-                    if ((!(value.on)) && (!(value.off))) {
-                        msg = `No tasks assigned.`;
-                    }
-                });
-                for (let i = 0; i < empIdArr.length; i++) {
-                    let empData = await user_Test.getUserById(empIdArr[i]);
-                    map[empIdArr[i]] = empData;
+                let res = await validation.getTaskList(boardUserData, taskList, msg, false, true, false);
+                if (res.taskList) {
+                    taskList = res.taskList;
                 }
-                if (!msg) {
-                    for (let i = 0; i < taskList.length; i++) {
-                        let currEle = taskList[i];
-                        let userData = map[currEle.employeeId];
-                        currEle.username = userData.username;
-                        currEle.firstName = userData.firstName;
-                        currEle.lastName = userData.lastName;
-                        currEle.taskId = currEle._id.toString();
-                        taskList[i] = currEle;
-                    }
+                if (res.msg) {
+                    msg = res.msg;
                 }
             }
-            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg });
+            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Onboard Task List' });
             //return res.json(boardUserData);
         } catch (e) {
             return res.status(500).json({ error: e });
         }
-    })
-    .post(async (req, res) => {
-
-        let data = req.body;
-        //make sure there is something present in the req.body
-        if (!data || Object.keys(data).length === 0) {
-            return res
-                .status(400)
-                .json({ error: 'There are no fields in the request body' });
-        }
-        try {
-
-            data = validation.validateBoardingData(null, data.employeeId, data.taskName, data.dueDate, data.taskType, false);
-        } catch (e) {
-            return res.status(400).json({ error: e.message });
-        }
-
-        try {
-            //check if boarding entry already present for user
-            let existingBoardData = await boardData.getboardingDataByEmpId(data.employeeId);
-            if (!existingBoardData || existingBoardData === null) {
-                //create
-                let createdBoardUserData = await boardData.createBoardingTask(data.employeeId, data);
-                return res.json(createdBoardUserData);
-            } else {
-                //update - PUT
-                let updatedBoardUserData = await boardData.updatePutBoardingTask(existingBoardData, data);
-                return res.json(updatedBoardUserData);
-            }
-
-        } catch (e) {
-            return res.status(404).json({ error: e.message });
-        }
-
-    })
-    .patch(async (req, res) => {
-        let updateBoardData = req.body;
-        //make sure there is something present in the req.body
-        if (!updateBoardData || Object.keys(updateBoardData).length === 0) {
-            return res
-                .status(400)
-                .json({ error: 'There are no fields in the request body' });
-        }
-        try {
-            updateBoardData = validation.validateBoardingDataPatch(updateBoardData.employeeId, updateBoardData.taskId, updateBoardData.taskType, updateBoardData.updateBoardDataObj);
-        } catch (e) {
-            return res.status(400).json({ error: e.message });
-        }
-
-        try {
-            let patchedInfo = await boardData.updatePatchBoardingTask(updateBoardData);
-
-            return res.json(patchedInfo);
-        } catch (e) {
-            return res.status(404).json({ error: e.message });
-        }
-
     });
 
 router
-    .route('/createTask/:employeeId')
+    .route('/getAllOffBoadingTask')
     .get(async (req, res) => {
         try {
-            if (!req.params.employeeId || req.params.employeeId.trim() === '') {
+            const boardUserData = await boardData.getAll();
+            let taskList = [];
+            let msg;
+            if (boardUserData.length > 0) {
+                let res = await validation.getTaskList(boardUserData, taskList, msg, false, false, false);
+                if (res.taskList) {
+                    taskList = res.taskList;
+                }
+                if (res.msg) {
+                    msg = res.msg;
+                }
+            }
+            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Offboard Task List' });
+            //return res.json(boardUserData);
+        } catch (e) {
+            return res.status(500).json({ error: e });
+        }
+    });
+
+router
+    .route('/createTask/:taskType/:employeeId')
+    .get(async (req, res) => {
+        try {
+            if (!req.params.employeeId || req.params.employeeId.trim() === '' || !req.params.taskType || req.params.taskType.trim() === '') {
                 res.status(400)
                 //res.render('home', { hasError400Id: true });
                 return;
@@ -188,7 +151,7 @@ router
             return res.status(400).json({ error: e });
         }
         let empData = await user_Test.getUserById(req.params.employeeId);
-        return res.render('./data_functions/createTask', { title: 'Create Task', hidden: 'hidden', firstName: empData.firstName, lastName: empData.lastName, username: empData.username, employeeId: empData.employeeId });
+        return res.render('./data_functions/createTask', { title: ((req.params.taskType === 'onboard') ? 'Create New Onboard Task' : 'Create New Offboard Task'), hidden: 'hidden', firstName: empData.firstName, lastName: empData.lastName, username: empData.username, employeeId: empData.employeeId, taskType: req.params.taskType, isOnboard: ((req.params.taskType === 'onboard') ? true : false) });
     });
 
 router
@@ -257,66 +220,6 @@ router
 
     });
 
-router
-    .route('/completeTask/:employeeId/:taskId')
-    .patch(async (req, res) => {
-        try {
-            if (!req.params.employeeId || req.params.employeeId.trim() === '' || !req.params.taskId || req.params.taskId.trim() === '') {
-                res.status(400)
-                //res.render('home', { hasError400Id: true });
-                return;
-            }
-        } catch (e) {
-            return res.status(400).json({ error: e });
-        }
-        let updateBoardData = req.body;
-        //make sure there is something present in the req.body
-        if (!updateBoardData || Object.keys(updateBoardData).length === 0) {
-            return res
-                .status(400)
-                .json({ error: 'There are no fields in the request body' });
-        }
-        try {
-            updateBoardData = validation.validateBoardingDataPatch(updateBoardData.employeeId, updateBoardData.taskId, updateBoardData.taskType, updateBoardData.updateBoardDataObj);
-        } catch (e) {
-            return res.status(400).json({ error: e.message });
-        }
 
-        try {
-            let patchedInfo = await boardData.updatePatchBoardingTask(updateBoardData);
 
-            return res.json(patchedInfo);
-        } catch (e) {
-            return res.status(404).json({ error: e.message });
-        }
-
-    });
-
-router
-    .route('/getAllByEmpId')
-    .get(async (req, res) => {
-        try {
-            let employeeId = req.session.user.employeeId;
-            const boardUserData = await boardData.getboardingDataByEmpId(employeeId);
-            let taskList = [];
-            let msg;
-            if (boardUserData.on) {
-                boardUserData.on.forEach((value) => {
-                    taskList.push(value);
-                });
-                //taskList.append(boardUserData.on);
-            } else if (boardUserData.off) {
-                boardUserData.off.forEach((value) => {
-                    taskList.push(value);
-                });
-                //taskList.append(boardUserData.off);
-            } else {
-                msg = `No tasks assigned.`;
-            }
-            return res.render('./data_funstions/getTaskList', { taskList: taskList, firstName: req.session.user.firstName, role: req.session.user.role, noDataPresentMsg: msg });
-            // return res.json(boardUserData);
-        } catch (e) {
-            return res.status(500).json(e.message);
-        }
-    });
 export default router;
