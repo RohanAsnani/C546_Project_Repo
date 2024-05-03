@@ -176,7 +176,7 @@ const getTaskData = (data) => {
 
 let updatedBoardObj = (oldObj, taskId, taskType) => {
     let updatedBoardObj = oldObj;
-    if (taskType === "onboard") {
+    if (taskType === "Onboard") {
         let onArr = [];
         onArr = updatedBoardObj.on;
         for (let i = 0; i < onArr.length; i++) {

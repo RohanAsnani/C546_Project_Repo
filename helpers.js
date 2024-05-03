@@ -617,7 +617,7 @@ const convertDateFormat = (inputDate) => {
     return parts[1] + '-' + parts[2] + '-' + parts[0];
 };
 
-const getTaskList = async (boardUserData, taskList, msg, getToDo) => {
+const getTaskList = async (boardUserData, taskList, msg, getToDo, isOnboard, isEmp) => {
     let res = {};
     let map = {};
     let empIdArr = [];
@@ -625,46 +625,59 @@ const getTaskList = async (boardUserData, taskList, msg, getToDo) => {
         //console.log(value);
         let employeeId = value.employeeId;
         empIdArr.push(employeeId);
-        if (value.on) {
-            value.on.forEach((valueOn) => {
-                valueOn.employeeId = employeeId;
-                valueOn.taskType = "onboard";
-                if (getToDo) {
-                    if (valueOn.completedOn == null) {
+        if (isOnboard || isEmp) {
+            if (value.on) {
+                value.on.forEach((valueOn) => {
+                    valueOn.employeeId = employeeId;
+                    valueOn.taskType = "Onboard";
+                    valueOn.isEmp = isEmp;
+                    if (getToDo) {
+                        if (valueOn.completedOn == null) {
+                            taskList.push(valueOn);
+                        }
+                    } else {
+                        if (valueOn.completedOn == null) {
+                            valueOn.status = 'To Do';
+                            valueOn.completedOn = "-";
+                        } else {
+                            valueOn.status = 'Done';
+                        }
                         taskList.push(valueOn);
                     }
-                } else {
-                    if (valueOn.completedOn == null) {
-                        valueOn.status = 'To Do';
-                        valueOn.completedOn = "-";
-                    } else {
-                        valueOn.status = 'Done';
-                    }
-                    taskList.push(valueOn);
-                }
-            });
+                });
+            } else if (!isEmp) {
+                msg = `No tasks assigned.`;
+            }
         }
-        if (value.off) {
-            value.off.forEach((valueOff) => {
-                valueOff.employeeId = employeeId;
-                valueOff.taskType = "offboard";
-                if (getToDo) {
-                    if (valueOff.completedOn == null) {
+        if ((!isOnboard) || isEmp) {
+            if (value.off) {
+                value.off.forEach((valueOff) => {
+                    valueOff.employeeId = employeeId;
+                    valueOff.taskType = "Offboard";
+                    valueOff.isEmp = isEmp;
+                    if (getToDo) {
+                        if (valueOff.completedOn == null) {
+                            taskList.push(valueOff);
+                        }
+                    } else {
+                        if (valueOff.completedOn == null) {
+                            valueOff.status = 'To Do';
+                            valueOff.completedOn = "-";
+                        } else {
+                            valueOff.status = 'Done';
+                        }
                         taskList.push(valueOff);
                     }
-                } else {
-                    if (valueOff.completedOn == null) {
-                        valueOff.status = 'To Do';
-                        valueOff.completedOn = "-";
-                    } else {
-                        valueOff.status = 'Done';
-                    }
-                    taskList.push(valueOff);
-                }
-            });
+                });
+            } else if (!isEmp) {
+                msg = `No tasks assigned.`;
+            }
         }
-        if ((!(value.on)) && (!(value.off))) {
-            msg = `No tasks assigned.`;
+
+        if (isEmp) {
+            if ((!(value.on)) && (!(value.off))) {
+                msg = `No tasks assigned.`;
+            }
         }
     });
     for (let i = 0; i < empIdArr.length; i++) {

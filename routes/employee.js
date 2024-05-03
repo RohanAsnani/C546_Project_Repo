@@ -26,7 +26,7 @@ router
             if (boardUserData) {
                 let boardUsrData = [];
                 boardUsrData.push(boardUserData);
-                let res = await validation.getTaskList(boardUsrData, taskList, msg, false);
+                let res = await validation.getTaskList(boardUsrData, taskList, msg, false, false, true);
                 if (res.taskList) {
                     taskList = res.taskList;
                 }
@@ -36,7 +36,7 @@ router
             } else {
                 msg = `No tasks assigned.`;
             }
-            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: true });
+            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: true, taskTypeList: 'Task List' });
             // return res.json(boardUserData);
         } catch (e) {
             return res.status(500).json(e.message);
@@ -54,7 +54,7 @@ router
             if (boardUserData) {
                 let boardUsrData = [];
                 boardUsrData.push(boardUserData);
-                let res = await validation.getTaskList(boardUsrData, taskList, msg, true);
+                let res = await validation.getTaskList(boardUsrData, taskList, msg, true, false, true);
                 if (res.taskList) {
                     taskList = res.taskList;
                 }
@@ -64,7 +64,7 @@ router
             } else {
                 msg = `No tasks assigned.`;
             }
-            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: false, isEmp: true });
+            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: false, isEmp: true, taskTypeList: 'To-Do Task List' });
             // return res.json(boardUserData);
         } catch (e) {
             return res.status(500).json(e.message);

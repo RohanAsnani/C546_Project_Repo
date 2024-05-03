@@ -2,10 +2,16 @@
 <ol class="user">
     {{#each users}}
     <li>
+        {{#if isOnboarding}}
         <a href="/hrc/hr/onboarding/{{employeeId}}" data-employeeId="{{employeeId}}">
             <h3>{{firstName}} {{lastName}}</h3>
         </a>
-        <a href="/hrc/hr/createTask/{{employeeId}}" data-employeeId="{{employeeId}}">
+        {{else}}
+        <a href="/hrc/hr/offboarding/{{employeeId}}" data-employeeId="{{employeeId}}">
+            <h3>{{firstName}} {{lastName}}</h3>
+        </a>
+        {{/if}}
+        <a href="/hrc/hr/createTask/{{taskType}}/{{employeeId}}" data-employeeId="{{employeeId}}">
             <h3>Assign Task</h3>
         </a>
         <p>Email: {{contactInfo.email}}</p>

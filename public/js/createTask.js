@@ -5,8 +5,8 @@
         taskName = $('#taskName'),
         taskDesc = $('#taskDesc'),
         dueDate = $('#dueDate'),
-        taskType = $('input[name="taskType"]'),
-        //taskType = $('#taskType'),
+        //taskType = $('input[name="taskType"]'),
+        taskType = $('#taskType'),
         errorList = $('#errorList'),
         errorDiv = $('#error');
 
@@ -26,7 +26,7 @@
         for (let i = 0; i < inputsArr.length; i++) {
             try {
                 checkUndefinedOrNull(inputsArr[i], inputNamesArr[i]);
-                if (inputNamesArr[i] !== 'Due Date' && inputNamesArr[i] !== 'Task Type') {
+                if (inputNamesArr[i] !== 'Due Date') {
                     inputsArr[i] = checkisValidString(inputsArr[i], inputNamesArr[i]);
                 }
                 if (inputNamesArr[i] === 'Due Date') {
@@ -36,11 +36,11 @@
                     let date = check[2];
                     isValidDate(month, date, year, 'Due Date');
                 }
-                if (inputNamesArr[i] === 'Task Type') {
-                    if (!(inputsArr[i][0].checked || inputsArr[i][1].checked)) {
-                        throw new Error(`Please select an option for task type`);
-                    }
-                }
+                // if (inputNamesArr[i] === 'Task Type') {
+                //     if (!(inputsArr[i][0].checked || inputsArr[i][1].checked)) {
+                //         throw new Error(`Please select an option for task type`);
+                //     }
+                // }
             } catch (e) {
                 errors.push(e);
             }

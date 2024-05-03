@@ -1,5 +1,5 @@
 <form id="createTask-form" name="createTask-form" class="createTask-form" action="../createTask" method="POST">
-    <h2>Create New Task</h2>
+    <h2>Create New {{taskType}} Task</h2>
     <h4>Task Details</h4>
 
     <label for="firstName" id="labelFirstName">First Name:</label>
@@ -29,15 +29,15 @@
     <input type="date" class="dueDate" id="dueDate" name="dueDate"><br>
 
     {{!-- Task Type - string --}}
-    {{!-- <label for="taskType" id="labelTaskType">Task Type:</label>
-    <input type="text" class="taskType" id="taskType" name="taskType"><br> --}}
+    <label for="taskType" id="labelTaskType">Task Type:</label>
+    <input type="text" class="taskType" id="taskType" name="taskType" value="{{taskType}}" readonly="readonly"><br>
 
     {{!-- Task Type - Radio button--}}
-    <p>Please select a task type:</p>
+    {{!-- <p>Please select a task type:</p>
     <input type="radio" id="onboard" name="taskType" value="onboard">
     <label for="onboard">Onboard</label><br>
     <input type="radio" id="offboard" name="taskType" value="offboard">
-    <label for="offboard">Offboard</label>
+    <label for="offboard">Offboard</label> --}}
 
 
     <ul id="errorList" name="errorList" hidden> </ul>
