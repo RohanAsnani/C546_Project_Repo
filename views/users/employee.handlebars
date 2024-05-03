@@ -1,11 +1,15 @@
 <h1>Welcome {{firstName}}</h1>
 <h5>You are logged in as {{role}}</h5>
+<h5>{{msg}}</h5>
 
 <nav class="sidebar">
     <button onclick="window.location.href=''" id="EmpDetails">My Profile</button>
 
-    {{!-- <button onclick="window.location.href='/hrc/employee/getAllByEmpId'" id="myTasks">My Tasks</button> --}}
+    <button onclick="window.location.href='/hrc/employee/getAllToDoByEmpId'" id="myToDoTasks">My To-Do
+        tasks</button>
+    <button onclick="window.location.href='/hrc/employee/getAllByEmpId'" id="myTasks">View all my tasks</button>
 
+    {{!-- <button onclick="window.location.href='/hrc/employee/getAllByEmpId'" id="myTasks">My Tasks</button>
     <div class="dropdown">
         <button class="dropbtn">My Tasks
             <i class="fa fa-caret-down"></i>
@@ -15,11 +19,17 @@
                 Do</button><br>
             <button onclick="window.location.href='/hrc/employee/getAllByEmpId'" id="myTasks">View all tasks</button>
 
-            {{!-- <button><a href="/hrc/employee/getAllToDoByEmpId">To Do</a></button>
+            <button><a href="/hrc/employee/getAllToDoByEmpId">To Do</a></button>
 
-            <button><a href="/hrc/employee/getAllByEmpId">View all tasks</a></button> --}}
+            <button><a href="/hrc/employee/getAllByEmpId">View all tasks</a></button>
         </div>
-    </div>
+    </div> --}}
 
 </nav>
+{{#if isAdmin}}
+<a class="page-link" id="adminLink" href="/hrc/admin">Admin Page</a><br>
+{{/if}}
+{{#if isHR}}
+<a class="page-link" id="hrLink" href="/hrc/hr">HR Page</a><br>
+{{/if}}
 <a class="page-link" id="logoutLink" href="/hrc/logout">Logout</a>

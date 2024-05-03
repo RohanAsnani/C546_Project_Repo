@@ -9,7 +9,12 @@ router
     .get(async (req, res) => {
 
         try {
-            return res.render('./users/employee', { title: 'Employee', firstName: req.session.user.firstName, role: req.session.user.role, employeeId: req.session.user.employeeId });
+            let status = req.session.user.status;
+            let msg;
+            if (status !== 'Active') {
+                msg = `Please complete your profile and/or boarding tasks.`;
+            }
+            return res.render('./users/employee', { title: 'Employee', firstName: req.session.user.firstName, role: req.session.user.role, employeeId: req.session.user.employeeId, isAdmin: (req.session.user.role === 'Admin') ? true : false, isHR: (req.session.user.role === 'HR') ? true : false, msg: msg });
         } catch (e) {
             return res.json('Not yet Set Up');
         }

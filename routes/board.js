@@ -18,7 +18,7 @@ router.route('/getonboarding')
     .get(async (req, res) => {
         try {
             let onboardingUsers = await user_Test.getOnboardingHR();
-            return res.render('./data_functions/getboardingusers', { title: "users to be Onboarded", ...req.session.user, users: onboardingUsers, isOnboarding: true, taskType: 'onboard' });
+            return res.render('./data_functions/getboardingusers', { title: "Users Yet to be Onboarded", ...req.session.user, users: onboardingUsers, isOnboarding: true, taskType: 'onboard' });
         } catch (e) {
             return res.status(500).json(e.message);
         }
@@ -28,7 +28,7 @@ router.route('/getoffboarding')
     .get(async (req, res) => {
         try {
             let offboardingUsers = await user_Test.getOffboardingHR();
-            return res.render('./data_functions/getboardingusers', { title: "users to be Offboarded", ...req.session.user, users: offboardingUsers, isOnboarding: false, taskType: 'offboard' });
+            return res.render('./data_functions/getboardingusers', { title: "Users Yet to be Offboarded", ...req.session.user, users: offboardingUsers, isOnboarding: false, taskType: 'offboard' });
         } catch (e) {
             return res.status(500).json(e.message);
         }
