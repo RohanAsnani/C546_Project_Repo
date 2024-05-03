@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HR Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>HR Dashboard</h1>
+    <p>Total Employees: {{totalEmployees}}</p>
+    <p>Average Tenure in Months: {{averageTenureResult}}</p>
+    <div>
+        <canvas id="deptChart"></canvas>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('deptChart').getContext('2d');
+            const deptData = JSON.parse('{{{departments}}}'); 
+
+            const deptChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: deptData.labels,
+                    datasets: [{
+                        label: 'Employees per Department',
+                        data: deptData.data,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+    </script>
+    <a class="page-link" href="/hr">Home</a> 
+</body>
+</html>

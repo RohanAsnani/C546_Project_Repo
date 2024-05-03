@@ -4,6 +4,7 @@ import boardData from '../data/board.js';
 import * as validation from '../helpers.js';
 import user_Test from '../data/user_Test.js';
 import xss from 'xss';
+import * as analytics from '../Analytics/Analytics_Functions.js';
 
 router.route('/')
 .get(async(req,res)=>{
@@ -214,6 +215,33 @@ router
         }
 
     });
+
+
+
+// HR Dashboard route to display analytics
+router
+    .route('/hr-dashboard')
+    .get( async (req, res) => {
+        try {
+            const totalEmployees = await analytics.getTotalEmployees();
+            const employeesByDepartment = await analytics.getEmployeesByDepartment();
+            const averageTenureResult = await analytics.getAverageTenure();
+            console.log(totalEmployees, employeesByDepartment, averageTenureResult);
+            const labels = employeesByDepartment.map(dept => dept._id);
+            const data = employeesByDepartment.map(dept => dept.count);
+
+            res.render('./data_functions/hr_dashboard', {
+            totalEmployees,
+            departments: JSON.stringify({ labels, data }), // serialize here
+            averageTenureResult
+        });
+
+        } catch (e) {
+            console.error("Failed to load HR dashboard:", e);
+            res.status(500).json({ error: e.message });
+        }
+    });
+
 
 
 
