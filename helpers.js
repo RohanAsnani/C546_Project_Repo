@@ -316,6 +316,7 @@ const checkTypeUserHR =(patchInfo)=>{
 const updateValuesOfTwoObjects = (obj1, obj2)=> {
     for (let key in obj1) {
       // Check if the key exists in both objects and if the value in obj2 is an object
+      // check if object is not array
       if (obj2.hasOwnProperty(key) && typeof obj2[key] === 'object' && typeof obj1[key] === 'object') {
         // Recursively update nested objects
         updateValuesOfTwoObjects(obj1[key], obj2[key]);

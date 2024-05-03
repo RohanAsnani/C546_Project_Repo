@@ -7,6 +7,9 @@ const salarySchema = {
       routingNo: "Number",
       paymentType: "String", 
     },
+    position: "String",
+    hourlyPay: "Number",
+    billingAddress: "String",
     salaryBreakdown: [
       {
         position: "String",
