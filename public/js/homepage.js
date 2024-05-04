@@ -9,6 +9,7 @@ function isDateBeforeToday(dateString) {
   
     // Check if the input date is before today
     if (inputDate < today) {
+    
       return true; // The input date is before today
     } else {
       return false; // The input date is not before today
@@ -122,15 +123,15 @@ const isValidDate = (month, date, year, param) => {
         }
     }
 
-    if (Number(year) > Today.getFullYear()) {
-        throw new Error(`parameter ${(param)} cannot have a future year value ${year}`)
-    }
-    if (Number(year) === Today.getFullYear() && (Today.getMonth() + 1) < Number(month)) {
-        throw new Error(`parameter ${(param)} cannot have a future month value ${month} for current year`)
-    }
-    if (Number(year) === Today.getFullYear() && (Today.getMonth() + 1) === Number(month) && Today.getDate() < Number(date)) {
-        throw new Error(`parameter ${(param)} cannot have a future day value ${date} for current year and month`)
-    }
+    // if (Number(year) > Today.getFullYear()) {
+    //     throw new Error(`parameter ${(param)} cannot have a future year value ${year}`)
+    // }
+    // if (Number(year) === Today.getFullYear() && (Today.getMonth() + 1) < Number(month)) {
+    //     throw new Error(`parameter ${(param)} cannot have a future month value ${month} for current year`)
+    // }
+    // if (Number(year) === Today.getFullYear() && (Today.getMonth() + 1) === Number(month) && Today.getDate() < Number(date)) {
+    //     throw new Error(`parameter ${(param)} cannot have a future day value ${date} for current year and month`)
+    // }
 }
 const checkState =(val,param,arr) =>{
     if(!(typeof(val) === 'string'))throw new Error(`${param} needs to be string type.`)
@@ -321,7 +322,7 @@ $('#createUser-form').submit((event)=>{
 //    }
 
    try{
-    checkState($('#department').val(),'Department',['Finance','IT','Human Resources','Adminstration','Research and Development','Customer Service']);
+    checkState($('#department').val(),'Department',['Finance','IT','Human Resources','Adminstration','Research And Development','Customer Service']);
     $('#department').removeClass('error');
     $('#labelDepartment').removeClass('error');
    }catch(e){
@@ -395,7 +396,7 @@ $('#createUser-form').submit((event)=>{
     let year = check[0];
     let month = check[1];
     let date = check[2];
-    isValidDate(month, date, year);
+    isValidDate(month, date, year, "Start Date");
     if(isDateBeforeToday($('#startDate').val().toString()))throw new Error("Start Date Cannot be before Today's Date.");
     $('#startDate').removeClass('error');
     $('#labelStartDate').removeClass('error');
@@ -579,7 +580,7 @@ $('#updateUser').submit((event)=>{
        }
 
        try{
-        checkState($('#department').val(),'Department',['Finance','IT','Human Resources','Adminstration','Research and Development','Customer Service']);
+        checkState($('#department').val(),'Department',['Finance','IT','Human Resources','Adminstration','Research And Development','Customer Service']);
         $('#department').removeClass('error');
         $('#labelDepartment').removeClass('error');
        }catch(e){
@@ -620,7 +621,7 @@ $('#updateUser').submit((event)=>{
         let year = check[0];
         let month = check[1];
         let date = check[2];
-        isValidDate(month, date, year);
+        isValidDate(month, date, year, "Start Date");
         $('#startDate').removeClass('error');
         $('#labelStartDate').removeClass('error');
        }catch(e){

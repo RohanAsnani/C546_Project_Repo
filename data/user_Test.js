@@ -4,6 +4,8 @@ import * as validation from "../helpers.js"
 import { users } from "../config/mongoCollections.js"
 import { ObjectId } from "mongodb"
 import bcrypt from 'bcryptjs';
+import sendEmail from "../util/emailNotif.js";
+// import nodemailer from 'nodemailer';
 
 const exportedMethods ={
 async create(creationInfo){
@@ -53,6 +55,9 @@ async create(creationInfo){
   let createdUser = await userCollection.insertOne(creationInfo);
 
   if(!createdUser || typeof(createdUser) === 'null') throw new Error('Could not add User.');
+
+// Send email
+  await sendEmail(creationInfo.email, 'Account Created', 'Your account has been created successfully. Please visit the company website to login.\n Here is your username: ' + creationInfo.username + '\n and password: ' + creationInfo.password + '.');
 
   return this.getByObjectId(createdUser.insertedId)
 
