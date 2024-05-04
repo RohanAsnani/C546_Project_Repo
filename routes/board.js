@@ -31,7 +31,7 @@ router.route('/getEmpDetails/:employeeId')
             let employeeDetails = await user_Test.getUserById(employeeId);
             return res.render('./data_functions/patchFormHR', { title: 'Onboarding Edit User', ...employeeDetails, manager: managerDetails ,isLoggedIn:true});
         } catch (e) {
-            return res.status(404).json(e.message);
+            return res.status(404).render('404Page',{title:'404 Not Found.',message:e.message});
         }
     });
 
@@ -39,7 +39,8 @@ router.route('/getonboarding')
     .get(async (req, res) => {
         try {
             let onboardingUsers = await user_Test.getOnboardingHR();
-            return res.render('./data_functions/getboardingusers', { title: "Users Yet to be Onboarded", ...req.session.user, users: onboardingUsers, isOnboarding: true, taskType: 'onboard',isLoggedIn:true});
+            let onboardingUsersES = await user_Test.getOnboardingHRES()
+            return res.render('./data_functions/getboardingusers', { title: "Users Yet to be Onboarded", ...req.session.user, users: onboardingUsers,usersES:onboardingUsersES, isOnboarding: true, taskType: 'onboard',isLoggedIn:true});
         } catch (e) {
             return res.status(500).json(e.message);
         }
@@ -57,15 +58,19 @@ router.route('/getoffboarding')
 
 router.route('/onboarding/:employeeId')
 .get(async (req,res)=>{
-    let employeeId = req.params.employeeId;
-    let employeeDetails = await user_Test.getUserById(employeeId);
-    let managerDetails = await boardData.getManagers();
-    managerDetails = managerDetails.filter((data)=>{
-        if(data.employeeId !== employeeDetails.employeeId){
-            return data
-        }
-    })
-    return res.render('./data_functions/patchFormHR',{title:'Onboarding Edit User',...employeeDetails,manager:managerDetails,isLoggedIn:true});
+    try{
+        let employeeId = req.params.employeeId;
+        let employeeDetails = await user_Test.getUserById(employeeId);
+        let managerDetails = await boardData.getManagers();
+        managerDetails = managerDetails.filter((data)=>{
+            if(data.employeeId !== employeeDetails.employeeId){
+                return data
+            }
+        })
+        return res.render('./data_functions/patchFormHR',{title:'Onboarding Edit User',...employeeDetails,manager:managerDetails,isLoggedIn:true});
+    }catch(e){
+        return res.status(404).render('404Page',{title:'404 Not Found.',message:e});
+    }
 })
 .post(async (req,res)=>{
     try{

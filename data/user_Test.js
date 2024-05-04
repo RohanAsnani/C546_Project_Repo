@@ -158,6 +158,14 @@ async updatePatch(updationInfo){
 
     return onboardingUsers.toArray();
   },
+  async getOnboardingHRES() {
+    let userCollection = await users();
+    let onboardingUsers = await userCollection.find({ status: "Onboarding(Employee-Side)" }, { projection: { password: 0 } });
+
+    if (!onboardingUsers) return false
+
+    return onboardingUsers.toArray();
+  },
 
   async getOffboardingHR() {
     let userCollection = await users();

@@ -305,9 +305,12 @@ const checkTypeUserHR =(patchInfo)=>{
     patchInfo.startDate = String(patchInfo.startDate[0]) + '-' + String(patchInfo.startDate[1]) + '-' + String(patchInfo.startDate[2]);
 
     patchInfo.email = isValidEmail(patchInfo.email);
-
+    if(patchInfo.isManager){
     patchInfo.isManager = checkState(patchInfo.isManager.toString(), 'isManager', ['true', 'false']);
     patchInfo.isManager = Boolean(patchInfo.isManager);
+    }else{
+        patchInfo.isManager = false;
+    }
 
     patchInfo.managerId = isValidEmployeeId(patchInfo.managerId);
     
@@ -340,6 +343,7 @@ const checkTypeUserEmployee =(patchInfo)=>{
     patchInfo.firstName = checkStrCS(patchInfo.firstName,'First Name',2,20,false,false)
     patchInfo.lastName = checkStrCS(patchInfo.lastName,'First Name',2,20,false,false)
     
+    if(!patchInfo.dob) throw new Error('Date of Birth Needed.');
     patchInfo.dob =     dateFormat(patchInfo.dob,'Date of Birth');
 
     let year = patchInfo.dob[0];
