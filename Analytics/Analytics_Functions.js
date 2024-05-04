@@ -11,8 +11,7 @@ export async function getTotalEmployees() {
         console.log("Total employees:", count);
         return count;
     } catch (error) {
-        console.error("Error fetching total employees:", error);
-        throw error;
+        throw new Error("Error fetching total employees:", error);
     }
 }
 
@@ -26,8 +25,7 @@ export async function getEmployeesByDepartment() {
         console.log("Employees by Department:", departmentCounts);
         return departmentCounts;
     } catch (error) {
-        console.error("Error fetching employees by department:", error);
-        throw error;
+        throw new Error("Error fetching employees by department:", error);
     }
 }
 
@@ -52,8 +50,7 @@ export async function getAverageTenure() {
         console.log("Average Tenure in Months:", averageTenureMonths);
         return averageTenureMonths;
     } catch (error) {
-        console.error("Error calculating average tenure in months:", error);
-        throw error;
+        throw new Error("Error calculating average tenure in months:", error)
     }
 }
 
@@ -76,7 +73,33 @@ export async function getIncompleteBoardingTasks() {
             details: incompleteTasks
         };
     } catch (error) {
-        console.error("Error fetching incomplete boarding tasks:", error);
-        throw error;
+        throw new Error("Error fetching incomplete boarding tasks:", error)
+    }
+}
+
+export async function getDiversityCount() {
+    try {
+        const userCollection = await users();
+        const diversityCount = await userCollection.aggregate([
+            {
+                $match: {
+                    race: { $ne: "" }  
+                }
+            },
+            {
+                $group: {
+                    _id: "$race",  
+                    count: { $sum: 1 }  
+                }
+            },
+            {
+                $sort: {
+                    count: -1  
+                }
+            }
+        ]).toArray();
+        return diversityCount;
+    } catch (error) {
+        throw new Error(error);
     }
 }
