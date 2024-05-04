@@ -1,0 +1,22 @@
+<table>
+    <thead>
+        <tr>
+            <th>Employee Name</th>
+            <th>Subject</th>
+            <th>Comment</th>
+            <th>Status</th>
+            <th>Button</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each leaveRequests}}
+        <tr>
+            <td>{{employeeName}}</td>
+            <td>{{subject}}</td>
+            <td>{{comment}}</td>
+            <td>{{status}}</td>
+            <td><button class="decisionButton" data-leave-id="{{_id}}">Decide</button></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

@@ -1,56 +1,77 @@
 /*
 You will style your page using at least 5 CSS selectors for general CSS styling. You will place the CSS in its own file. 
 */
-h1,h5{
-    text-align: center;
+h1,
+h5 {
+  text-align: center;
 }
 
-.loginForm{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.loginForm label{
-    margin-bottom: 5px;
-    text-align: center;
+.loginForm label {
+  margin-bottom: 5px;
+  text-align: center;
 }
 
-.loginForm input{
-    margin-bottom: 5px;
+.loginForm input {
+  margin-bottom: 5px;
 }
 
-.footer{
-    
-    margin-top: 490px;
-    text-align: center;
+.footer {
+  margin-top: 490px;
+  text-align: center;
 }
 
-#username, #password,#firstName,#lastName,#employeeId,#confirmPassword,#gender,#maritalStatus,#department,#role,#disability,#race,#countryOfOrigin,#startDate,#dob,#currentPosition,#currentSalary,#promoDate,#phone,#email,#primaryAddress,#secondaryAddress,#subordinates,#maagersId{
-    border-style: solid;
-    color:black;
-    font-weight: 400;
-   }
-
-.error{
-    color:red;
-    font-weight: bold;
-    border-color: red;
-    
+#username,
+#password,
+#firstName,
+#lastName,
+#employeeId,
+#confirmPassword,
+#gender,
+#maritalStatus,
+#department,
+#role,
+#disability,
+#race,
+#countryOfOrigin,
+#startDate,
+#dob,
+#currentPosition,
+#currentSalary,
+#promoDate,
+#phone,
+#email,
+#primaryAddress,
+#secondaryAddress,
+#subordinates,
+#maagersId {
+  border-style: solid;
+  color: black;
+  font-weight: 400;
 }
 
-.createUser-form{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.error {
+  color: red;
+  font-weight: bold;
+  border-color: red;
 }
 
-.createUser-form label{
-    margin-bottom: 2px;
-    text-align: center;
+.createUser-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.createUser-form input{
-    margin-bottom: 3px;
+.createUser-form label {
+  margin-bottom: 2px;
+  text-align: center;
 }
 
+.createUser-form input {
+  margin-bottom: 3px;
+}
