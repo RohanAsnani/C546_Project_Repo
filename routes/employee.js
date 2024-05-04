@@ -16,7 +16,7 @@ router
             if (status !== 'Active') {
                 msg = `Please complete your profile and/or boarding tasks.`;
             }
-            return res.render('./users/employee', { title: 'Employee', firstName: req.session.user.firstName, role: req.session.user.role, employeeId: req.session.user.employeeId, isAdmin: (req.session.user.role === 'Admin') ? true : false, isHR: (req.session.user.role === 'HR') ? true : false, msg: msg ,isLoggedIn:true});
+            return res.render('./users/employee', { title: 'Employee', firstName: req.session.user.firstName, role: req.session.user.role, employeeId: req.session.user.employeeId, isAdmin: (req.session.user.role === 'Admin') ? true : false, isHR: (req.session.user.role === 'HR') ? true : false, msg: msg, isLoggedIn: true, isNotActive: (status !== 'Active') ? true : false });
         } catch (e) {
             return res.json('Not yet Set Up');
         }
@@ -148,7 +148,10 @@ router
         }
 
         try {
-            let patchedInfo = await board.updatePatchBoardingCompleteTask(req.params.employeeId, req.params.taskId, req.params.taskType);
+            let empData = await board.updatePatchBoardingCompleteTask(req.params.employeeId, req.params.taskId, req.params.taskType, req.session.user.status, req.session.user.countryOfOrigin);
+            if (empData) {
+                req.session.user = empData;
+            }
             return res.redirect('/hrc/employee/getAllToDoByEmpId');
             //return res.json(patchedInfo);
         } catch (e) {

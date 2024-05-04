@@ -73,8 +73,9 @@ router.route('/onboarding/:employeeId')
     }
 })
 .post(async (req,res)=>{
+    let patchInfo;
     try{
-        let patchInfo =  validation.checkTypeUserHR(req.body);
+        patchInfo =  validation.checkTypeUserHR(req.body);
         console.log(patchInfo);
     }catch(e){
         let employeeId = req.params.employeeId;

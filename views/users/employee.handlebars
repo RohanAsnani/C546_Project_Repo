@@ -3,10 +3,12 @@
 <h5>{{msg}}</h5>
 
 <nav class="sidebar">
-    <a href="/hrc/employee/profile"><button id="EmpDetails">My Profile</button>
-    </a>
+    <button onclick="window.location.href='/hrc/employee/profile'" id="EmpDetails">My Profile</button>
+
+    {{#if isNotActive}}
     <button onclick="window.location.href='/hrc/employee/getAllToDoByEmpId'" id="myToDoTasks">My To-Do
         tasks</button>
+    {{/if}}
     <button onclick="window.location.href='/hrc/employee/getAllByEmpId'" id="myTasks">View all my tasks</button>
 
     {{!-- <button onclick="window.location.href='/hrc/employee/getAllByEmpId'" id="myTasks">My Tasks</button>

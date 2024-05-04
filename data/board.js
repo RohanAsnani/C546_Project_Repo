@@ -98,12 +98,13 @@ const exportedMethods = {
 
     },
 
-    async updatePatchBoardingCompleteTask(employeeId, taskId, taskType) {
+    async updatePatchBoardingCompleteTask(employeeId, taskId, taskType, status, countryOfOrigin) {
         employeeId = validation.checkStrCS(employeeId, 'Employee Id', 0, 100, true);
         taskId = validation.validObject(taskId);
         taskType = validation.checkStrCS(taskType, 'Task Type', 0, 100, true);
 
         const boardingCollection = await boarding();
+        const userCollection = await users();
         const totBoardingData = await this.getboardingDataByEmpId(employeeId);
         let updatedObj = updatedBoardObj(totBoardingData, taskId, taskType);
 
@@ -115,8 +116,26 @@ const exportedMethods = {
         );
 
         if (!patchedInfo) throw new Error(`Cannot update task for user with id: ${updationPatchInfo.employeeId}`);
+        let empData;
+        if (status !== 'Active') {
+            if (countryOfOrigin) {
+                let taskList = await this.checkAllTasksCompletedForEmp(employeeId);
+                if (taskList.length === 0) {
+                    empData = await userCollection.findOne({ employeeId: employeeId });
+                    empData.status = 'Active';
 
-        return patchedInfo
+                    let updatedData = await userCollection.findOneAndUpdate({ employeeId: employeeId },
+                        { $set: empData },
+                        { returnDocument: 'after' }
+                    )
+
+                    if (!updatedData) throw new Error('Could not Update data in the system.')
+
+                }
+            }
+        }
+
+        return empData;
 
     },
 
@@ -148,12 +167,38 @@ const exportedMethods = {
       
       },
 
-      async patchEmployeeData(patchData){
+    async checkAllTasksCompletedForEmp(employeeId) {
+        //check if onboarding tasks are completed
+        const boardingCollection = await boarding();
+        const boardUserData = await this.getboardingDataByEmpId(employeeId);
+        let taskList = [];
+        let msg;
+        if (boardUserData) {
+            let boardUsrData = [];
+            boardUsrData.push(boardUserData);
+            let res = await validation.getTaskList(boardUsrData, taskList, msg, true, true, false);
+            if (res.taskList) {
+                taskList = res.taskList;
+            }
+            if (res.msg) {
+                msg = res.msg;
+            }
+        } else {
+            msg = `No tasks assigned.`;
+        }
+        return taskList;
+    },
+
+    async patchEmployeeData(patchData) {
         patchData = validation.checkTypeUserEmployee(patchData);
-    
-        let userCollection =    await users();
-        
-        let checkPhone = await userCollection.findOne({'contactInfo.phone': patchData.contactInfo.phone});
+        let taskList = await this.checkAllTasksCompletedForEmp(patchData.employeeId);
+        if (taskList.length > 0) {
+            patchData.status = 'Onboarding(Employee-Side)';
+        }
+
+        let userCollection = await users();
+
+        let checkPhone = await userCollection.findOne({ 'contactInfo.phone': patchData.contactInfo.phone });
 
         
         let checkPersonalEmail = await userCollection.findOne({'contactInfo.personalEmail': patchData.contactInfo.personalEmail})
@@ -239,7 +284,7 @@ const getTaskData = (data) => {
     resObj.taskType = taskType;
 
     return resObj;
-}
+};
 
 let updatedBoardObj = (oldObj, taskId, taskType) => {
     let updatedBoardObj = oldObj;

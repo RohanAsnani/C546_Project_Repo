@@ -58,6 +58,11 @@
             errorList.show();
             event.preventDefault();
             //return;
+        } else {
+            errorList.hide();
+            errorList.empty();
+            errorDiv.hide();
+            errorDiv.empty();
         }
         //event.preventDefault();
 
