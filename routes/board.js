@@ -111,7 +111,7 @@ router
             return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Onboard Task List' });
             //return res.json(boardUserData);
         } catch (e) {
-            return res.status(500).json({ error: e });
+            return res.status(500).json(e.message );
         }
     });
 

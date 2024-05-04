@@ -44,7 +44,7 @@ const dateFormat = (dateReleased, param) => {
     return date
 }
 
-const isValidDate = (month, date, year, param) => {
+const isValidDate = (month, date, year, param,beFutureDate) => {
     let Today = new Date()
     if (month.length !== 2 || date.length !== 2 || year.length !== 4) {
         throw new Error(`parameter ${(param)} is not in proper date format`)
@@ -74,6 +74,7 @@ const isValidDate = (month, date, year, param) => {
         }
     }
 
+   if(beFutureDate === false){ 
     if (Number(year) > Today.getFullYear()) {
         throw new Error(`parameter ${(param)} cannot have a future year value ${year}`)
     }
@@ -82,7 +83,7 @@ const isValidDate = (month, date, year, param) => {
     }
     if (Number(year) === Today.getFullYear() && (Today.getMonth() + 1) === Number(month) && Today.getDate() < Number(date)) {
         throw new Error(`parameter ${(param)} cannot have a future day value ${date} for current year and month`)
-    }
+    }}
 }
 
 const numberExistandType = (num, param, int = true, dec = 2) => {
@@ -254,7 +255,7 @@ const checkMasterUser =(creationInfo)=>{
     let month = creationInfo.startDate[1];
     let date = creationInfo.startDate[2];
 
-    isValidDate(month, date, year);
+    isValidDate(month, date, year,'Start Date',true);
     creationInfo.startDate = String(creationInfo.startDate[0]) + '-' + String(creationInfo.startDate[1]) + '-' + String(creationInfo.startDate[2]);
 
     creationInfo.email = isValidEmail(creationInfo.email);
@@ -300,7 +301,7 @@ const checkTypeUserHR =(patchInfo)=>{
     let month = patchInfo.startDate[1];
     let date = patchInfo.startDate[2];
 
-    isValidDate(month, date, year);
+    isValidDate(month, date, year,'Date of Birth',true);
     patchInfo.startDate = String(patchInfo.startDate[0]) + '-' + String(patchInfo.startDate[1]) + '-' + String(patchInfo.startDate[2]);
 
     patchInfo.email = isValidEmail(patchInfo.email);
@@ -345,7 +346,7 @@ const checkTypeUserEmployee =(patchInfo)=>{
     let month = patchInfo.dob[1];
     let date = patchInfo.dob[2];
     
-    isValidDate(month, date, year);
+    isValidDate(month, date, year,'Date Of Birth',false);
     patchInfo.dob = String(patchInfo.dob[0]) + '-' + String(patchInfo.dob[1]) + '-' + String(patchInfo.dob[2]);
           
     patchInfo.personalEmail = isValidEmail(patchInfo.personalEmail);
@@ -398,7 +399,7 @@ const checkTypeMaster = (updationInfo) => {
     if (!(updationInfo.password === updationInfo.confirmPassword)) throw new Error('password and Confirm passwords do not match.');
     updationInfo.password = checkPassConstraints(updationInfo.password, 8);
 
-    updationInfo.gender = checkState(updationInfo.gender, 'Gender', ['male', 'female', 'other']);
+    updationInfo.gender = checkState(updationInfo.gender, 'Gender', ['Male', 'Female', 'Other']);
 
     updationInfo.department = checkState(updationInfo.department, 'Department', ['it', 'finance', 'human resources', 'adminstration', 'research and development', 'customer service']);
 
@@ -631,7 +632,7 @@ const validateBoardingDataPatch = (userId, taskId, taskType, updateBoardDataObj)
         let month = dateArr[0];
         let date = dateArr[1];
         let year = dateArr[2];
-        isValidDate(month, date, year, 'dueDate');
+        isValidDate(month, date, year, 'dueDate',true);
         updateBoardDataObj.dueDate = updateBoardDataObj.dueDate.trim();
     }
 
@@ -770,4 +771,4 @@ const getCurrDate = () => {
     return `${month}-${day}-${year}`;
 };
 
-export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch, isValidEmployeeId, checkPassConstraints, isValidEmail, isValidPhoneNumber, bcryptPass, checkStrCS, checkMasterUser, checkTypeUserHR, updateValuesOfTwoObjects, convertDateFormat,checkTypeUserEmployee,isDateBeforeToday }
+export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch, isValidEmployeeId, checkPassConstraints, isValidEmail, isValidPhoneNumber, bcryptPass, checkStrCS, checkMasterUser, checkTypeUserHR, updateValuesOfTwoObjects, convertDateFormat,checkTypeUserEmployee,isDateBeforeToday,getTaskList}
