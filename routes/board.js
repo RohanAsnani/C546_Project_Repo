@@ -84,7 +84,6 @@ router.route('/onboarding/:employeeId')
     }
 
     try{
-        let patchInfo = validation.checkTypeUserHR(req.body);
         let updatedDetails = await boardData.updatePatchOnboardingData(patchInfo)
         return res.render('./data_functions/newAdded',{title:'Updated User',...updatedDetails,hrView:true,adminButtons:'hidden'});
     }catch(e){

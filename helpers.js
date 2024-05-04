@@ -325,7 +325,8 @@ const checkTypeUserHR =(patchInfo)=>{
     patchInfo.secondaryAddress = "";
     patchInfo.currentPosition = checkStrCS(patchInfo.currentPosition,'Current Position',5,20,true,false);
     patchInfo.currentSalary= Number(patchInfo.currentSalary);
-    patchInfo.currentSalary = numberExistandType(patchInfo.currentSalary,`Salary`);
+    patchInfo.currentSalary = numberExistandType(patchInfo.currentSalary,`Salary`, false, 2);
+    patchInfo.currentSalary = numberRange(patchInfo.currentSalary, 'Salary', 15.13, 200);
     patchInfo.notes = [];
     patchInfo.leaveBank = { sickLeaves: 5, vacation: 5 };
 
@@ -761,6 +762,17 @@ const getTaskList = async (boardUserData, taskList, msg, getToDo, isOnboard, isE
     return res;
 }
 
+const getLaterDate = (days) => {
+    let currDate = Date.now();
+    let date = new Date(currDate);
+    date.setDate(date.getDate() + days);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${month}-${day}-${year}`;
+}
+
 const getCurrDate = () => {
     let currDate = Date.now();
     const date = new Date(currDate);
@@ -771,4 +783,4 @@ const getCurrDate = () => {
     return `${month}-${day}-${year}`;
 };
 
-export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch, isValidEmployeeId, checkPassConstraints, isValidEmail, isValidPhoneNumber, bcryptPass, checkStrCS, checkMasterUser, checkTypeUserHR, updateValuesOfTwoObjects, convertDateFormat,checkTypeUserEmployee,isDateBeforeToday,getTaskList,getCurrDate}
+export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch, isValidEmployeeId, checkPassConstraints, isValidEmail, isValidPhoneNumber, bcryptPass, checkStrCS, checkMasterUser, checkTypeUserHR, updateValuesOfTwoObjects, convertDateFormat, getLaterDate, checkTypeUserEmployee, isDateBeforeToday, getTaskList,getCurrDate}

@@ -9,6 +9,8 @@ const salarySchema = {
     },
     position: "String",
     hourlyPay: "Number",
+    federalTaxbracket: "Number",
+    stateTaxBracket: "Number",
     billingAddress: "String",
     salaryBreakdown: [
       {
@@ -16,19 +18,12 @@ const salarySchema = {
         basePay: "Number",
         federalTax: "Number",
         stateTax: "Number",
-        socialSec: "Number", 
         startDate: "Date",
         endDate: "Date",
         billingAddress: "String",
         deductions: [
           {
             _typeOf: "String", // Provident, Insurance, etc.
-            _amount: "Number",
-          }
-        ],
-        bonus: [
-          {
-            _typeOf: "String", // Annual bonus, Retention, Miscellaneous, Performance
             _amount: "Number",
           }
         ],

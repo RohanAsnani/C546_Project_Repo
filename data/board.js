@@ -174,6 +174,39 @@ const exportedMethods = {
         updatedData = await user_Test.getUserById(patchData.employeeId);
 
         return updatedData
+    },
+    async createSalaryBenifits(employeeId){
+        employeeId = validation.checkStrCS(employeeId, 'Employee Id', 0, 100, true);
+        let dueDate = validation.getLaterDate(7)
+        const boardData = {
+            employeeId: employeeId,
+            on: [
+                {
+                    taskName: 'Bank Account Details',
+                    taskDesc: 'please provide your bank account details',
+                    dueDate: dueDate,
+                    completedOn: ''
+                },
+                {
+                    taskName: 'Tax Forms',
+                    taskDesc: 'please provide your tax forms',
+                    dueDate: dueDate,
+                    completedOn: ''
+                },
+                {
+                    taskName: 'Health Insurance',
+                    taskDesc: 'please provide your health insurance details',
+                    dueDate: dueDate,
+                    completedOn: ''
+                },
+            ],
+        }
+        const boardingCollection = await boarding();
+        let createdInfo = await boardingCollection.insertOne(boardData);
+
+        if (!createdInfo || typeof (createdInfo) === 'null') throw new Error('Could not add Task.');
+
+        return this.getboardingDataByObjectId(createdInfo.insertedId)
     }
 }
 

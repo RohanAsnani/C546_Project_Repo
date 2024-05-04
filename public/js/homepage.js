@@ -164,6 +164,15 @@ const isValidEmployeeId =(employeeId)=> {
     return employeeId
 }
 
+const numberRange = (num, param, low, high) => {
+    if (num < low) {
+        throw new Error(`${(param)} parameter with value ${num}, cannot be less than ${low}`)
+    }
+    if (num > high) {
+        throw new Error(`${(param)} parameter with value ${num}, cannot be greater than ${high}`)
+    }
+}
+
 
 $('#loginForm').submit((event)=>{
     let usernameStatus = false;
@@ -663,7 +672,8 @@ $('#updateUser').submit((event)=>{
     
        try{
         check = parseInt($('#currentSalary').val());
-        numberExistandType(check, `Current Salary`);
+        numberExistandType(check, `Current Salary`, false, 2);
+        numberRange(check,'Current Salary',15.13,200);
         $('#currentSalary').removeClass('error');
         $('#labelCurrentSalary').removeClass('error');
        }catch(e){
