@@ -11,11 +11,13 @@
     <tbody>
         {{#each leaveRequests}}
         <tr>
-            <td>{{employeeName}}</td>
+            <td>{{employeeID}}</td>
             <td>{{subject}}</td>
-            <td>{{comment}}</td>
+            <td>{{reason}}</td>
             <td>{{status}}</td>
-            <td><button class="decisionButton" data-leave-id="{{_id}}">Decide</button></td>
+            <td> <a href="/hrc/hr/leaveReq/getAll/{{objectId}}">
+                    <button class="decisionButton" name="decisionButton" data-id="{{objectId}}">Decide</button>
+                </a></td>
         </tr>
         {{/each}}
     </tbody>

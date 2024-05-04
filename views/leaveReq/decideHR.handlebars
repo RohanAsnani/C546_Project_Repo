@@ -1,0 +1,39 @@
+<div>
+    <h3>Decide the Leave Request status</h3>
+    <h4>Approve, Decline or keep the status of the leave as pending</h4>
+    {{!-- The leave req form filled by the employee --}}
+    <div>
+        {{!-- We can additionally passs the name and department of the employee --}}
+        <p>Employee ID :- {{employeeID}}</p>
+        {{!-- additionally --}}
+        <p>Employee Name :- {{employeeName}}</p>
+        <p>Employee Department :- {{employeeDepartment}}</p>
+        {{!-- --}}
+        <p>Start Date:- {{startDate}}</p>
+        <p>End Date:- {{endDate}}</p>
+        <p>Type of Leave:- {{typeOfLeave}}</p>
+        <p>Reason for the Leave:- {{reasonOfLeave}}</p>
+    </div>
+    <div class="HrForm">
+        <form action="/reqDecision" method="PUT">
+            <label for="reasonHR">Reason for the Decision:-</label>
+            <textarea id="reasonHR" name="reasonHR"></textarea>
+            <p>Final Decision for the leave Request is shall be </p>
+            <label>
+                <input type="radio" name="radioButton" value="Approve">
+                {{Approve}}
+            </label>
+            <label>
+                <input type="radio" name="radioButton" value="Decline">
+                {{Decline}}
+            </label>
+            <label>
+                <input type="radio" name="radioButton" value="Pending">
+                {{Pending}}
+            </label>
+            <button type="submit">Submit</button>
+        </form>
+        {{!-- On click submit the form submitted messaged should be appear --}}
+        {{!-- For client side validation atleast and exactly one of the checkbox should be checked --}}
+    </div>
+</div>

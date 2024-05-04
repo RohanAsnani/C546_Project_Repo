@@ -702,8 +702,8 @@ const validateLeaveReqForm = (subject, reason, startDate, endDate) => {
   }
   reason = checkIsProperString(reason);
 
-  const startDate = new Date(startDate);
-  const endDate = new Date(endDate);
+  startDate = new Date(startDate);
+  endDate = new Date(endDate);
   const currentDate = new Date();
 
   if (startDate < currentDate) {

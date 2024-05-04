@@ -17,7 +17,9 @@ export const createLeaveReq = async (subject, reason, startDate, endDate) => {
   });
 
   if (!userWanted) {
-    throw `The desired user with the id ${userId} could not be fetched`;
+    throw new Error(
+      `The desired user with the id ${userId} could not be fetched`
+    );
   }
 
   let newLeave = {
@@ -27,6 +29,7 @@ export const createLeaveReq = async (subject, reason, startDate, endDate) => {
     startDate: startDate,
     endDate: endDate,
     status: "pending",
+    commentsReviewer: "",
     reviewerID: null,
   };
 
@@ -34,40 +37,39 @@ export const createLeaveReq = async (subject, reason, startDate, endDate) => {
   const insertInfo = await leaveCollection.insertOne(newLeave);
 
   if (!insertInfo.acknowledged || !insertInfo.insertedId)
-    throw "Could not add the leave";
+    throw new Error("Could not add the leave");
 
   return newLeave;
 };
 
-export const getLeaveRecord = async () => {
-  // TODO: Get the employee id of the current logged in empployee
-
-  const usersCollection = await users(); // idk how to get employeeID
-  const user = await usersCollection.findOne({ _id: new ObjectId(employeeID) });
-
+export const getLeaveRecord = async employeeId => {
   const leaveCollection = await leaves();
+  const leave = await leaveCollection
+    .find({ "leave.employeeID": employeeId })
+    .toArray();
 
-  const leave = await leaveCollection.find({
-    _id: new ObjectId(employeeId),
-  });
-
-  if (!leave) throw `No leave under this employee`;
-
+  if (leave.length === 0) {
+    throw new Error(
+      `No leaves found with the employee Id ${employeeId} to review`
+    );
+  }
   return leave;
 };
 
 export const getAllLeaves = async () => {
   const leaveCollection = await leaves();
-  const leave = await leaveCollection.find({});
+  const leave = await leaveCollection.find({}).toArray();
 
-  if (!leave) throw `No leaves found for the HR to review`;
+  if (!leave) return [];
 
   return leave;
 };
 export const createReqDecision = async (
+  Approve,
+  Decline,
+  Pending,
   employeeID,
-  commentsReviewer,
-  Reviewer_ID
+  reasonHR
 ) => {
   // Get HR id
   // put it into reviewer id
@@ -76,27 +78,31 @@ export const createReqDecision = async (
   // push to employee view
   // if nothing don put status as pending again if no decision is made
 
-  //   TODO: get the HR id and put it into Reviewer_ID
-  const usersCollection = await users();
-  const hrID = usersCollection.findOne({});
+  reasonHR = validation.checkIsProperString(reasonHR);
+
+  //   How to get the particular leaveReq selected
 
   const leaveCollection = await leaves();
-
   const leave = leaveCollection.findOne({ _id: new ObjectId() });
 
+  updatedLeaveData = {
+    ...leave,
+    reviewerID: employeeID,
+    commentsReviewer: reasonHR,
+  };
+
   const leaveUpdated = leaveCollection.findOneAndUpdate(
-    { _id: new ObjectId() },
-    { _id: findReview._id, "reviews._id": new ObjectId(reviewId) },
-    { $set: { reviews: updatedReviewData } },
+    { employeeID: employeeID },
+    { $set: { leave: updatedLeaveData } },
     { returnDocument: "after" }
   );
 
-  return Reviewer_ID;
+  return leaveUpdated;
 };
 export const getLeaveForm = async () => {
   const userCollection = await users();
   const user = await userCollection.findOne(
-    { _id: new ObjectId(employeeId) },
+    { employeeId: employeeId },
     { "leaveBank.sickDay": 1, "leaveBank.vacation": 1 }
   );
 

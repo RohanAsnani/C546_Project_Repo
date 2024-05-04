@@ -9,6 +9,7 @@ import {
 } from "../data/leaveReq.js";
 import * as validation from "../helpers.js";
 import { ObjectId } from "mongodb";
+import { users, leaves } from "../config/mongoCollections.js";
 
 router.route("/hrc/emp/leaveReq/form").post(async (req, res) => {
   let data = req.body;
@@ -17,17 +18,9 @@ router.route("/hrc/emp/leaveReq/form").post(async (req, res) => {
       .status(400)
       .json({ error: "There are no fields in the request body" });
   }
-  try {
-    let {
-      employeeID,
-      subject,
-      reason,
-      startDate,
-      endDate,
-      status,
-      reviewerID,
-    } = data;
 
+  let { subject, reason, startDate, endDate } = data;
+  try {
     ({ subject, reason, startDate, endDate } = validation.validateLeaveReqForm(
       subject,
       reason,
@@ -35,31 +28,56 @@ router.route("/hrc/emp/leaveReq/form").post(async (req, res) => {
       endDate
     ));
   } catch (error) {
-    return res.status(400).json({ error: e.message });
+    return res.status(400).json(error);
   }
 
   try {
-    const {
-      employeeID,
-      subject,
-      reason,
-      startDate,
-      endDate,
-      status,
-      reviewerID,
-    } = await createLeaveReq(subject, reason, startDate, endDate);
+    const finalData = await createLeaveReq(subject, reason, startDate, endDate);
     res.status(201).send("New leave req created");
   } catch (error) {
-    return res.status(404).json({ error: e.message });
+    return res.status(404).json(error);
   }
 });
 
 router.route("/hrc/emp/leaveReq/leaveRecord").get(async (req, res) => {
   try {
-    const leaveRecord = getLeaveRecord();
-    res.status(200).json("Employee gets the leave requests data successfully");
+    // TODO: Get the employee id of the current logged in empployee
+
+    let empId = req.session.user.employeeId;
+    const leaveRecords = getLeaveRecord(empId);
+
+    res
+      .status(200)
+      .json("Employee gets the leave requests data successfully")
+      .render("leaveRecord", { leaveRecords });
   } catch (error) {
-    res.status(500).send("Internal server error");
+    res.status(500).send(error);
+  }
+});
+// Route for HR manager to decide on leave requests
+router.route("/hrc/hr/leaveReq/:employeeId").put(async (req, res) => {
+  const { reasonHR, Approve, Decline, Pending } = req.body;
+
+  try {
+    reasonHR = validation.checkIsProperString(reasonHR);
+    
+  } catch (error) {
+    res.status(500).send(error);
+  }
+
+  try {
+    const empId = req.session.user.employeeId;
+    const leaveRecords = createReqDecision(
+      empId,
+      reasonHR,
+      Approve,
+      Decline,
+      Pending
+    );
+
+    return leaveRecords;
+  } catch (error) {
+    res.status(500).send(error);
   }
 });
 
@@ -68,22 +86,20 @@ router.route("/hrc/emp/leaveReq/form").get(async (req, res) => {
     const { sickDaysLeft, vacationDaysLeft } = getLeaveForm();
     return res.render("leaveReqForm", { sickDaysLeft, vacationDaysLeft });
   } catch (error) {
-    res.status(400).json();
+    res.status(400).json(error);
   }
 });
-
-// Route for HR manager to decide on leave requests
-router.route("/hrc/hr/leaveReq/reqDecision").put(async (req, res) => {});
 
 // Route for HR manager to get all leave requests
 router.route("/hrc/hr/leaveReq/getAll").get(async (req, res) => {
   try {
-    const hr = getAllLeaves();
+    const leaveRequests = getAllLeaves();
     res
       .status(200)
-      .json("HR Manager gets the leave requests data successfully");
+      .json("HR Manager gets the leave requests data successfully")
+      .render("leaveRequestList", { leaveRequests });
   } catch (error) {
-    res.status(500).send("Internal server error");
+    res.status(500).send(error);
   }
 });
 
