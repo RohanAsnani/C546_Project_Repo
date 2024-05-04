@@ -1,10 +1,12 @@
 import { createTransport } from 'nodemailer';
+import dotenv from 'dotenv';
+dotenv.config();
 
 let transporter = createTransport({
   service: 'gmail',
   auth: {
     user: 'noreply.hrcentral@gmail.com',
-    pass: 'H4C3ntr@l'
+    pass: process.env.GMAIL_PASSWORD
   }
 });
 

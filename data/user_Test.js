@@ -12,7 +12,7 @@ async create(creationInfo){
   // creationInfo = validation.checkTypeMaster(creationInfo);
   
   if(creationInfo.password !== creationInfo.confirmPassword)throw new Error("Passwords don't match.");
-  
+  const emaildata={ email: creationInfo.personalEmail, username: creationInfo.username, password: creationInfo.password }
   creationInfo.password = await validation.bcryptPass(creationInfo.password);
 
   creationInfo.currentPosition = '';
@@ -41,7 +41,7 @@ async create(creationInfo){
   creationInfo.startDate = String(creationInfo.startDate[0]) + '-' + String(creationInfo.startDate[1]) + '-' + String(creationInfo.startDate[2]);
         
   creationInfo.email = validation.isValidEmail(creationInfo.email);
-  
+  creationInfo.personalEmail = validation.isValidEmail(creationInfo.personalEmail);
   creationInfo = {
     employeeId: creationInfo.employeeId, firstName : creationInfo.firstName,lastName:creationInfo.lastName,username: creationInfo.username,password: creationInfo.password,gender: creationInfo.gender,maritalStatus:creationInfo.maritalStatus,department:creationInfo.department,role:creationInfo.role,notes:creationInfo.notes,status:creationInfo.status,vet:creationInfo.vet,disability:creationInfo.disability,race:creationInfo.race,countryOfOrigin:creationInfo.countryOfOrigin,startDate:creationInfo.startDate,endDate:creationInfo.endDate,dob:creationInfo.dob,currentPosition:creationInfo.currentPosition,isManager:creationInfo.isManager,currentSalary:creationInfo.currentSalary,contactInfo:{phone:creationInfo.phone,email:creationInfo.email,personalEmail:creationInfo.personalEmail,primaryAddress:creationInfo.primaryAddress,secondaryAddress:creationInfo.secondaryAddress},managerId:creationInfo.managerId,leaveBank:creationInfo.leaveBank
   }
@@ -57,7 +57,8 @@ async create(creationInfo){
   if(!createdUser || typeof(createdUser) === 'null') throw new Error('Could not add User.');
 
 // Send email
-  await sendEmail(creationInfo.email, 'Account Created', 'Your account has been created successfully. Please visit the company website to login.\n Here is your username: ' + creationInfo.username + '\n and password: ' + creationInfo.password + '.');
+  console.log('Sending email to ' + creationInfo.contactInfo.personalEmail);
+  await sendEmail(emaildata.email, 'Account Created', 'Your account has been created successfully. Please visit the company website to login.\n Here is your username: ' + emaildata.username + '\n and password: ' + emaildata.password + '.');
 
   return this.getByObjectId(createdUser.insertedId)
 

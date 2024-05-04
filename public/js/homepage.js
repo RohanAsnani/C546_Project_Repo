@@ -93,7 +93,7 @@ const checkPassConstraints=(str,minLen)=>{
     return str
     
 }
-const isValidDate = (month, date, year, param) => {
+const isValidDate = (month, date, year, param,beFutureDate) => {
     let Today = new Date()
     if (month.length !== 2 || date.length !== 2 || year.length !== 4) {
         throw new Error(`parameter ${(param)} is not in proper date format`)
@@ -123,15 +123,16 @@ const isValidDate = (month, date, year, param) => {
         }
     }
 
-    // if (Number(year) > Today.getFullYear()) {
-    //     throw new Error(`parameter ${(param)} cannot have a future year value ${year}`)
-    // }
-    // if (Number(year) === Today.getFullYear() && (Today.getMonth() + 1) < Number(month)) {
-    //     throw new Error(`parameter ${(param)} cannot have a future month value ${month} for current year`)
-    // }
-    // if (Number(year) === Today.getFullYear() && (Today.getMonth() + 1) === Number(month) && Today.getDate() < Number(date)) {
-    //     throw new Error(`parameter ${(param)} cannot have a future day value ${date} for current year and month`)
-    // }
+    if(beFutureDate=== false){ 
+        if (Number(year) > Today.getFullYear()) {
+        throw new Error(`parameter ${(param)} cannot have a future year value ${year}`)
+    }
+    if (Number(year) === Today.getFullYear() && (Today.getMonth() + 1) < Number(month)) {
+        throw new Error(`parameter ${(param)} cannot have a future month value ${month} for current year`)
+    }
+    if (Number(year) === Today.getFullYear() && (Today.getMonth() + 1) === Number(month) && Today.getDate() < Number(date)) {
+        throw new Error(`parameter ${(param)} cannot have a future day value ${date} for current year and month`)
+    }}
 }
 const checkState =(val,param,arr) =>{
     if(!(typeof(val) === 'string'))throw new Error(`${param} needs to be string type.`)
@@ -396,7 +397,7 @@ $('#createUser-form').submit((event)=>{
     let year = check[0];
     let month = check[1];
     let date = check[2];
-    isValidDate(month, date, year, "Start Date");
+    isValidDate(month, date, year,'Start Date',true);
     if(isDateBeforeToday($('#startDate').val().toString()))throw new Error("Start Date Cannot be before Today's Date.");
     $('#startDate').removeClass('error');
     $('#labelStartDate').removeClass('error');
@@ -485,6 +486,19 @@ $('#createUser-form').submit((event)=>{
     }catch(e){
         $('#email').addClass('error');
         $('#labelEmail').addClass('error');
+        let li= `<li class ='error'>${e.message}</li>`;
+        $('#errorList').append(li);
+        $('#errorList').show();
+        event.preventDefault();
+    }
+
+    try{
+        isValidEmail($('#personalEmail').val());
+        $('#personalEmail').removeClass('error');
+        $('#labelPersonalEmail').removeClass('error');
+    }catch(e){
+        $('#personalEmail').addClass('error');
+        $('#labelPersonalEmail').addClass('error');
         let li= `<li class ='error'>${e.message}</li>`;
         $('#errorList').append(li);
         $('#errorList').show();
@@ -621,7 +635,7 @@ $('#updateUser').submit((event)=>{
         let year = check[0];
         let month = check[1];
         let date = check[2];
-        isValidDate(month, date, year, "Start Date");
+        isValidDate(month, date, year,'Start Date',true);
         $('#startDate').removeClass('error');
         $('#labelStartDate').removeClass('error');
        }catch(e){
