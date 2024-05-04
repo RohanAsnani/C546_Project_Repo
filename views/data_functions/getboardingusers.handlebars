@@ -15,7 +15,27 @@
         <p>Role: {{role}}</p>
         <p>Employee Id: {{employeeId}}</p>
     </li>
+    {{/each }}
+</ol> 
+<ol>
+        <h2>Awaiting User Action</h2>
+    {{#each usersES}}
+        <li>
+        <a href="/hrc/hr/onboarding/{{employeeId}}" data-employeeId="{{employeeId}}">
+            <h3>{{firstName}} {{lastName}}</h3>
+        </a>
+        {{!-- <a href="/hrc/hr/createTask/onboard/{{employeeId}}" data-employeeId="{{employeeId}}">
+            <h3>Assign Task</h3>
+        </a> --}}
+
+        <p>Email: {{contactInfo.email}}</p>
+        <p>Department: {{department}}</p>
+        <p>Role: {{role}}</p>
+        <p>Employee Id: {{employeeId}}</p>
+    </li>
     {{/each}}
+</ol>
+
     {{else}}
     {{#each users}}
     <li>
@@ -32,6 +52,6 @@
     </li>
     {{/each}}
     {{/if}}
-</ol>
+
 <button onclick="window.location.href='/hrc/hr'">Back</button>
 <a class="page-link" id="logoutLink" href="/hrc/logout">Logout</a>

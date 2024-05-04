@@ -16,7 +16,7 @@ router
             if (status !== 'Active') {
                 msg = `Please complete your profile and/or boarding tasks.`;
             }
-            return res.render('./users/employee', { title: 'Employee', firstName: req.session.user.firstName, role: req.session.user.role, employeeId: req.session.user.employeeId, isAdmin: (req.session.user.role === 'Admin') ? true : false, isHR: (req.session.user.role === 'HR') ? true : false, msg: msg });
+            return res.render('./users/employee', { title: 'Employee', firstName: req.session.user.firstName, role: req.session.user.role, employeeId: req.session.user.employeeId, isAdmin: (req.session.user.role === 'Admin') ? true : false, isHR: (req.session.user.role === 'HR') ? true : false, msg: msg ,isLoggedIn:true});
         } catch (e) {
             return res.json('Not yet Set Up');
         }
@@ -27,7 +27,7 @@ router
     .get(async(req,res)=>{
         try{
             let userData = req.session.user;
-            return res.render('profile',{title:'My Profile',...userData});
+            return res.render('profile',{title:'My Profile',...userData,isLoggedIn:true});
             
         }catch(e){
             return res.status(500).json(e.message)
@@ -38,7 +38,7 @@ router
     .route('/profile/edit')
     .get(async(req,res)=>{
         let userData = req.session.user;
-        return res. render('editProfile',{title:'Edit Profile',...userData})
+        return res. render('editProfile',{title:'Edit Profile',...userData,isLoggedIn:true})
     })
     .post(async (req,res)=>{
        
@@ -55,7 +55,7 @@ router
             userData.contactInfo.personalEmail=userData.personalEmail
             userData.contactInfo.primaryAddress=userData.primaryAddress;
             userData.contactInfo.secondaryAddress=userData.secondaryAddress;
-            return res.status(400).render('editProfile',{title:'Edit Profile',...userData,hidden:'',message:e.message,employeeId:existingData.employeeId,firstName:userData.firstName,lastName:userData.lastName,vet:userData.vet,disability:userData.disability,race:userData.race,countryOfOrigin:userData.countryOfOrigin,phone:userData.phone,currentPosition:existingData.currentPosition, currentSalary: existingData.currentSalary,startDate:existingData.startDate,username:existingData.username,department:existingData.department,role:existingData.role,status:existingData.status,contactInfo:userData.contactInfo});
+            return res.status(400).render('editProfile',{title:'Edit Profile',...userData,hidden:'',message:e.message,employeeId:existingData.employeeId,firstName:userData.firstName,lastName:userData.lastName,vet:userData.vet,disability:userData.disability,race:userData.race,countryOfOrigin:userData.countryOfOrigin,phone:userData.phone,currentPosition:existingData.currentPosition, currentSalary: existingData.currentSalary,startDate:existingData.startDate,username:existingData.username,department:existingData.department,role:existingData.role,status:existingData.status,contactInfo:userData.contactInfo,isLoggedIn:true});
         }
 
         try{
@@ -73,7 +73,7 @@ router
             userData.contactInfo.personalEmail=userData.personalEmail
             userData.contactInfo.primaryAddress=userData.primaryAddress;
             userData.contactInfo.secondaryAddress=userData.secondaryAddress;
-            return res.status(400).render('editProfile',{title:'Edit Profile',...userData,hidden:'',message:e.message,employeeId:existingData.employeeId,firstName:userData.firstName,lastName:userData.lastName,vet:userData.vet,disability:userData.disability,race:userData.race,countryOfOrigin:userData.countryOfOrigin,phone:userData.phone,currentPosition:existingData.currentPosition, currentSalary: existingData.currentSalary,startDate:existingData.startDate,username:existingData.username,department:existingData.department,role:existingData.role,status:existingData.status,contactInfo:userData.contactInfo});
+            return res.status(400).render('editProfile',{title:'Edit Profile',...userData,hidden:'',message:e.message,employeeId:existingData.employeeId,firstName:userData.firstName,lastName:userData.lastName,vet:userData.vet,disability:userData.disability,race:userData.race,countryOfOrigin:userData.countryOfOrigin,phone:userData.phone,currentPosition:existingData.currentPosition, currentSalary: existingData.currentSalary,startDate:existingData.startDate,username:existingData.username,department:existingData.department,role:existingData.role,status:existingData.status,contactInfo:userData.contactInfo,isLoggedIn:true});
         }
 
     });
@@ -98,7 +98,7 @@ router
             } else {
                 msg = `No tasks assigned.`;
             }
-            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: true, taskTypeList: 'Task List' });
+            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: true, taskTypeList: 'Task List' ,isLoggedIn:true});
             // return res.json(boardUserData);
         } catch (e) {
             return res.status(500).json(e.message);
@@ -126,7 +126,7 @@ router
             } else {
                 msg = `No tasks assigned.`;
             }
-            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: false, isEmp: true, taskTypeList: 'To-Do Task List' });
+            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: false, isEmp: true, taskTypeList: 'To-Do Task List' ,isLoggedIn:true});
             // return res.json(boardUserData);
         } catch (e) {
             return res.status(500).json(e.message);

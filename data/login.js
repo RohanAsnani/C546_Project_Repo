@@ -21,7 +21,7 @@ async getUsernameAndValidate(username,pass){
 
     let checkPass = await bcrypt.compare(pass,credentialsCheck.password);
    
-    if(checkPass === false)throw new Error('Incorrect Password.');
+    if(checkPass === false)throw new Error('Username Or Password is Incorrect.');
     delete credentialsCheck.password
     return credentialsCheck
 }

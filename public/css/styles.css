@@ -1,14 +1,45 @@
 /*
 You will style your page using at least 5 CSS selectors for general CSS styling. You will place the CSS in its own file. 
 */
+
+body, header, footer, h1, button {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+.logoutBtn {
+    margin-right: 10px; 
+}
+
+.logoutBtn button {
+    background-color: #f00; 
+    color: #fff; 
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 h1,h5,h2{
     text-align: center;
+    margin: 0 auto;
 }
 
 .loginForm{
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top:50px;
 }
 
 .loginForm label{
@@ -49,7 +80,12 @@ td {
     padding: 15px;
     text-align: center;
 }
-
+#message{
+    margin-left:5px;
+}
+#loginPage{
+    margin-left: 5px;
+}
 /* The dropdown container */
 .dropdown {
     float: left;
