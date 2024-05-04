@@ -8,7 +8,7 @@ import xss from 'xss';
 router.route('/')
     .get(async (req, res) => {
         try {
-            return res.render('./users/hr', { title: 'HR', firstName: req.session.user.firstName, role: req.session.user.role });
+            return res.render('./users/hr', { title: 'HR', firstName: req.session.user.firstName, role: req.session.user.role ,isLoggedIn:true});
         } catch (e) {
             return res.status(500).json(e.message);
         }
@@ -18,7 +18,7 @@ router.route('/getAllEmployees')
     .get(async (req, res) => {
         try {
             const userdata = await user_Test.getAll();
-            return res.render('./data_functions/getAllEmp', { title: 'Employee Details', empList: userdata, firstName: req.session.user.firstName, role: req.session.user.role });
+            return res.render('./data_functions/getAllEmp', { title: 'Employee Details', empList: userdata, firstName: req.session.user.firstName, role: req.session.user.role ,isLoggedIn:true});
         } catch (e) {
             return res.status(500).json(e.message);
         }
@@ -29,9 +29,9 @@ router.route('/getEmpDetails/:employeeId')
         try {
             let employeeId = req.params.employeeId;
             let employeeDetails = await user_Test.getUserById(employeeId);
-            return res.render('./data_functions/patchFormHR', { title: 'Onboarding Edit User', ...employeeDetails, manager: managerDetails });
+            return res.render('./data_functions/patchFormHR', { title: 'Onboarding Edit User', ...employeeDetails, manager: managerDetails ,isLoggedIn:true});
         } catch (e) {
-            return res.status(500).json(e.message);
+            return res.status(404).json(e.message);
         }
     });
 
@@ -39,7 +39,7 @@ router.route('/getonboarding')
     .get(async (req, res) => {
         try {
             let onboardingUsers = await user_Test.getOnboardingHR();
-            return res.render('./data_functions/getboardingusers', { title: "Users Yet to be Onboarded", ...req.session.user, users: onboardingUsers, isOnboarding: true, taskType: 'onboard' });
+            return res.render('./data_functions/getboardingusers', { title: "Users Yet to be Onboarded", ...req.session.user, users: onboardingUsers, isOnboarding: true, taskType: 'onboard',isLoggedIn:true});
         } catch (e) {
             return res.status(500).json(e.message);
         }
@@ -49,7 +49,7 @@ router.route('/getoffboarding')
     .get(async (req, res) => {
         try {
             let offboardingUsers = await user_Test.getOffboardingHR();
-            return res.render('./data_functions/getboardingusers', { title: "Users Yet to be Offboarded", ...req.session.user, users: offboardingUsers, isOnboarding: false, taskType: 'offboard' });
+            return res.render('./data_functions/getboardingusers', { title: "Users Yet to be Offboarded", ...req.session.user, users: offboardingUsers, isOnboarding: false, taskType: 'offboard' ,isLoggedIn:true});
         } catch (e) {
             return res.status(500).json(e.message);
         }
@@ -65,7 +65,7 @@ router.route('/onboarding/:employeeId')
             return data
         }
     })
-    return res.render('./data_functions/patchFormHR',{title:'Onboarding Edit User',...employeeDetails,manager:managerDetails});
+    return res.render('./data_functions/patchFormHR',{title:'Onboarding Edit User',...employeeDetails,manager:managerDetails,isLoggedIn:true});
 })
 .post(async (req,res)=>{
     try{
@@ -80,13 +80,13 @@ router.route('/onboarding/:employeeId')
                 return data
             }
         })
-        return res.status(400).render('./data_functions/patchFormHR',{title:'Onboarding Edit User',...employeeDetails,manager:managerDetails,hidden:'',message:e.message})
+        return res.status(400).render('./data_functions/patchFormHR',{title:'Onboarding Edit User',...employeeDetails,manager:managerDetails,hidden:'',message:e.message,isLoggedIn:true})
     }
 
     try{
         let patchInfo = validation.checkTypeUserHR(req.body);
         let updatedDetails = await boardData.updatePatchOnboardingData(patchInfo)
-        return res.render('./data_functions/newAdded',{title:'Updated User',...updatedDetails,hrView:true,adminButtons:'hidden'});
+        return res.render('./data_functions/newAdded',{title:'Updated User',...updatedDetails,hrView:true,adminButtons:'hidden',isLoggedIn:true});
     }catch(e){
         return res.status(400).json(e.message);
     }
@@ -108,7 +108,7 @@ router
                     msg = res.msg;
                 }
             }
-            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Onboard Task List' });
+            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Onboard Task List' ,isLoggedIn:true});
             //return res.json(boardUserData);
         } catch (e) {
             return res.status(500).json(e.message );
@@ -131,7 +131,7 @@ router
                     msg = res.msg;
                 }
             }
-            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Offboard Task List' });
+            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Offboard Task List' ,isLoggedIn:true});
             //return res.json(boardUserData);
         } catch (e) {
             return res.status(500).json({ error: e });
@@ -151,7 +151,7 @@ router
             return res.status(400).json({ error: e });
         }
         let empData = await user_Test.getUserById(req.params.employeeId);
-        return res.render('./data_functions/createTask', { title: ((req.params.taskType === 'onboard') ? 'Create New Onboard Task' : 'Create New Offboard Task'), hidden: 'hidden', firstName: empData.firstName, lastName: empData.lastName, username: empData.username, employeeId: empData.employeeId, taskType: req.params.taskType, isOnboard: ((req.params.taskType === 'onboard') ? true : false) });
+        return res.render('./data_functions/createTask', { title: ((req.params.taskType === 'onboard') ? 'Create New Onboard Task' : 'Create New Offboard Task'), hidden: 'hidden', firstName: empData.firstName, lastName: empData.lastName, username: empData.username, employeeId: empData.employeeId, taskType: req.params.taskType, isOnboard: ((req.params.taskType === 'onboard') ? true : false) ,isLoggedIn:true});
     });
 
 router
@@ -182,12 +182,12 @@ router
             if (!existingBoardData || existingBoardData === null) {
                 //create
                 let createdBoardUserData = await boardData.createBoardingTask(data.employeeId, data);
-                return res.render('./data_functions/newTaskAdded', { title: "Created Task" });
+                return res.render('./data_functions/newTaskAdded', { title: "Created Task" ,isLoggedIn:true});
                 //return res.json(createdBoardUserData);
             } else {
                 //update - PUT
                 let updatedBoardUserData = await boardData.updatePutBoardingTask(existingBoardData, data);
-                return res.render('./data_functions/newTaskAdded', { title: "Created Task" });
+                return res.render('./data_functions/newTaskAdded', { title: "Created Task" ,isLoggedIn:true});
                 //return res.json(updatedBoardUserData);
             }
 

@@ -155,11 +155,14 @@ const exportedMethods = {
         
         let checkPhone = await userCollection.findOne({'contactInfo.phone': patchData.contactInfo.phone});
 
-        if(checkPhone)throw new Error('Phone number already exists try another one.');
+        
         let checkPersonalEmail = await userCollection.findOne({'contactInfo.personalEmail': patchData.contactInfo.personalEmail})
 
-        if(checkPersonalEmail)throw new Error('email Id already Exists , try another Personal Email Id')
-
+        if(checkPhone.employeeId !== patchData.employeeId && checkPersonalEmail.employeeId !== patchData.employeeId){
+            if(checkPhone)throw new Error('Phone number already exists try another one.');
+            if(checkPersonalEmail)throw new Error('email Id already Exists , try another Personal Email Id')
+        }
+    
         let existingData = await userCollection.findOne({employeeId: patchData.employeeId});
 
         patchData = validation.updateValuesOfTwoObjects(existingData,patchData);
