@@ -1,0 +1,48 @@
+<h1>Employee Details for {{employeeId}}</h1>
+<div class="user-details">
+    <p><strong>First Name:</strong> {{firstName}}</p>
+    <p><strong>Last Name:</strong> {{lastName}}</p>
+    <p><strong>Employee ID:</strong> {{employeeId}}</p>
+    <p><strong>Username:</strong> {{username}}</p>
+    <p><strong>Department:</strong> {{department}}</p>
+    <p><strong>Role:</strong> {{role}}</p>
+    <p><strong>Is Manager:</strong> {{#if isManager}}Yes{{else}}No{{/if}}</p>
+    <p><strong>Status:</strong> {{status}}</p>
+    <p><strong>Start Date:</strong> {{startDate}}</p>
+    <p><strong>Current Position:</strong> {{currentPosition}}</p>
+    <p><strong>Current Salary:</strong> {{currentSalary}}</p>
+    <p><strong>Email:</strong> {{contactInfo.email}}</p>
+    <p><strong>Manager ID:</strong> {{managerId}}</p>
+    <p><strong>Country of Origin:</strong> {{countryOfOrigin}}</p>
+    <p><strong>Date of Birth:</strong> {{dob}}</p>
+</div>
+
+{{#if error}}
+<p class="error">{{error}}</p>
+{{/if}}
+
+{{#if successMessage}}
+<p class="success">{{successMessage}}</p>
+{{/if}}
+
+<h2>Add a Note:</h2>
+<div class="notes-container">
+    {{#each notes}}
+    <div class="note">
+        <p>{{this}}</p>
+    </div>
+    {{/each}}
+</div>
+
+<form action="/hrc/hr/submit-note" method="post">
+    <label for="notes">Leave a note for {{firstName}}:</label>
+    <textarea id="notes" name="notes" rows="4" cols="50" required></textarea>
+    <input type="hidden" name="employeeId" value="{{employeeId}}">
+    <button type="submit">Submit Note</button>
+</form>
+
+
+<button onclick="window.location.href='/hrc/hr'">Homepage</button>
+<a class="page-link" id="logoutLink" href="/hrc/logout">Logout</a>
+
+
