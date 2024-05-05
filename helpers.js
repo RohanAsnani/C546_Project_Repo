@@ -361,7 +361,7 @@ const checkTypeUserEmployee =(patchInfo)=>{
     patchInfo.maritalStatus = checkState(patchInfo.maritalStatus,'Marital Status',['Single','Married','Divorced','Seperated','Widowed','Rather Not Say']);
    
     patchInfo.status = "Active";
-    patchInfo.vet = checkStrCS(patchInfo.vet,'Veteran',2,15,false);
+    patchInfo.vet = checkState(patchInfo.vet,'Veteran',["I self identify as a Veteran","Do not wish to identify","Not a Veteran"]);
     
     patchInfo.disability = checkState(patchInfo.disability,'Disability',['Yes','No','Rather Not Say']);
 

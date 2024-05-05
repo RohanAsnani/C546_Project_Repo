@@ -31,6 +31,12 @@ router.route('/getEmpDetails/:employeeId')
         try {
             let employeeId = req.params.employeeId;
             let employeeDetails = await user_Test.getUserById(employeeId);
+            let managerDetails = await boardData.getManagers();
+            managerDetails = managerDetails.filter((data) => {
+                if (data.employeeId !== employeeDetails.employeeId) {
+                    return data
+                }
+            })
             return res.render('./data_functions/patchFormHR', { title: 'Onboarding Edit User', ...employeeDetails, manager: managerDetails, isLoggedIn: true });
         } catch (e) {
             return res.status(404).render('404Page', { title: '404 Not Found.', message: e.message });
