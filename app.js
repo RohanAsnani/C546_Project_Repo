@@ -27,7 +27,11 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 
-app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
+app.engine('handlebars', exphbs.engine({defaultLayout: 'main',
+helpers: {
+  // Defined a json helper to stringify objects needed for charts
+  json: function (context) {
+      return JSON.stringify(context);}}}));
 app.set('view engine', 'handlebars');
 
 app.use(cookieParser());
