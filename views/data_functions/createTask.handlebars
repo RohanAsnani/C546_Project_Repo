@@ -90,9 +90,8 @@
             <button onclick="window.location.href='/hrc/hr/deleteTask/{{employeeId}}/{{taskId}}/{{taskType}}/true'"
                 id="deleteTask" name="deleteTask" class="deleteTask" data-id="{{taskId}}">Delete
                 Task</button><br>
-            {{!-- <button
-                onclick="window.location.href='/hrc/hr/emailReminder/{{employeeId}}/{{taskId}}/{{taskType}}/true'"
-                id="sendEmail" name="sendEmail" class="sendEmail" data-id="{{taskId}}">Send reminder email</button> --}}
+            <button onclick="window.location.href='/hrc/hr/emailReminder/{{employeeId}}/{{taskId}}/{{taskType}}/true'"
+                id="sendEmail" name="sendEmail" class="sendEmail" data-id="{{taskId}}">Send reminder email</button>
         </td>
         {{/if}}
     </tr>
