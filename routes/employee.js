@@ -4,7 +4,11 @@ import * as validation from '../helpers.js';
 import bcrypt from 'bcryptjs';
 import userTest from '../data/user_Test.js';
 import board from '../data/board.js';
+import doc from '../data/documents.js'
+import multer from 'multer';
 
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 router
     .route('/')
@@ -159,4 +163,95 @@ router
         }
 
     });
+
+router
+    .route('/uploadDocs')
+    .get(async (req, res) => {
+        console.log("helloooo");
+        if (!req.session.user) {
+            return res.status(401).json({ message: "Unauthorized access" });
+        }
+        
+        try {
+            const documentsData = await doc.getDocumentsByEmployeeId(req.session.user.employeeId);
+            return res.render('uploadDocs', {
+                title: 'Upload Document',
+                isLoggedIn: true,
+                documents: documentsData.documents,
+                noDocuments: documentsData.documents.length === 0
+            });
+        } catch (error) {
+            console.error("Error fetching documents:", error);
+            return res.status(500).render('uploadDocs', {
+                title: 'Upload Document',
+                message: 'Failed to fetch documents',
+                isLoggedIn: true
+            });
+        }
+    })
+    .post(upload.single('file'), async (req, res) => {
+        if (!req.session.user) {
+            return res.status(401).json({ message: "Unauthorized access" });
+        }
+        
+        if (!req.file) {
+            return res.status(400).render('uploadDocs', {
+                title: 'Upload Document',
+                message: 'No file provided',
+                isLoggedIn: true
+            });
+        }
+
+        const fileBuffer = req.file.buffer;
+        const fileName = req.file.originalname;
+        const documentInfo = {
+            empId: req.session.user.employeeId,
+            typeOfDoc: req.body.typeOfDoc,
+            status: "Pending",
+            approvedby: null
+        };
+
+        try {
+            const result = await doc.createDocument(documentInfo, fileBuffer, fileName);
+            return res.render('uploadDocs', {
+                title: 'Upload Document',
+                success: true,
+                message: "Document uploaded successfully!",
+                isLoggedIn: true
+            });
+        } catch (error) {
+            console.error("Error uploading document:", error);
+            return res.render('uploadDocs', {
+                title: 'Upload Document',
+                message: `Error uploading document: ${error.message}`,
+                isLoggedIn: true
+            });
+        }
+    });
+
+
+    router
+    .route('/uploadDocs/viewDocByDocId/:docId')
+    .get(async (req, res) => {
+        if (!req.session.user || !req.session.user.employeeId) {
+            return res.status(401).json({ message: "Unauthorized access" });
+        }
+        
+        const { docId } = req.params;
+        const empId = req.session.user.employeeId;
+
+        try {
+            const result = await doc.getDocumentUrlByDocId(empId, docId);
+            if (!result.success) {
+                return res.status(404).json({ message: result.message });
+            }
+            
+            res.redirect(result.docUrl);
+        } catch (error) {
+            console.error("Error fetching document:", error);
+            return res.status(500).json({ message: "Failed to fetch document" });
+        }
+    });
+
+
 export default router 
