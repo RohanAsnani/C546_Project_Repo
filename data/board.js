@@ -230,18 +230,21 @@ const exportedMethods = {
             employeeId: employeeId,
             on: [
                 {
+                    _id: new ObjectId(),
                     taskName: 'Bank Account Details',
                     taskDesc: 'please provide your bank account details',
                     dueDate: dueDate,
                     completedOn: ''
                 },
                 {
+                    _id: new ObjectId(),
                     taskName: 'Tax Forms',
                     taskDesc: 'please provide your tax forms',
                     dueDate: dueDate,
                     completedOn: ''
                 },
                 {
+                    _id: new ObjectId(),
                     taskName: 'Health Insurance',
                     taskDesc: 'please provide your health insurance details',
                     dueDate: dueDate,

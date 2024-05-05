@@ -1,14 +1,24 @@
-import { createTransport } from 'nodemailer';
+import nodemailer from 'nodemailer';
+import sgTransport from 'nodemailer-sendgrid-transport';
 import dotenv from 'dotenv';
 dotenv.config();
+//GJA4RJ8NEXDK417YRC6YTESY for sendgrid
+// let transporter = createTransport({
+//   service: 'gmail',
+//   auth: {
+//     user: 'noreply.hrcentral@gmail.com',
+//     pass: process.env.GMAIL_PASSWORD
+//   }
+// });
 
-let transporter = createTransport({
-  service: 'gmail',
+let options = {
   auth: {
-    user: 'noreply.hrcentral@gmail.com',
-    pass: process.env.GMAIL_PASSWORD
+    api_key: process.env.SENGRID_API_KEY // replace with your SendGrid API key
   }
-});
+}
+
+let mailer = nodemailer.createTransport(sgTransport(options));
+
 
 async function sendEmail(to, subject, text) {
   let mailOptions = {
@@ -19,8 +29,9 @@ async function sendEmail(to, subject, text) {
   };
 
   try {
-    let info = await transporter.sendMail(mailOptions);
-    console.log('Email sent: ' + info.response);
+    let info = await mailer.sendMail(mailOptions);
+    console.log('Email sent: ');
+    console.log(info);
   } catch (error) {
     console.log('Error sending email: ' + error);
   }
