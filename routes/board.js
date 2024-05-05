@@ -152,11 +152,34 @@ router
                 //res.render('home', { hasError400Id: true });
                 return;
             }
+            let employeeId = req.params.employeeId.trim();
+            let taskType = req.params.taskType.trim();
+            let empData = await user_Test.getUserById(employeeId);
+            let isOnboard = true;
+            if (taskType === 'offboard') {
+                isOnboard = false;
+            }
+            const boardUserData = await boardData.getboardingDataByEmpId(employeeId);
+            let taskList = [];
+            let msg;
+            if (boardUserData) {
+                let boardUsrData = [];
+                boardUsrData.push(boardUserData);
+                let res = await validation.getTaskList(boardUsrData, taskList, msg, false, isOnboard, true);
+                if (res.taskList) {
+                    taskList = res.taskList;
+                }
+                if (res.msg) {
+                    msg = res.msg;
+                }
+            } else {
+                msg = `No tasks assigned.`;
+            }
+
+            return res.render('./data_functions/createTask', { title: ((taskType === 'onboard') ? 'Create New Onboard Task' : 'Create New Offboard Task'), hidden: 'hidden', firstName: empData.firstName, lastName: empData.lastName, username: empData.username, employeeId: empData.employeeId, taskType: req.params.taskType, isOnboard: ((taskType === 'onboard') ? true : false), taskList: taskList, noDataPresentMsg: msg, isLoggedIn: true });
         } catch (e) {
-            return res.status(400).json({ error: e });
+            return res.status(400).json(e.message);
         }
-        let empData = await user_Test.getUserById(req.params.employeeId);
-        return res.render('./data_functions/createTask', { title: ((req.params.taskType === 'onboard') ? 'Create New Onboard Task' : 'Create New Offboard Task'), hidden: 'hidden', firstName: empData.firstName, lastName: empData.lastName, username: empData.username, employeeId: empData.employeeId, taskType: req.params.taskType, isOnboard: ((req.params.taskType === 'onboard') ? true : false) ,isLoggedIn:true});
     });
 
 router
@@ -225,6 +248,69 @@ router
 
     });
 
+router
+    .route('/deleteTask/:employeeId/:taskId/:taskType/:byEmp')
+    .delete(async (req, res) => {
+
+        if (!req.params.employeeId || req.params.employeeId.trim() === '' || !req.params.taskId || req.params.taskId.trim() === ''
+            || !req.params.taskType || req.params.taskType.trim() === '' || !req.params.byEmp || req.params.byEmp.trim() === '') {
+            res.status(400)
+            //res.render('home', { hasError400Id: true });
+            return;
+        }
+        try {
+            let employeeId = req.params.employeeId.trim();
+            let taskType = req.params.taskType.trim().toLowerCase();
+            let taskId = req.params.taskId.trim();
+            let byEmp = req.params.byEmp.trim();
+
+            const deletedInfo = await boardData.deleteTask(employeeId, taskType, taskId);
+            if (byEmp) {
+                return res.redirect(`/hrc/hr/createTask/${taskType}/${employeeId}`);
+            } else {
+                if (taskType === 'onboard') {
+                    return res.redirect('/hrc/hr/getAllOnBoadingTask');
+                } else {
+                    return res.redirect('/hrc/hr/getAllOffBoadingTask');
+                }
+            }
+        } catch (e) {
+            return res.status(400).json(e.message)
+        }
+    });
+
+router
+    .route('/emailReminder/:employeeId/:taskId/:taskType/:byEmp')
+    .post(async (req, res) => {
+
+        if (!req.params.employeeId || req.params.employeeId.trim() === '' || !req.params.taskId || req.params.taskId.trim() === ''
+            || !req.params.taskType || req.params.taskType.trim() === '' || !req.params.byEmp || req.params.byEmp.trim() === '') {
+            res.status(400)
+            //res.render('home', { hasError400Id: true });
+            return;
+        }
+        try {
+            let employeeId = req.params.employeeId.trim();
+            let taskType = req.params.taskType.trim().toLowerCase();
+            let taskId = req.params.taskId.trim();
+            let taskObjId = ObjectId.createFromHexString(taskId);
+            taskId = validation.validObject(taskObjId);
+            let byEmp = req.params.byEmp.trim();
+            let empData = await user_Test.getUserById(employeeId);
+            let taskData = await boardData.getTaskById(employeeId, taskType, taskId);
+            console.log('Sending email to ' + empData.contactInfo.email);
+            let email = empData.contactInfo.email;
+            let subject = `Task Completion Reminder for Employee ID: ${employeeId}`;
+            let msg = `This is a gentle reminder to complete task assigned to you. Please visit company portal to complete the task.\n Task Details:\n Task Name: ${taskData.taskName}\n Task Description: ${taskData.taskDesc}\n Due Date: ${taskData.dueDate}`;
+
+            await sendEmail(email, subject, msg);
+
+            return res.status(200);
+
+        } catch (e) {
+            return res.status(400).json(e.message)
+        }
+    });
 
 
 export default router;

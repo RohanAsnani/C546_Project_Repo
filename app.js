@@ -83,10 +83,20 @@ app.use('/hrc/employee', (req, res, next) => {
   }
 });
 
-app.use('/hrc/hr',(req,res,next)=>{
-  if(req.session.user){
-    if(req.session.user.role !== 'HR'){
-      return res.status(403).render('error',{message:'Forbidden',title:'Forbidden',class:'error',previous_Route:'hrc/login',linkMessage:'Click Here to Login.'});
+app.use('/hrc/hr', (req, res, next) => {
+  if (req.session.user) {
+    if (req.session.user.role !== 'HR') {
+      return res.status(403).render('error', { message: 'Forbidden', title: 'Forbidden', class: 'error', previous_Route: 'hrc/login', linkMessage: 'Click Here to Login.' });
+    } else {
+      if (req.originalUrl.startsWith('/hrc/hr/deleteTask')) {
+        if (req.method == 'GET') {
+          req.method = 'DELETE';
+        }
+      } else if (req.originalUrl.startsWith('/hrc/hr/emailReminder')) {
+        if (req.method == 'GET') {
+          req.method = 'POST';
+        }
+      }
     }
     next();
   }else{

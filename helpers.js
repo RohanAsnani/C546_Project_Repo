@@ -705,8 +705,10 @@ const getTaskList = async (boardUserData, taskList, msg, getToDo, isOnboard, isE
                         if (valueOn.completedOn == null) {
                             valueOn.status = 'To Do';
                             valueOn.completedOn = "-";
+                            valueOn.completed = false;
                         } else {
                             valueOn.status = 'Done';
+                            valueOn.completed = true;
                         }
                         taskList.push(valueOn);
                     }
@@ -729,8 +731,10 @@ const getTaskList = async (boardUserData, taskList, msg, getToDo, isOnboard, isE
                         if (valueOff.completedOn == null) {
                             valueOff.status = 'To Do';
                             valueOff.completedOn = "-";
+                            valueOff.completed = false;
                         } else {
                             valueOff.status = 'Done';
+                            valueOff.completed = true;
                         }
                         taskList.push(valueOff);
                     }
