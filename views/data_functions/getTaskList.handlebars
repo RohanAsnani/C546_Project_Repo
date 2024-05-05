@@ -51,9 +51,8 @@
                 <button onclick="window.location.href='/hrc/hr/deleteTask/{{employeeId}}/{{taskId}}/{{taskType}}/false'"
                     id="deleteTask" name="deleteTask" class="deleteTask" data-id="{{taskId}}">Delete
                     Task</button><br>
-                <button
-                    onclick="window.location.href='/hrc/hr/emailReminder/{{employeeId}}/{{taskId}}/{{taskType}}/false'"
-                    id="sendEmail" name="sendEmail" class="sendEmail" data-id="{{taskId}}">Send reminder email</button>
+                <button id="sendEmail" name="sendEmail" class="sendEmail" data-taskId="{{taskId}}"
+                    data-taskType="{{taskType}}" data-employeeId="{{employeeId}}">Send reminder email</button>
             </td>
             {{/if}}
             {{/if}}
@@ -79,10 +78,11 @@
         {{/if}}
     </table>
     <p>{{noDataPresentMsg}}</p>
-    {{!--
+
+
     <script src="https://code.jquery.com/jquery-3.5.1.js"
         integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-    <script src="../../../public/js/completeTask.js"></script> --}}
+    <script src="../../../public/js/createTask.js"></script>
 </article>
 {{#if isEmp}}
 <button onclick="window.location.href='/hrc/employee'">Homepage</button>

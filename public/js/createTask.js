@@ -8,7 +8,8 @@
         //taskType = $('input[name="taskType"]'),
         taskType = $('#taskType'),
         errorList = $('#errorList'),
-        errorDiv = $('#error');
+        errorDiv = $('#error'),
+        sendEmail = $('#sendEmail');
 
     errorList.hide();
     errorList.empty();
@@ -16,8 +17,6 @@
     errorDiv.empty();
 
     createTaskForm.submit(function (event) {
-
-
         let errors = [];
         let inputsArr = [employeeId, taskName, taskDesc, dueDate, taskType];
         let inputNamesArr = ['Employee Id', 'Task Name', 'Task Description', 'Due Date', 'Task Type'];
@@ -65,6 +64,41 @@
             errorDiv.empty();
         }
         //event.preventDefault();
+
+    });
+
+    sendEmail.click(function (event) {
+        console.log('In sendEmail');
+        errorDiv.empty();
+        errorDiv.hide();
+        let currentLink = $(this);
+        let taskId = currentLink[0].dataset.taskid;
+        let taskType = currentLink[0].dataset.tasktype;
+        let employeeId = currentLink[0].dataset.employeeid;
+        let requestConfig = {
+            method: 'POST',
+            url: '/hrc/hr/emailReminder',
+            data: {
+                employeeId: employeeId,
+                taskId: taskId,
+                taskType: taskType
+            }
+        };
+
+        $.ajax(requestConfig).then(function (responseMessage) {
+            console.log(responseMessage);
+            let res = responseMessage.message;
+            if (res === 'success') {
+                alert('Reminder email sent!');
+
+            } else {
+                alert(`We're sorry, an error occurred. Please try again later.`);
+                // errorDiv.empty();
+                // errorDiv.append(`We're sorry, an error occurred. Please try again later.`);
+                // errorDiv.show();
+                // return;
+            }
+        });
 
     });
 

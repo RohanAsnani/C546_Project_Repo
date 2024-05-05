@@ -725,7 +725,7 @@ const getTaskList = async (boardUserData, taskList, msg, getToDo, isOnboard, isE
                 value.on.forEach((valueOn) => {
                     valueOn.employeeId = employeeId;
                     valueOn.taskType = "Onboard";
-                    valueOn.isEmp = isEmp;
+                    valueOn.isEmp = isEmp ? isEmp : getToDo;
                     if (getToDo) {
                         if (valueOn.completedOn == null) {
                             taskList.push(valueOn);
@@ -751,7 +751,7 @@ const getTaskList = async (boardUserData, taskList, msg, getToDo, isOnboard, isE
                 value.off.forEach((valueOff) => {
                     valueOff.employeeId = employeeId;
                     valueOff.taskType = "Offboard";
-                    valueOff.isEmp = isEmp;
+                    valueOff.isEmp = isEmp ? isEmp : getToDo;
                     if (getToDo) {
                         if (valueOff.completedOn == null) {
                             taskList.push(valueOff);

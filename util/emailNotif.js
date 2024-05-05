@@ -32,6 +32,7 @@ async function sendEmail(to, subject, text) {
     let info = await mailer.sendMail(mailOptions);
     console.log('Email sent: ');
     console.log(info);
+    return info;
   } catch (error) {
     console.log('Error sending email: ' + error);
   }

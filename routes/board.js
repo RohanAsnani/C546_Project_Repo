@@ -282,22 +282,22 @@ router
     });
 
 router
-    .route('/emailReminder/:employeeId/:taskId/:taskType/:byEmp')
+    .route('/emailReminder')
     .post(async (req, res) => {
 
-        if (!req.params.employeeId || req.params.employeeId.trim() === '' || !req.params.taskId || req.params.taskId.trim() === ''
-            || !req.params.taskType || req.params.taskType.trim() === '' || !req.params.byEmp || req.params.byEmp.trim() === '') {
-            res.status(400)
-            //res.render('home', { hasError400Id: true });
-            return;
-        }
         try {
-            let employeeId = req.params.employeeId.trim();
-            let taskType = req.params.taskType.trim().toLowerCase();
-            let taskId = req.params.taskId.trim();
+            let data = req.body;
+            if (!data || Object.keys(data).length === 0) {
+                return res
+                    .status(400)
+                    .json({ error: 'There are no fields in the request body' });
+            }
+            let employeeId = xss(data.employeeId.trim());
+            let taskType = xss(data.taskType.trim().toLowerCase());
+            let taskId = xss(data.taskId.trim());
+
             let taskObjId = ObjectId.createFromHexString(taskId);
             taskId = validation.validObject(taskObjId);
-            let byEmp = req.params.byEmp.trim();
             let empData = await user_Test.getUserById(employeeId);
             let taskData = await boardData.getTaskById(employeeId, taskType, taskId);
             console.log('Sending email to ' + empData.contactInfo.email);
@@ -305,9 +305,9 @@ router
             let subject = `Task Completion Reminder for Employee ID: ${employeeId}`;
             let msg = `This is a gentle reminder to complete task assigned to you. Please visit company portal to complete the task.\n Task Details:\n Task Name: ${taskData.taskName}\n Task Description: ${taskData.taskDesc}\n Due Date: ${taskData.dueDate}`;
 
-            await sendEmail(email, subject, msg);
+            let info = await sendEmail(email, subject, msg);
 
-            return res.status(200);
+            return res.status(200).json(info);
 
         } catch (e) {
             return res.status(400).json(e.message)
