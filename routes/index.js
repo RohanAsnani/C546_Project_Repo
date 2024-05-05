@@ -15,7 +15,7 @@ const constructorMethod = (app) => {
   // app.use('/hrc/users', user_Test);
   app.use('/hrc/hr', boardRoutes);
   app.use('/hrc/employee', employee);
-  app.use('/hrc/', user_Test);
+  // app.use('/hrc/', user_Test);
   app.use('*', (req, res) => {
     res.redirect('/hrc/login');
   });

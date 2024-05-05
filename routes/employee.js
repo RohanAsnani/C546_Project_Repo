@@ -4,6 +4,7 @@ import * as validation from '../helpers.js';
 import bcrypt from 'bcryptjs';
 import userTest from '../data/user_Test.js';
 import board from '../data/board.js';
+import login from '../data/login.js';
 
 
 router
@@ -31,6 +32,45 @@ router
             
         }catch(e){
             return res.status(500).json(e.message)
+        }
+    })
+    router
+    .route('/profile/changepass')
+    .get(async(req,res)=>{
+        try{
+            return res.render('./data_functions/changePass',{title:'Change Password',currentPass:'',newPass:'hidden',errorList:'hidden'});
+        }catch(e){
+            return res.status(500).json(e.message);
+        }
+    })
+    .post(async (req,res)=>{
+        try{
+           if(req.body.password){ 
+            let credentialsCheck = await login.getUsernameAndValidate(req.session.user.username,req.body.password)
+            credentialsCheck;
+            return res.render('./data_functions/changePass',{title:'Set New Pass',currentPass:'hidden',newPass:'',errorList:'hidden'})}
+
+            if(req.body.newPass){
+                if(req.body.newPass !== req.body.confirmNewPass)throw new Error("Passwords Don't match");
+                let setNewPass = await userTest.changePass(req.session.user.employeeId,req.body.newPass);
+
+                if(setNewPass === true){
+                    req.session.destroy();
+                    return res.render('changePassLogout');
+                    
+                    
+                }else{
+                    return res.json("Error: Could Not Update Password.");
+                }
+            }
+        }catch(e){
+           if(e.message === "Passwords Don't match"){
+            return res.status(400).render('./data_functions/changePass',{title:'Set New Pass',currentPass:'hidden',newPass:'',errorList:'',message:e.message})
+           }
+           if(e.message ==="New Password cannot be same as the old one."){
+            return res.status(400).render('./data_functions/changePass',{title:'Set New Pass',currentPass:'hidden',newPass:'',errorList:'',message:e.message});
+           }
+            return res.status(400).render('./data_functions/changePass',{title:'Change Password',message:'Incorrect Password.',newPass:'hidden',errorList:'',message:"Incorrect Password. Damn How did you login in the First Place??"})
         }
     })
 

@@ -99,6 +99,23 @@ async getUserById(userId){
   return userList;
 
 },
+async changePass(userId,newPass){
+  if(!userId || !newPass)throw new Error('UserId and New Password Both Needed.')
+  userId = validation.isValidEmployeeId(userId);
+  newPass = validation.checkPassConstraints(newPass,8);
+  let userCollection = await users();
+  let checkUserId = await userCollection.findOne({employeeId: userId});
+  if(!checkUserId)throw new Error(`No user with ${userId} exists.`)
+  let checkPass = await bcrypt.compare(newPass,checkUserId.password)
+  if(checkPass === true)throw new Error('New Password cannot be same as the old one.');
+  let brcyptNewPass = await validation.bcryptPass(newPass)
+
+  let checkNewPass = await userCollection.updateOne({employeeId: userId},{$set:{password:brcyptNewPass}}); 
+
+  if(!checkNewPass.acknowledged)throw new Error('Could not change PassWord. CONTACT ADMIN.');
+
+  return checkNewPass.acknowledged
+},
 async deleteUser(userId){
   if(!userId || userId === null)throw 'user Id required';
 

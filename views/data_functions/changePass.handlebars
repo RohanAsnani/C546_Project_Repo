@@ -1,0 +1,60 @@
+<h2>Change Password</h2>
+<button onclick="window.location.href='/hrc/employee'">Return to Homepage</button>
+<p {{currentPass}}>Enter Current Password to continue  </p>
+
+<form id="changePassword-form" name="changePassword-form" method="POST" {{currentPass}}>
+<label for="password" id="labelPassword" name="labelPassword">Enter Password:</label>
+<input type="password" id="password" name="password"><br>
+<button type="submit" id="submitBtn" name="submitBtn">Submit</button>
+</form>
+
+<form id="newPass-Form" name="newPass-Form" method="POST" {{newPass}}>
+    <label for="newPass" id="labelNewPass" name="labelNewPass">Enter New Password</label>
+    <input type="password" id="newPass" name="newPass"><br>
+    <label for="confirmNewPass" id="labelConfirmNewPass" name="labelConfirmNewPass">Confirm New Password</label>
+    <input type="password" id="confirmNewPass" name="confirmNewPass"><br>
+    <button type="submit" id="submit" name="submit">Submit</button>  
+</form>
+<p class="error" {{errorList}}>{{message}}</p>
+<ul id="errorListCS" name="errorListCS"> </ul>
+
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  
+
+<script>
+    $('#changePassword-form').submit((event)=>{
+        $('#errorListCS li').remove();
+        try{
+            $('#password').removeClass('error');
+            $('#labelPassword').removeClass('error');
+            if(!$('#password').val())throw new Error('Password Needed.')
+        }catch(e){
+             $('#password').addClass('error');
+            $('#labelPassword').addClass('error');
+             let li= `<li class='error'>${e.message}</li>`;
+            $('#errorListCS').append(li);
+            $('#errorListCS').show();
+            event.preventDefault();
+        }
+    });
+
+    $('#newPass-Form').submit((event)=>{
+        $('#errorListCS li').remove();
+        try{
+            $('#labelNewPass').removeClass('error');
+            $('#newPass').removeClass('error');
+            $('#labelConfirmNewPass').removeClass('error');
+            $('#confirmNewPass').removeClass('error');
+            if(!$('#newPass').val() || !$('#confirmNewPass').val() )throw new Error('New Password and Confirm Password Needed. ')
+            if($('#newPass').val() !== $('#confirmNewPass').val())throw new Error('Passwords do not match.')
+        }catch(e){
+            $('#labelNewPass').addClass('error');
+            $('#newPass').addClass('error');
+            $('#labelConfirmNewPass').addClass('error');
+            $('#confirmNewPass').addClass('error');
+             let li= `<li class='error'>${e.message}</li>`;
+            $('#errorListCS').append(li);
+            $('#errorListCS').show();
+            event.preventDefault();
+        }
+    })
+</script>
