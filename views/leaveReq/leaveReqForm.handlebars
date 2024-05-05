@@ -1,0 +1,48 @@
+<div>
+    <h1>Request for a Leave </h1>
+    <div>Summary of Leave Bank</div>
+    <ul>
+        <li>Sick Day : {{sickDaysLeft}} </li>
+        <li>Vacation Day : {{vacationDaysLeft}} </li>
+    </ul>
+
+    <h3> Look for past record of leaves</h3>
+    <button type="button" onclick="window.location.href='/hrc/employee/leaveReq/leaveRecord'">Past Leave Record</button>
+
+    <h2>Apply below for a leave</h2>
+    <p>Fill the form with the instructions and mention the dates</p>
+
+    <form id="leaveRequestForm" action="/hrc/employee/leaveReq/form" method="POST">
+        {{!-- <div class="leaveRequestFormDiv"> --}}
+            <div>
+                <label for="subject">Subject:</label>
+                <select id="subject" name="subject" required>
+                    {{!-- added required field for the dropdown --}}
+                    <option value="none" selected disabled hidden></option>
+                    <option value="Sick Leave">Sick Leave</option>
+                    <option value="Vacation Leave">Vacation Leave</option>
+                </select>
+            </div>
+            <div class="">
+                <label for="reason">Reason:</label>
+                <textarea id="reason" name="reason"></textarea>
+            </div>
+            <div>
+
+                <label for="startDate">Start Date:</label>
+                <input type="date" id="startDate" name="startDate">
+            </div>
+            <div>
+                <label for="endDate">End Date:</label>
+                <input type="date" id="endDate" name="endDate">
+            </div>
+            <button type="submit">Submit</button>
+            {{!--
+        </div> --}}
+    </form>
+
+    {{#if isSubmitted}}
+    <p>The form is submitted</p>
+    {{/if}}
+
+</div>

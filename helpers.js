@@ -791,4 +791,70 @@ const getCurrDate = () => {
     return `${month}-${day}-${year}`;
 };
 
-export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch, isValidEmployeeId, checkPassConstraints, isValidEmail, isValidPhoneNumber, bcryptPass, checkStrCS, checkMasterUser, checkTypeUserHR, updateValuesOfTwoObjects, convertDateFormat, getLaterDate, checkTypeUserEmployee, isDateBeforeToday, getTaskList,getCurrDate}
+const checkIsProperString = string1 => {
+    // To check if the input provided is valid or not
+  
+    if (typeof string1 !== "string") {
+      throw `${
+        string1 || "provided input"
+      } is not of type string. Kindly enter a string data type`;
+    }
+  
+    if (string1 == undefined || string1 == null) {
+      throw `${
+        string1 || "provided input"
+      } is undefined or unvalid. Kindly enter a valid string.`;
+    }
+  
+    if (string1.trim().length < 1) {
+      throw `${string1 || "provided input"} is empty`;
+    }
+  
+    return string1.trim();
+  };
+  
+  const checkifEmptySubject = subject => {
+    if (subject == null) {
+      throw new Error("subject for the leave is not selected");
+    }
+    return subject;
+  };
+  
+
+const validateLeaveReqForm = (subject, reason, startDate, endDate) => {
+    subject = checkifEmptySubject(subject);
+    const validOptions = ["Sick Leave", "Vacation Leave"];
+    if (!validOptions.includes(subject)) {
+      throw new Error("Subject is not choosen properly");
+    }
+    reason = checkIsProperString(reason);
+  
+    startDate = new Date(startDate);
+    endDate = new Date(endDate);
+    const currentDate = new Date();
+  
+    if (startDate < currentDate) {
+      throw new Error(
+        "The start date of the leave should be in the future, i.e. after the today's date"
+      );
+    }
+  
+    if (endDate < startDate) {
+      throw new Error(
+        "The end date of the leave should be in the future, i.e. after the start date"
+      );
+    }
+  
+    return { subject, reason, startDate, endDate };
+  };
+
+  const getDateFormat = (currDate) => {
+    const date = new Date(currDate);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${month}-${day}-${year}`;
+};
+
+export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch, isValidEmployeeId, checkPassConstraints, isValidEmail, isValidPhoneNumber, bcryptPass, checkStrCS, checkMasterUser, checkTypeUserHR, updateValuesOfTwoObjects, convertDateFormat, getLaterDate, checkTypeUserEmployee, isDateBeforeToday, getTaskList,getCurrDate,checkIsProperString, checkifEmptySubject, validateLeaveReqForm,getDateFormat}

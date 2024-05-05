@@ -1,0 +1,13 @@
+<h3>List of past leave records with status</h3>
+
+<ul>
+  {{#each leaveRecords}}
+  <li>
+    <h2>Subject: {{subject}}</h2>
+    <p>Reason: {{reason}}</p>
+    <p>Start Date: {{startDate}}</p>
+    <p>End Date: {{endDate}}</p>
+    <p>Status: {{status}}</p>
+  </li>
+  {{/each}}
+</ul>
