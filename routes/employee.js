@@ -109,6 +109,37 @@ router
         }
     });
 
+    router
+    .route('/getAllNotesByEmpId')
+    .get(async (req, res) => {
+        console.log("hi")
+        if (!req.session.user || !req.session.user.employeeId) {
+            return res.status(401).json({ message: "Unauthorized access: No employee ID found in session" });
+        }
+
+        const employeeId = req.session.user.employeeId;
+
+        try {
+            const notes = await userTest.getNotesByEmployeeId(employeeId); 
+            console.log('after')
+            if (notes.length === 0) {
+                return res.render('displaynotes', { 
+                    employeeId: employeeId,
+                    noNotes: true, 
+                    message: "No notes available for you"
+                });
+            } else {
+                return res.render('displaynotes', { 
+                    employeeId: employeeId,
+                    notes: notes
+                });
+            }
+        } catch (e) {
+            console.error("Error fetching notes:", e);
+            return res.status(500).json({ message: e.message });
+        }
+    });
+
 router
     .route('/getAllToDoByEmpId')
     .get(async (req, res) => {

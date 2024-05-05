@@ -1,0 +1,12 @@
+
+    <h1>Notes for Employee {{employeeId}}</h1>
+    {{#if noNotes}}
+        <p>{{message}}</p>
+    {{else}}
+        <ul>
+            {{#each notes}}
+                <li>{{this}}</li>
+            {{/each}}
+        </ul>
+    {{/if}}
+    <button onclick="window.location.href='/hrc/employee'">Homepage</button>
