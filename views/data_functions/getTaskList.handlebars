@@ -19,6 +19,10 @@
             {{!-- To be added for employee not for HR --}}
             <th>Action</th>
             {{/if}}
+            {{#if isEmp}}
+            {{else}}
+            <th>Action</th>
+            {{/if}}
 
         </tr>
         {{#if viewAll}}
@@ -36,6 +40,23 @@
             <td>{{dueDate}}</td>
             <td>{{completedOn}}</td>
             <td>{{status}}</td>
+            {{#if isEmp}}
+            {{else}}
+            {{#if completed}}
+            <td>
+                <p>-</p>
+            </td>
+            {{else}}
+            <td>
+                <button onclick="window.location.href='/hrc/hr/deleteTask/{{employeeId}}/{{taskId}}/{{taskType}}/false'"
+                    id="deleteTask" name="deleteTask" class="deleteTask" data-id="{{taskId}}">Delete
+                    Task</button><br>
+                <button
+                    onclick="window.location.href='/hrc/hr/emailReminder/{{employeeId}}/{{taskId}}/{{taskType}}/false'"
+                    id="sendEmail" name="sendEmail" class="sendEmail" data-id="{{taskId}}">Send reminder email</button>
+            </td>
+            {{/if}}
+            {{/if}}
         </tr>
         {{/each}}
         {{else}}

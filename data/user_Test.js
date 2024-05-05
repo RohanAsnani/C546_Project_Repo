@@ -191,6 +191,31 @@ async updatePatch(updationInfo){
     if (!onboardingUsers) return false
 
     return onboardingUsers.toArray();
+  },
+  async getUserByIdWithPass(userId) {
+
+    if (!userId) throw 'id required';
+    userId = validation.checkStrCS(userId, 'User Id', 5, 20, true, false);
+
+    const userCollection = await users();
+    let userList = await userCollection.findOne({ employeeId: userId });
+
+    if (!userList || userList === null) throw 'Error : User Not Found.';
+    return userList;
+
+  },
+  async updateUserStatus(updationInfo) {
+
+    const userCollection = await users();
+    let updatedInfo = await userCollection.findOneAndReplace(
+      { employeeId: updationInfo.employeeId },
+      updationInfo,
+      { returnDocument: 'after' }
+    );
+
+    if (!updatedInfo || updatedInfo === 'null') throw new Error(`Could not find user with id: ${updationInfo.employeeId}`);
+    return updatedInfo;
+
   }
 
 

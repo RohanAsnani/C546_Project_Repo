@@ -49,12 +49,6 @@
 
     <button type="submit" class="submitButton" id="submitButton" name="submitButton">Create</button><br>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.js"
-        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-
-    <script src="../../../../public/js/createTask.js"></script>
-
-
 </form>
 <h4>Assigned tasks</h4>
 <table class="taskTable">
@@ -98,6 +92,11 @@
     {{/each}}
 </table>
 <p>{{noDataPresentMsg}}</p>
+
+<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous"></script>
+
+<script src="../../../../public/js/createTask.js"></script>
 
 {{#if isOnboard}}
 <button onclick="window.location.href='/hrc/hr/getonboarding'">Back</button>
