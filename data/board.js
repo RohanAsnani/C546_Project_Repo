@@ -255,6 +255,50 @@ const exportedMethods = {
         if (!createdInfo || typeof (createdInfo) === 'null') throw new Error('Could not add Task.');
 
         return this.getboardingDataByObjectId(createdInfo.insertedId)
+    },
+    async deleteTask(employeeId, taskType, taskId) {
+        employeeId = validation.checkStrCS(employeeId, 'Employee Id', 0, 100, true);
+        let taskIdStr = taskId;
+        let taskObjId = ObjectId.createFromHexString(taskId);
+        taskId = validation.validObject(taskObjId);
+        taskType = validation.checkStrCS(taskType, 'Task Type', 0, 100, true);
+        const boardingCollection = await boarding();
+
+        const checkIfExists = await this.getTaskById(employeeId, taskType, taskId);
+
+        if (!checkIfExists) throw `Task does not exist with task Id: ${taskIdStr}.`;
+        let deletionInfo;
+        if (taskType === 'onboard') {
+            deletionInfo = await boardingCollection.updateOne(
+                { employeeId: employeeId, 'on._id': taskId },
+                { $pull: { on: { _id: taskId } } }
+            );
+        } else {
+            deletionInfo = await boardingCollection.updateOne(
+                { employeeId: employeeId, 'off._id': taskId },
+                { $pull: { off: { _id: taskId } } }
+            );
+        }
+
+
+        if (!deletionInfo) throw `Could not delete task with for employee id ${employeeId}`;
+        return deletionInfo;
+    },
+    async getTaskById(employeeId, taskType, taskId) {
+        employeeId = validation.checkStrCS(employeeId, 'Employee Id', 0, 100, true);
+        taskId = validation.validObject(taskId);
+        taskType = validation.checkStrCS(taskType, 'Task Type', 0, 100, true);
+
+        const boardingCollection = await boarding();
+        let taskData;
+        if (taskType === 'onboard') {
+            taskData = await boardingCollection.findOne({ 'on._id': taskId }, { projection: { 'on.$': 1 } });
+        } else {
+            taskData = await boardingCollection.findOne({ 'off._id': taskId }, { projection: { 'off.$': 1 } });
+        }
+
+        if (!taskData || taskData === null) throw 'Error : Task Not Found.';
+        return (taskType === 'onboard') ? taskData.on[0] : taskData.off[0];
     }
 }
 

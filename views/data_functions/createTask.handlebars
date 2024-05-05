@@ -68,6 +68,7 @@
         <th>Due Date</th>
         <th>Completed On</th>
         <th>Status</th>
+        <th>Action</th>
     </tr>
     {{#each taskList}}
     <tr>
@@ -80,6 +81,20 @@
         <td>{{dueDate}}</td>
         <td>{{completedOn}}</td>
         <td>{{status}}</td>
+        {{#if completed}}
+        <td>
+            <p>-</p>
+        </td>
+        {{else}}
+        <td>
+            <button onclick="window.location.href='/hrc/hr/deleteTask/{{employeeId}}/{{taskId}}/{{taskType}}/true'"
+                id="deleteTask" name="deleteTask" class="deleteTask" data-id="{{taskId}}">Delete
+                Task</button><br>
+            {{!-- <button
+                onclick="window.location.href='/hrc/hr/emailReminder/{{employeeId}}/{{taskId}}/{{taskType}}/true'"
+                id="sendEmail" name="sendEmail" class="sendEmail" data-id="{{taskId}}">Send reminder email</button> --}}
+        </td>
+        {{/if}}
     </tr>
     {{/each}}
 </table>
