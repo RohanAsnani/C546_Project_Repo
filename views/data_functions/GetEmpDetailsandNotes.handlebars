@@ -18,11 +18,11 @@
 </div>
 
 {{#if error}}
-<p class="error">{{error}}</p>
+    <p class="error">{{error}}</p>
 {{/if}}
 
 {{#if successMessage}}
-<p class="success">{{successMessage}}</p>
+    <p class="success">{{successMessage}}</p>
 {{/if}}
 
 <h2>Add a Note:</h2>
@@ -41,8 +41,20 @@
     <button type="submit">Submit Note</button>
 </form>
 
+<h2>Documents Submitted by This Employee</h2> 
+    <ul>
+        {{#each documents}}
+            <li>
+                {{typeOfDoc}} - Submitted on: {{submittedOn}}
+                <button onclick="window.location.href='/hrc/employee/uploadDocs/viewDocByDocId/{{docId}}'">Download</button>
+            </li>
+        {{else}}
+            <p>No documents have been submitted.</p>
+        {{/each}}
+    </ul>
+{{else}}
+    <p>No documents have been submitted by this employee.</p>
+{{/if}}
 
 <button onclick="window.location.href='/hrc/hr'">Homepage</button>
 <a class="page-link" id="logoutLink" href="/hrc/logout">Logout</a>
-
-

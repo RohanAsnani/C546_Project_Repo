@@ -7,6 +7,8 @@ import xss from 'xss';
 import * as analytics from '../Analytics/Analytics_Functions.js';
 import { ObjectId } from "mongodb";
 import sendEmail from "../util/emailNotif.js";
+import doc from '../data/documents.js'
+import multer from 'multer';
 
 router.route('/')
     .get(async (req, res) => {
@@ -26,7 +28,7 @@ router.route('/getAllEmployees')
             return res.status(500).json(e.message);
         }
     });
-
+/*
 router.route('/getEmpDetails/:employeeId')
     .get(async (req, res) => {
         try {
@@ -36,7 +38,34 @@ router.route('/getEmpDetails/:employeeId')
         } catch (e) {
             return res.status(404).render('404Page', { title: '404 Not Found.', message: e.message });
         }
+    });  */
+
+
+router
+.route('/getEmpDetails/:employeeId')
+.get(async (req, res) => {
+        try {
+            let employeeId = req.params.employeeId;
+            let employeeDetails = await user_Test.getUserById(employeeId);
+            let documentsData = await doc.getDocumentsByEmployeeId(employeeId);
+                let hasDocuments = documentsData.documents && documentsData.documents.length > 0;
+                return res.render('./data_functions/GetEmpDetailsandNotes', {
+                title: 'Employee Details',
+                ...employeeDetails,
+                documents: documentsData.documents,
+                noDocuments: !hasDocuments, // Add a flag to indicate presence of documents
+                isLoggedIn: true
+            });
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            return res.status(500).render('404Page', {
+                title: 'Error',
+                message: 'Failed to retrieve employee details or documents.',
+                isLoggedIn: true
+            });
+        }
     });
+    
 
 router.route('/submit-note')
     .post(async (req,res)=>{
