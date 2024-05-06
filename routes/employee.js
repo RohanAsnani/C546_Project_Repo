@@ -6,6 +6,7 @@ import userTest from '../data/user_Test.js';
 import board from '../data/board.js';
 import login from '../data/login.js';
 import { ObjectId } from 'mongodb';
+import xss from 'xss';
 
 
 router
@@ -15,8 +16,10 @@ router
         try {
             let status = req.session.user.status;
             let msg;
-            if (status !== 'Active') {
+            if (status !== 'Active' && status.startsWith('Onboarding')) {
                 msg = `Please complete your profile and/or boarding tasks.`;
+            } else if (status !== 'Active' && status.startsWith('Offboarding')) {
+                msg = `Please complete your off boarding tasks.`;
             }
             return res.render('./users/employee', { title: 'Employee', firstName: req.session.user.firstName, role: req.session.user.role, employeeId: req.session.user.employeeId, isAdmin: (req.session.user.role === 'Admin') ? true : false, isHR: (req.session.user.role === 'HR') ? true : false, msg: msg, isLoggedIn: true, isNotActive: (status !== 'Active') ? true : false });
         } catch (e) {
@@ -157,7 +160,14 @@ router
             if (boardUserData) {
                 let boardUsrData = [];
                 boardUsrData.push(boardUserData);
-                let res = await validation.getTaskList(boardUsrData, taskList, msg, true, false, true);
+                let isOnboard = true;
+                let status = req.session.user.status;
+                if (status.startsWith('Onboarding')) {
+                    isOnboard = true;
+                } else if (status.startsWith('Offboarding')) {
+                    isOnboard = false;
+                }
+                let res = await validation.getTaskList(boardUsrData, taskList, msg, true, isOnboard, false);
                 if (res.taskList) {
                     taskList = res.taskList;
                 }
@@ -167,7 +177,7 @@ router
             } else {
                 msg = `No tasks assigned.`;
             }
-            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: false, isEmp: true, taskTypeList: 'To-Do Task List' ,isLoggedIn:true});
+            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: false, isEmp: true, taskTypeList: 'To-Do Task List', isLoggedIn: true });
             // return res.json(boardUserData);
         } catch (e) {
             return res.status(500).json(e.message);
@@ -254,5 +264,46 @@ router
             return res.status(404).json(e.message);
         }
 
+    });
+
+router
+    .route('/resign')
+    .get(async (req, res) => {
+        try {
+            let employeeId = req.session.user.employeeId;
+            let empData = await userTest.getUserById(employeeId);
+            return res.render('./data_functions/resign', { title: 'Emloyee Resignation', firstName: empData.firstName, lastName: empData.lastName, username: empData.username, employeeId: empData.employeeId });
+        } catch (e) {
+            return res.status(400).json({ error: e });
+        }
+    })
+    .post(async (req, res) => {
+        try {
+            let data = req.body;
+            if (!data || Object.keys(data).length === 0) {
+                return res
+                    .status(400)
+                    .json({ error: 'There are no fields in the request body' });
+            }
+            let employeeId = xss(data.employeeId);
+            let resignReason = xss(data.resignReason);
+
+            let empData = await userTest.getUserByIdWithPass(employeeId);
+            empData.status = 'Offboarding';
+            empData.resignedOn = validation.getCurrDate();
+            empData.resignReason = resignReason;
+            let patchedInfo = await userTest.updateUserStatus(empData);
+            empData = await userTest.getUserById(employeeId);
+            req.session.user = empData;
+            let status = req.session.user.status;
+            let msg;
+            if (status !== 'Active' && status.startsWith('Offboarding')) {
+                msg = `Please complete your off boarding tasks.`;
+            }
+            return res.render('./users/employee', { title: 'Employee', firstName: req.session.user.firstName, role: req.session.user.role, employeeId: req.session.user.employeeId, isAdmin: (req.session.user.role === 'Admin') ? true : false, isHR: (req.session.user.role === 'HR') ? true : false, msg: msg, isLoggedIn: true, isNotActive: (status !== 'Active' && status.startsWith('Offboarding')) ? true : false });
+
+        } catch (e) {
+            return res.status(400).json({ error: e });
+        }
     });
 export default router 

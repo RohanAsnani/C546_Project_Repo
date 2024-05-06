@@ -61,6 +61,7 @@
     {{!-- dynamically populating  --}}
     <label for="managerId" id="labelManagerId">Assign Manager:</label>
     <select id="managerId" name="managerId" >
+        <option value="none" selected hidden disabled></option>
         {{#each manager}}
         <option value="{{employeeId}}">{{firstName}} {{lastName}}</option>
         {{/each}}

@@ -1,0 +1,36 @@
+<form id="resign-form" name="resign-form" class="resign-form" method="POST">
+    <h2>{{title}}</h2>
+    <h4>Employee Details</h4>
+
+    <label for="firstName" id="labelFirstName">First Name:</label>
+    <input type="text" class="firstName" id="firstName" name="firstName" value="{{firstName}}" readonly="readonly"><br>
+
+    <label for="lastName" id="labelLastName">Last Name:</label>
+    <input type="text" class="lastName" id="lastName" name="lastName" value="{{lastName}}" readonly="readonly"><br>
+
+    <label for="employeeId" id="labelEmployeeId">Employee Id:</label>
+    <input type="text" class="employeeId" id="employeeId" name="employeeId" value="{{employeeId}}"
+        readonly="readonly"><br>
+
+    <label for="username" id="labelUsername">Username:</label>
+    <input type="text" class="username" id="username" name="username" value="{{username}}" readonly="readonly"><br>
+
+
+    {{!-- Resignation Reason --}}
+    <label for="resignReason" id="labelResignReason">Resignation Reason:</label>
+    <input type="text" class="resignReason" id="resignReason" name="resignReason"><br>
+
+    <ul id="errorList" name="errorList" hidden> </ul>
+
+    <p id="error" name="error" class="error" {{hidden}}>
+        {{message}}
+    </p>
+
+    <button type="submit" class="submitButton" id="submitButton" name="submitButton">Submit</button><br>
+
+</form>
+
+<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous"></script>
+
+<script src="../../../../public/js/resign.js"></script>
