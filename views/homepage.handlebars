@@ -1,21 +1,51 @@
+<div>
+  <form
+    action="/hrc/login"
+    method="post"
+    class="loginForm"
+    name="loginForm"
+    id="c"
+  >
+    <label
+      for="username"
+      id="labelUsername"
+      name="labelUsername"
+    >Username</label>
+    <input
+      type="text"
+      name="username"
+      id="username"
+      placeholder="Enter Username"
+      class="inputbox"
+      value="{{username}}"
+    /><br />
 
-<div> 
-    <form action="/hrc/login" method="post" class="loginForm" name="loginForm" id="loginForm">
-    <label for="username" id="labelUsername" name="labelUsername">Username:</label>
-    <input type="text" name="username" id="username" placeholder="Enter Username" class="inputbox" value="{{username}}"><br>
+    <label
+      for="password"
+      id="labelPassword"
+      name="labelPassword"
+    >Password</label>
+    <input
+      type="password"
+      name="password"
+      id="password"
+      placeholder="Enter Password"
+      class="inputbox"
+      value="{{password}}"
+    />
 
-    <label for="password" id="labelPassword" name="labelPassword">Password:</label>
-    <input type="password" name="password" id="password" placeholder="Enter Password" class="inputbox" value="{{password}}">
+    <ul id="errorList" name="errorList" hidden> </ul>
 
-    <ul  id="errorList" name="errorList" hidden> </ul>
-    
-    <p  id="error" name="error" class="error" {{hidden}}>{{message}} </p><br>
-    <button type="submit">Login</button>
+    <p id="error" name="error" class="error Gbutton" {{hidden}}>{{message}} </p><br />
+    <button id="loginButton" type="submit">Login</button>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.js"
-		integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.js"
+      integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+      crossorigin="anonymous"
+    ></script>
 
     <script src="../public/js/homepage.js"></script>
 
-</form>
+  </form>
 </div>

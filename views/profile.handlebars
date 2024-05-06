@@ -1,41 +1,41 @@
-<button onclick="window.location.href='/hrc/employee/profile/edit'">Edit Details</button>
+<button class="backButton" onclick="window.location.href='/hrc/employee/profile/edit'">Edit Details</button>
 <div>
-<h2>Employee Details</h2>
-<p>Employee Id: {{employeeId}}</p>
-<p>First Name: {{firstName}}</p>
-<p>Last Name: {{lastName}}</p>
-<p>Gender: {{gender}}</p>
-<p>Marital Status: {{maritalStatus}}</p>
-<p>Veteran: {{vet}}</p>
-<p>Disability: {{disability}}</p>
-<p>Race: {{race}}</p>
-<p>Country Of Origin: {{countryOfOrigin}}</p>
-<p>Date of Birth: {{dob}}</p>
-<p>Gender: {{gender}}</p>
-<p>Current Position: {{currentPosition}}</p>
-<p>Current Salary: {{currentSalary}}</p>
-<p>Start Date: {{startDate}}</p>
-{{#if endDate}}
-<p>End Date: {{endDate}}</p>
-{{/if}}
+    <h2>Employee Details</h2>
+    <p> <span class="highlight">Employee Id:</span> {{employeeId}}</p>
+    <p> <span class="highlight">First Name:</span> {{firstName}}</p>
+    <p> <span class="highlight">Last Name:</span> {{lastName}}</p>
+    <p> <span class="highlight">Gender: </span>{{gender}}</p>
+    <p> <span class="highlight">Marital Status:</span> {{maritalStatus}}</p>
+    <p> <span class="highlight">Veteran: </span>{{vet}}</p>
+    <p> <span class="highlight">Disability: </span>{{disability}}</p>
+    <p> <span class="highlight">Race: </span>{{race}}</p>
+    <p> <span class="highlight">Country Of </span>Origin: {{countryOfOrigin}}</p>
+    <p> <span class="highlight">Date of </span>Birth: {{dob}}</p>
+    <p> <span class="highlight">Gender: </span>{{gender}}</p>
+    <p> <span class="highlight">Current Position:</span> {{currentPosition}}</p>
+    <p> <span class="highlight">Current Salary:</span> {{currentSalary}}</p>
+    <p> <span class="highlight">Start Date:</span> {{startDate}}</p>
+    {{#if endDate}}
+    <p> <span class="highlight">End Date:</span> {{endDate}}</p>
+    {{/if}}
 </div>
 
 <div>
-<h2>Account Details</h2>
-<p>Username: {{username}}</p>
-<p>Department: {{department}}</p>
-<p>Role: {{role}}</p>
-<p>Status: {{status}}</p>
-<p>Is Manager: {{isManager}}</p>
+    <h2>Account Details</h2>
+    <p> <span class="highlight">Username: </span>{{username}}</p>
+    <p> <span class="highlight">Department: </span>{{department}}</p>
+    <p> <span class="highlight">Role: </span>{{role}}</p>
+    <p> <span class="highlight">Status: </span>{{status}}</p>
+    <p> <span class="highlight">Is Manager:</span> {{isManager}}</p>
 </div>
 
 <div>
-<h2>Contact Info</h2>
-<p>Phone Number: {{contactInfo.phone}}</p>
-<p>Email: {{contactInfo.email}}</p>
-<p>Personal Email: {{contactInfo.personalEmail}}</p>
-<p>Primary Address: {{contactInfo.primaryAddress}}</p>
-<p>Secondary Address: {{contactInfo.secondaryAddress}}</p><br>
+    <h2>Contact Info</h2>
+    <p> <span class="highlight">Phone Number:</span> {{contactInfo.phone}}</p>
+    <p> <span class="highlight">Email: </span>{{contactInfo.email}}</p>
+    <p> <span class="highlight">Personal Email:</span> {{contactInfo.personalEmail}}</p>
+    <p> <span class="highlight">Primary Address:</span> {{contactInfo.primaryAddress}}</p>
+    <p> <span class="highlight">Secondary Address:</span> {{contactInfo.secondaryAddress}}</p><br>
 </div>
 
-<button onclick="window.location.href='/hrc/employee'">Homepage</button>
+<button class="backButton" onclick="window.location.href='/hrc/employee'">Homepage</button>

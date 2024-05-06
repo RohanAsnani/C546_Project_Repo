@@ -51,10 +51,22 @@ h2 {
 .loginForm label {
   margin-bottom: 5px;
   text-align: center;
+  color: coral;
+  font-weight: 800;
 }
 
 .loginForm input {
   margin-bottom: 5px;
+  padding: 5px 15px;
+}
+
+.loginForm input:hover {
+  border-color: rgb(13, 118, 222);
+}
+
+.loginForm input:focus {
+  outline: none;
+  border-color: rgb(228, 141, 34);
 }
 
 .footer {
@@ -216,7 +228,7 @@ td {
 #leaveRequestForm {
   display: flex;
   flex-direction: column;
-  max-width: 100px;
+  max-width: 200px;
   margin: auto;
   padding: 20px;
 }
@@ -228,5 +240,199 @@ td {
 
 .highlightt {
   font-weight: 900;
-  color: rgb(59, 131, 131);
+  color: rgb(195, 122, 59);
+}
+
+.sidebar {
+  margin: 10px;
+}
+
+.sidebar > button {
+  margin: 10px;
+}
+
+.backButton {
+  background-color: maroon;
+  padding: 4px 10px;
+  color: whitesmoke;
+  font-weight: bold;
+  /* font-size: medium; */
+  border: 1px solid maroon;
+  border-radius: 10px;
+  margin: 5px;
+}
+
+.backButton:hover {
+  cursor: pointer;
+  background-color: whitesmoke;
+  color: maroon;
+  border: 1px solid maroon;
+}
+
+.Gbutton {
+  background-color: royalblue;
+  padding: 7px 20px;
+  color: ghostwhite;
+  font-weight: bolder;
+  font-size: medium;
+  border: 1px solid royalblue;
+  border-radius: 10px;
+}
+
+.Gbutton:hover {
+  cursor: pointer;
+  background-color: ghostwhite;
+  color: royalblue;
+  border: 1px solid royalblue;
+}
+
+#loginButton {
+  font-size: large;
+  border-radius: 20px;
+  background-color: rgb(40, 196, 40);
+  border: 1px solid green;
+  padding: 7px 20px;
+  color: ghostwhite;
+  font-weight: bold;
+}
+
+#loginButton:hover {
+  background-color: ghostwhite;
+  color: rgb(40, 196, 40);
+  border: 1px solid green;
+  cursor: pointer;
+}
+
+#leaveReqContainer {
+  margin: 20px;
+}
+
+.leaveFormContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* max-width: 550px; */
+}
+
+#leaveRequestForm > label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+#leaveFormButton {
+  margin: 10px;
+  font-size: large;
+  border-radius: 20px;
+  background-color: rgb(40, 196, 40);
+  border: 1px solid green;
+  padding: 7px 20px;
+  color: ghostwhite;
+  font-weight: bold;
+}
+
+#leaveFormButton:hover {
+  background-color: ghostwhite;
+  color: rgb(40, 196, 40);
+  border: 1px solid green;
+  cursor: pointer;
+}
+
+.subjectLeave {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #d5d3d3;
+  border-radius: 3px;
+}
+
+.reasonLeave {
+  width: 100%;
+  min-height: 100px;
+  padding: 5px;
+  border: 1px solid #dfdbdb;
+  border-radius: 3px;
+}
+
+.leaveRecord {
+  list-style-type: none;
+  padding: 0;
+}
+
+.leaveRecord li {
+  margin: 15px;
+  background-color: #e4e3e3;
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+}
+
+.logoutView {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  max-width: 300px;
+  margin: auto;
+}
+
+.decisionButton {
+  border-radius: 20px;
+  background-color: rgb(40, 196, 40);
+  border: 1px solid green;
+  padding: 3px 10px;
+  color: ghostwhite;
+  font-weight: 600;
+}
+
+.decisionButton:hover {
+  background-color: ghostwhite;
+  color: rgb(40, 196, 40);
+  border: 1px solid green;
+  cursor: pointer;
+}
+
+.decideHR {
+  margin: 0px 10px;
+}
+
+table {
+  width: 90%;
+  border-collapse: collapse;
+  margin: 10px auto;
+}
+
+thead th {
+  background-color: #113c68;
+  border: 1px solid whitesmoke;
+  padding: 7px;
+  color: whitesmoke;
+  text-align: center;
+}
+
+tbody td {
+  border: 1px solid whitesmoke;
+  padding: 10px;
+}
+
+tbody tr:hover {
+  background-color: #efefef;
+}
+
+.page-link {
+  background-color: maroon;
+  padding: 2px 6px;
+  color: whitesmoke;
+  font-weight: bold;
+  border: 1px solid maroon;
+  border-radius: 10px;
+  margin: 5px;
+  text-decoration: none;
+  margin-top: 10px;
+}
+
+.page-link:hover {
+  cursor: pointer;
+  background-color: whitesmoke;
+  color: maroon;
+  border: 1px solid maroon;
 }

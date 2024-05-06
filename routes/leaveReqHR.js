@@ -18,7 +18,7 @@ router.route("/getAll").get(async (req, res) => {
     const leaveRequests = await getAllLeaves();
     res.status(200).render("./leaveReq/leaveRequestList", { leaveRequests });
   } catch (error) {
-    res.status(500).send(error);
+    return res.status(400).render("./404Page/", { message: e.message });
   }
 });
 
@@ -32,7 +32,7 @@ router.route("/getAll/:objectId").get(async (req, res) => {
       .status(200)
       .render("./leaveReq/decideHR", { leaveData, obj: obj });
   } catch (e) {
-    return res.status(400).json(e.message);
+    return res.status(400).render("./404Page/", { message: e.message });
   }
 });
 
@@ -56,7 +56,7 @@ router.route("/getAll/:objectId").post(async (req, res) => {
     );
     return res.status(200).render("./leaveReq/decideHR");
   } catch (error) {
-    return res.status(404).json(error.message);
+    return res.status(400).render("./404Page/", { message: e.message });
   }
 });
 

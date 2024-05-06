@@ -1,24 +1,25 @@
-<div>
-    <h3>Decide the Leave Request status</h3>
+<div class="decideHR">
+    <h2>Decide the Leave Request status</h2>
     <h4>Approve, Decline or keep the status of the leave as pending</h4>
     {{!-- The leave req form filled by the employee --}}
     <div>
         {{!-- We can additionally passs the name and department of the employee --}}
-        <p>Employee ID :- {{leaveData.employeeID}}</p>
+        <p> <span class="highlight">Employee ID :- </span> {{leaveData.employeeID}}</p>
         {{!-- additionally --}}
-        {{!-- <p>Employee Name :- {{employeeName}}</p>
-        <p>Employee Department :- {{employeeDepartment}}</p> --}}
+        {{!-- <p> <span class="highlight">Employee Name </span>:- {{employeeName}}</p>
+        <p> <span class="highlight">Employee Department </span>:- {{employeeDepartment}}</p> --}}
         {{!-- --}}
-        <p>Start Date:- {{leaveData.startDate}}</p>
-        <p>End Date:- {{leaveData.endDate}}</p>
-        <p>Type of Leave:- {{leaveData.subject}}</p>
-        <p>Reason for the Leave:- {{leaveData.reason}}</p>
+        <p> <span class="highlight">Start Date:- </span> {{leaveData.startDate}}</p>
+        <p> <span class="highlight">End Date:- </span> {{leaveData.endDate}}</p>
+        <p> <span class="highlight">Type of Leave:- </span> {{leaveData.subject}}</p>
+        <p> <span class="highlight">Reason for the Leave:- </span> {{leaveData.reason}}</p>
     </div>
     <div class="HrForm">
         <form action="/hrc/hr/leaveReq/getAll/{{obj}}" method="POST">
-            <label for="reasonHR">Reason for the Decision:-</label>
-            <textarea id="reasonHR" name="reasonHR">{{leaveData.commentsReviewer}}</textarea>
-            <p>Final Decision for the leave Request :- </p>
+            <label class="highlight" for="reasonHR">Reason for the Decision:-</label>
+            <textarea id="reasonHR" name="reasonHR"
+                placeholder="Provide a reason">{{leaveData.commentsReviewer}}</textarea>
+            <p class="highlight">Final Decision for the leave Request :- </p>
             <label>
                 <input type="radio" name="radioButton" value="Approve">
                 Approve
@@ -28,12 +29,12 @@
                 Decline
             </label>
             <label>
-                <input type="radio" name="radioButton" value="Pending">
+                <input type="radio" name="radioButton" value="Pending" checked>
                 Pending
             </label>
-            <button type="submit">Submit</button>
+            <button type="submit" class="decisionButton">Submit</button>
         </form>
-        <button onclick="window.location.href='/hrc/hr/leaveReq/getAll'">Go Back</button>
+        <button class="backButton" onclick="window.location.href='/hrc/hr/leaveReq/getAll'">Go Back</button>
         {{!-- On click submit the form submitted messaged should be appear --}}
         {{!-- For client side validation atleast and exactly one of the checkbox should be checked --}}
     </div>

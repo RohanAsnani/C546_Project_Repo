@@ -22,7 +22,7 @@ router.route("/form").get(async (req, res) => {
       isSubmitted: false,
     });
   } catch (error) {
-    res.status(400).json(error);
+    return res.status(400).render("./404Page/", { message: e.message });
   }
 });
 
@@ -41,8 +41,8 @@ router.route("/form").post(async (req, res) => {
       startDate,
       endDate
     ));
-  } catch (error) {
-    return res.status(400).json(error.message);
+  } catch (e) {
+    return res.status(400).render("./404Page/", { message: e.message });
   }
 
   try {
@@ -81,7 +81,7 @@ router.route("/leaveRecord").get(async (req, res) => {
 
     res.status(200).render("./leaveReq/leaveRecord", { leaveRecords });
   } catch (error) {
-    return res.status(404).json(error.message);
+    return res.status(400).render("./404Page/", { message: e.message });
   }
 });
 
