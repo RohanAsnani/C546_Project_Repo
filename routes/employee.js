@@ -56,6 +56,7 @@ router
     .post(async (req,res)=>{
         try{
            if(req.body.password){ 
+            req.body.password = xss(req.body.password);
             let credentialsCheck = await login.getUsernameAndValidate(req.session.user.username,req.body.password)
             credentialsCheck;
             return res.render('./data_functions/changePass',{title:'Set New Pass',currentPass:'hidden',newPass:'',errorList:'hidden'})}
@@ -95,6 +96,11 @@ router
         try{
             //validation
             let patchData = req.body
+            for (let key in patchData) {
+                if (typeof patchData[key] === 'string') {
+                    patchData[key] = xss(patchData[key]);
+                }
+            }
                 patchData = validation.checkTypeUserEmployee(patchData);
         }catch(e){
             let existingData =req.session.user// await userTest.getUserById(req.session.user.employeeId);
@@ -266,6 +272,11 @@ router.route('/fillSalaryForm')
         let paymentType
         try {
             let salaryData = req.body;
+            for (let key in salaryData) {
+                if (typeof salaryData[key] === 'string') {
+                    salaryData[key] = xss(salaryData[key]);
+                }
+            }
             employeeId = validation.isValidEmployeeId(salaryData.employeeId);
             if(ObjectId.isValid(salaryData.taskId)){
                 taskId = salaryData.taskId;
@@ -504,6 +515,11 @@ router.route('/selectBenifitsForm')
         let beneficiaries=[];
         try {
             let benifitsData = req.body;
+            for (let key in benifitsData) {
+                if (typeof benifitsData[key] === 'string') {
+                    benifitsData[key] = xss(benifitsData[key]);
+                }
+            }
             employeeId = xss(validation.isValidEmployeeId(benifitsData.employeeId));
             if(ObjectId.isValid(benifitsData.taskId)){
                 taskId = benifitsData.taskId;
@@ -643,6 +659,11 @@ router
     .post(async (req, res) => {
         try {
             let data = req.body;
+            for (let key in data) {
+                if (typeof data[key] === 'string') {
+                    data[key] = xss(data[key]);
+                }
+            }
             if (!data || Object.keys(data).length === 0) {
                 return res
                     .status(400)

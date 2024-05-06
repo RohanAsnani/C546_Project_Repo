@@ -75,8 +75,8 @@ router
 router.route('/submit-note')
     .post(async (req,res)=>{
         //console.log(req.body)
-        const employeeId  = req.body.employeeId;
-        const notes  = req.body.notes;
+        const employeeId  = xss(req.body.employeeId);
+        const notes  = xss(req.body.notes);
         if (!employeeId || !notes) {
             return res.status(400).render('./data_functions/GetEmpDetailsandNotes', {
                 error: "Both Employee ID and note are required and cannot be empty."
@@ -132,6 +132,10 @@ router
     .post(async (req,res)=>{
         try{
             let data = req.body
+            data.employeeId = validation.isValidEmployeeId(data.employeeId);
+            data.endDate = validation.checkStrCS(data.endDate, 'End Date');
+            data.employeeId = xss(data.employeeId);
+            data.endDate = xss(data.endDate);
             let updatedUser = await boardData.addEndDate(data.employeeId,data.endDate);
             if(updatedUser){
                 return res.render('offboardingAcknowledge',{title:`Offboarding ${updatedUser.employeeId}`,...updatedUser});
@@ -348,11 +352,18 @@ router
             return;
         }
         try {
-            let employeeId = req.params.employeeId.trim();
-            let taskType = req.params.taskType.trim().toLowerCase();
-            let taskId = req.params.taskId.trim();
-            let byEmp = req.params.byEmp.trim();
-
+            let employeeId = xss(req.params.employeeId.trim());
+            let taskType = xss(req.params.taskType.trim().toLowerCase());
+            let taskId = xss(req.params.taskId.trim());
+            let byEmp = xss(req.params.byEmp.trim());
+            employeeId = validation.isValidEmployeeId(employeeId);
+            if(taskType !== 'onboard' && taskType !== 'offboard'){
+                throw new Error('Invalid Task Type for deletion of task.');
+            }
+            taskId = ObjectId.isValid(taskId);
+            if(byEmp !== 'true' && byEmp !== 'false'){
+                throw new Error('Invalid Request for deletion of task.');
+            }
             const deletedInfo = await boardData.deleteTask(employeeId, taskType, taskId);
             if (byEmp === 'true') {
                 return res.redirect(`/hrc/hr/createTask/${taskType}/${employeeId}`);

@@ -3,6 +3,7 @@ const router = Router();
 import usertest from '../data/user_Test.js';
 import * as validation from "../helpers.js";
 import login from '../data/login.js';
+import xss from 'xss';
 
 
 router.route('/')
@@ -16,6 +17,8 @@ router.route('/')
 .post(async (req,res) =>{
   
     try{
+        req.body.username = xss(req.body.username)
+        req.body.password = xss(req.body.password)
         let credentialsCheck =  await login.getUsernameAndValidate(req.body.username,req.body.password);
          req.session.user = credentialsCheck
         

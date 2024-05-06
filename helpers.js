@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 import bcrypt from 'bcryptjs';
 import userData from './data/user_Test.js';
+import xss from 'xss';
 
 const checkStr = (str, param, minLen, maxLen, containNum) => {
     if (!(typeof (str) === 'string')) throw new Error(`${param} needs to be string type.`)
@@ -347,15 +348,15 @@ const isPastDate=(dateString)=>{
     return givenDate < currentDate;
 }
 const checkTypeUserHR =(patchInfo)=>{
-    patchInfo.firstName = checkStrCS(patchInfo.firstName,'First Name',2,20,false,false)
-    patchInfo.lastName = checkStrCS(patchInfo.lastName,'First Name',2,20,false,false)
-    patchInfo.employeeId = isValidEmployeeId(patchInfo.employeeId);
+    patchInfo.firstName = xss(checkStrCS(patchInfo.firstName,'First Name',2,20,false,false))
+    patchInfo.lastName = xss(checkStrCS(patchInfo.lastName,'First Name',2,20,false,false))
+    patchInfo.employeeId = xss(isValidEmployeeId(patchInfo.employeeId));
 
     patchInfo.department = checkState(patchInfo.department,'Department',['IT','Finance','Human Resources','Adminstration','Research And Development','Customer Service']);
     
     patchInfo.role = checkState(patchInfo.role,'role',['Admin','HR','Employee']);
     
-    patchInfo.startDate = patchInfo.startDate.trim();
+    patchInfo.startDate = xss(patchInfo.startDate.trim());
 
     patchInfo.startDate = dateFormat(patchInfo.startDate);
 
@@ -368,7 +369,7 @@ const checkTypeUserHR =(patchInfo)=>{
 
     isDateBeforeToday(patchInfo.startDate);
 
-    patchInfo.email = isValidEmail(patchInfo.email);
+    patchInfo.email = xss(isValidEmail(patchInfo.email));
     if(patchInfo.isManager){
     patchInfo.isManager = checkState(patchInfo.isManager.toString(), 'isManager', ['true', 'false']);
     patchInfo.isManager = Boolean(patchInfo.isManager);
@@ -377,7 +378,7 @@ const checkTypeUserHR =(patchInfo)=>{
     }
 
     if(patchInfo.managerId){
-    patchInfo.managerId = isValidEmployeeId(patchInfo.managerId);
+    patchInfo.managerId = xss(isValidEmployeeId(patchInfo.managerId));
     }else{
         patchInfo.managerId = "";
     }
@@ -394,7 +395,7 @@ const checkTypeUserHR =(patchInfo)=>{
     patchInfo.phone = "";
     patchInfo.primaryAddress = "";
     patchInfo.secondaryAddress = "";
-    patchInfo.currentPosition = checkStrCS(patchInfo.currentPosition,'Current Position',5,20,true,false);
+    patchInfo.currentPosition = xss(checkStrCS(patchInfo.currentPosition,'Current Position',5,20,true,false));
     patchInfo.currentSalary= Number(patchInfo.currentSalary);
     patchInfo.currentSalary = numberExistandType(patchInfo.currentSalary,`Salary`, false, 2);
     patchInfo.currentSalary = numberRange(patchInfo.currentSalary, 'Salary', 15.13, 200);

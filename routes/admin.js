@@ -4,6 +4,7 @@ import * as validation from '../helpers.js';
 import bcrypt from 'bcryptjs';
 import userTest from '../data/user_Test.js';
 import boardData from '../data/board.js';
+import xss from 'xss';
 
 
 router
@@ -27,6 +28,12 @@ router
             //validation
             let creationData = req.body;
             creationData = validation.checkMasterUser(creationData);
+
+            for (let key in creationData) {
+                if (typeof creationData[key] === 'string') {
+                    creationData[key] = xss(creationData[key]);
+                }
+            }
 
         } catch (e) {
             return res.status(400).render('./data_functions/createUser', { title: 'Create User', hidden: '', message: e.message ,...req.body,isLoggedIn:true});
