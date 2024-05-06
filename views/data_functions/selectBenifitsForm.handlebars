@@ -47,6 +47,12 @@
     </div>
     <button type="button" id="addBeneficiary">Add Beneficiary</button>
     <input type="submit" value="Submit">
+
+    <ul id="errorList" name="errorList" hidden> </ul>
+
+    <p id="error" name="error" class="error" {{hidden}}>
+        {{message}}
+    </p>
 </form>
 <button onclick="window.location.href='/hrc/employee/getAllToDoByEmpId'" id="myToDoTasks">Back To tasks</button>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
