@@ -6,6 +6,8 @@ import exphbs from 'express-handlebars';
 import {dbConnection, closeConnection} from './config/mongoConnection.js';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import userTest from './data/user_Test.js';
+import * as validation from "./helpers.js"
 
 // const rewriteUnsupportedBrowserMethods = (req, res, next) => {
 //   // If the user posts to the server with a property called _method, rewrite the request's method
@@ -66,6 +68,13 @@ app.use('/hrc/login',(req,res,next)=>{
 
 app.use('/hrc/admin',(req,res,next)=>{
   if(req.session.user){
+    if(req.session.user.resignedOn){
+      let resignedDate = new Date(req.session.user.resignedOn);
+      if(validation.isPastDate(resignedDate)) {
+        userTest.deactivateUser(req.session.user.employeeId);
+        return res.redirect('/hrc/deactivated');
+      }
+    }
     if(req.session.user.role !== 'Admin'){
       return res.status(403).render('error',{message:'Forbidden',title:'Forbidden',class:'error',previous_Route:'hrc/login',linkMessage:'Click Here to Login.'});
     }
@@ -77,6 +86,14 @@ app.use('/hrc/admin',(req,res,next)=>{
 
 app.use('/hrc/employee', (req, res, next) => {
   if (req.session.user) {
+    
+  if(req.session.user.resignedOn){
+    let resignedDate = new Date(req.session.user.resignedOn);
+    if(validation.isPastDate(resignedDate)) {
+      userTest.deactivateUser(req.session.user.employeeId);
+      return res.redirect('/hrc/deactivated');
+    }
+  }
     if (req.session.user.role !== 'Employee' && req.session.user.role !== 'Admin' && req.session.user.role !== 'HR') {
       return res.status(403).render('error', { message: 'Forbidden', title: 'Forbidden', class: 'error', previous_Route: 'hrc/login', linkMessage: 'Click Here to Login.' });
     }
@@ -94,7 +111,15 @@ app.use('/hrc/employee', (req, res, next) => {
 });
 
 app.use('/hrc/hr', (req, res, next) => {
+
   if (req.session.user) {
+    if(req.session.user.resignedOn){
+      let resignedDate = new Date(req.session.user.resignedOn);
+      if(validation.isPastDate(resignedDate)) {
+        userTest.deactivateUser(req.session.user.employeeId);
+        return res.redirect('/hrc/deactivated');
+      }
+    }
     if (req.session.user.role !== 'HR') {
       return res.status(403).render('error', { message: 'Forbidden', title: 'Forbidden', class: 'error', previous_Route: 'hrc/login', linkMessage: 'Click Here to Login.' });
     } else {

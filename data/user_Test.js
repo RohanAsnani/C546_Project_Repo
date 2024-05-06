@@ -136,6 +136,20 @@ async deleteUser(userId){
   return deletionInfo
 
 },
+
+async deactivateUser(userId){
+ if(!userId)throw new Error('Employee Id Needed.');
+
+ userId= validation.isValidEmployeeId(userId);
+
+ let userCollection = await users();
+ let deactivatedUser = await userCollection.updateOne({employeeId: userId},{$set:{status:'Inactive'}});
+
+ if(!deactivatedUser)throw new Error('Could not deactivate User.');
+
+ return deactivatedUser
+
+},
 async updatePut(updationInfo){
   updationInfo = validation.checkTypeMaster(updationInfo);
   

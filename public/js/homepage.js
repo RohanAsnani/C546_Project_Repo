@@ -1,20 +1,24 @@
 // clientside JS
 
 function isDateBeforeToday(dateString) {
-    // Parse the input date string
-    const inputDate = new Date(dateString);
-  
-    // Get today's date
     const today = new Date();
-  
-    // Check if the input date is before today
-    if (inputDate < today) {
+    const todayDay = today.toISOString().slice(0, 10);
+    if(today !== todayDay){
+    const inputDate = new Date(dateString);
     
-      return true; // The input date is before today
+    const todayUTC = new Date(today.toISOString().slice(0, 10)); 
+  
+    const inputDateUTC = new Date(inputDate.toISOString().slice(0, 10)); 
+    
+    if (inputDateUTC < todayUTC) {
+        return true; 
     } else {
-      return false; // The input date is not before today
+        return false;
     }
-  }
+    }return false   
+}
+
+
   const checkStrCS =(str,param,minLen,maxLen,containNum,containSpecialChar)=>{
     if(!(typeof(str) === 'string'))throw new Error(`${param} needs to be string type.`)
     if(!str) throw new Error(`${param} needed.`);
@@ -407,7 +411,7 @@ $('#createUser-form').submit((event)=>{
     let month = check[1];
     let date = check[2];
     isValidDate(month, date, year,'Start Date',true);
-    if(isDateBeforeToday($('#startDate').val().toString()))throw new Error("Start Date Cannot be before Today's Date.");
+    if(isDateBeforeToday($('#startDate').val().toString()))throw new Error("Start Date Cannot be Today's date or before that.");
     $('#startDate').removeClass('error');
     $('#labelStartDate').removeClass('error');
    }catch(e){

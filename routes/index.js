@@ -5,10 +5,12 @@ import login from './login.js';
 import logout from './logout.js';
 import admin from './admin.js';
 import employee from './employee.js';
+import deactivated from './deactivated.js';
 import path from 'path';
 import { static as staticDir } from 'express';
 
 const constructorMethod = (app) => {
+  app.use('/hrc/deactivated',deactivated);
   app.use('/hrc/login', login);
   app.use('/hrc/logout', logout);
   app.use('/hrc/admin', admin);

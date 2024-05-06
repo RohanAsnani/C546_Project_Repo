@@ -195,20 +195,24 @@ const isValidEmployeeId = (employeeId) => {
     if (!(regex.test(employeeId))) throw new Error('Employee Id must be in format of HRC followed by 2 Uppercase Characters and ending with 4 digits. Eg: HRCNS0001 , HRCST0002');
     return employeeId
 }
-const isDateBeforeToday=(dateString)=> {
+function isDateBeforeToday(dateString) {
     // Parse the input date string
     const inputDate = new Date(dateString);
-  
-    // Get today's date
+    
+    // Get today's date without the time component
     const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to zero
+    
+    // Set the time component of the input date to zero for comparison
+    inputDate.setHours(0, 0, 0, 0);
   
     // Check if the input date is before today
     if (inputDate < today) {
-      return true; // The input date is before today
+        return true; // The input date is before today
     } else {
-      return false; // The input date is not before today
+        return false; // The input date is not before today
     }
-  }
+}
 
 const checkPassConstraints = (str, minLen) => {
     str = str.trim(); //should we trim this??
@@ -283,6 +287,12 @@ const checkMasterUser =(creationInfo)=>{
         personalEmail:creationInfo.personalEmail,primaryAddress:creationInfo.primaryAddress,secondaryAddress:creationInfo.secondaryAddress},managerId:creationInfo.managerId,leaveBank:creationInfo.leaveBank
       }
       return createUser
+}
+
+const isPastDate=(dateString)=>{
+    const givenDate = new Date(dateString);
+    const currentDate = new Date();
+    return givenDate < currentDate;
 }
 const checkTypeUserHR =(patchInfo)=>{
     patchInfo.firstName = checkStrCS(patchInfo.firstName,'First Name',2,20,false,false)
@@ -823,4 +833,4 @@ const getCurrDate = () => {
     return `${month}-${day}-${year}`;
 };
 
-export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch, isValidEmployeeId, checkPassConstraints, isValidEmail, isValidPhoneNumber, bcryptPass, checkStrCS, checkMasterUser, checkTypeUserHR, updateValuesOfTwoObjects, convertDateFormat, getLaterDate, checkTypeUserEmployee, isDateBeforeToday, getTaskList,getCurrDate}
+export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch, isValidEmployeeId, checkPassConstraints, isValidEmail, isValidPhoneNumber, bcryptPass, checkStrCS, checkMasterUser, checkTypeUserHR, updateValuesOfTwoObjects, convertDateFormat, getLaterDate, checkTypeUserEmployee, isDateBeforeToday, getTaskList,getCurrDate,isPastDate}
