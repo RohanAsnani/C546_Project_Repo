@@ -16,14 +16,12 @@
             <th>Completed On</th>
             <th>Status</th>
             {{else}}
-            {{!-- To be added for employee not for HR --}}
             <th>Action</th>
             {{/if}}
             {{#if isEmp}}
             {{else}}
             <th>Action</th>
             {{/if}}
-
         </tr>
         {{#if viewAll}}
         {{#each taskList}}
@@ -44,7 +42,11 @@
             {{else}}
             {{#if completed}}
             <td>
+                {{#if (eq type "document")}}
+                <button onclick="location.href='/hrc/employee/uploadDocs/viewDocByTaskId/{{taskId}}'">Download Document</button>
+                {{else}}
                 <p>-</p>
+                {{/if}}
             </td>
             {{else}}
             <td>
@@ -73,8 +75,8 @@
             <td>{{dueDate}}</td>
             <td>
                 {{#if (eq type "document")}}
-                <a href="/hrc/employee/uploadDoc/{{employeeId}}/{{taskId}}/{{taskType}}/{{type}}" id="completeTaskDoc"
-                    name="completeTaskDoc" class="completeTaskDoc" data-id="{{taskId}}">Upload Document</a></td>
+                <a href="/hrc/employee/uploadDocs/{{taskId}}" id="completeTaskDoc" name="completeTaskDoc" class="completeTaskDoc" data-id="{{taskId}}">Upload Document</a>
+                </td>
                 {{else}}
                 {{#if (eq type "normal")}}
                 <a href="/hrc/employee/completeTask/{{employeeId}}/{{taskId}}/{{taskType}}" id="completeTask"
@@ -89,7 +91,6 @@
         {{/if}}
     </table>
     <p>{{noDataPresentMsg}}</p>
-
 
     <script src="https://code.jquery.com/jquery-3.5.1.js"
         integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>

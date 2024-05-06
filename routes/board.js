@@ -66,38 +66,6 @@ router.route('/submit-note')
             });
         }
     })
-    
-
-
-router.route('/submit-note')
-    .post(async (req,res)=>{
-        //console.log(req.body)
-        const employeeId  = req.body.employeeId;
-        const notes  = req.body.notes;
-        if (!employeeId || !notes) {
-            return res.status(400).render('./data_functions/GetEmpDetailsandNotes', {
-                error: "Both Employee ID and note are required and cannot be empty."
-            })
-        }
-        try {
-            await user_Test.updatePatchNotes(req.body);
-            const employeeDetails = await user_Test.getUserById(employeeId);
-            res.status(200).render('./data_functions/GetEmpDetailsandNotes', {
-                title: 'Employee Details',
-                ...employeeDetails,
-                isLoggedIn: true,
-                successMessage: "Note successfully added."
-            });
-        } catch (e) {
-            console.error("Error updating employee note:", e);
-            res.status(500).render('./data_functions/GetEmpDetailsandNotes',{
-                title: 'Employee Details',
-                error: e.message,
-                isLoggedIn: true
-            });
-        }
-    })
-    
 
 
 router.route('/getonboarding')
@@ -178,6 +146,7 @@ router
                     msg = res.msg;
                 }
             }
+            //console.dir(taskList)
             return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Onboard Task List', isLoggedIn: true });
             //return res.json(boardUserData);
         } catch (e) {

@@ -364,7 +364,8 @@ router
         }
     });
     
-    router.route('/uploadDocs')
+    router
+    .route('/uploadDocs/:taskId?')
     .get(async (req, res) => {
         console.log("helloooo");
         if (!req.session.user) {
@@ -377,14 +378,15 @@ router
                 title: 'Upload Document',
                 isLoggedIn: true,
                 documents: documentsData.documents,
-                noDocuments: documentsData.documents.length === 0
+                noDocuments: documentsData.documents.length === 0,
+                taskId: req.params.taskId
             });
         } catch (error) {
             console.error("Error fetching documents:", error);
             return res.status(500).render('uploadDocs', {
                 title: 'Upload Document',
                 message: 'Failed to fetch documents',
-                isLoggedIn: true
+                isLoggedIn: true,
             });
         }
     })
@@ -401,6 +403,7 @@ router
             });
         }
 
+        const taskId = req.params.taskId; 
         const fileBuffer = req.file.buffer;
         const fileName = req.file.originalname;
         const documentInfo = {
@@ -409,14 +412,17 @@ router
             status: "Pending",
             approvedby: null
         };
-
         try {
-            const result = await doc.createDocument(documentInfo, fileBuffer, fileName);
+            const result = await doc.createDocument(documentInfo, fileBuffer, fileName, taskId);
+            if (result && taskId) { 
+                await doc.markTaskAsCompleted(req.session.user.employeeId,taskId);
+            }
             return res.render('uploadDocs', {
                 title: 'Upload Document',
                 success: true,
                 message: "Document uploaded successfully!",
-                isLoggedIn: true
+                isLoggedIn: true,
+                taskId: req.params.taskId
             });
         } catch (error) {
             console.error("Error uploading document:", error);
@@ -427,6 +433,7 @@ router
             });
         }
     });
+    
 
 
     router
@@ -452,5 +459,33 @@ router
         }
     });
 
+    router
+    .route('/uploadDocs/viewDocByTaskId/:taskId')
+    .get(async (req, res) => {
+        if (!req.session.user || !req.session.user.employeeId) {
+            return res.status(401).json({ message: "Unauthorized access" });
+        }
+        let taskId;
+        try {
+            taskId = req.params.taskId;
+        } catch (error) {
+            console.error("Error parsing taskId:", error);
+            return res.status(400).json({ message: "Invalid task ID format" });
+        }
+
+        const empId = req.session.user.employeeId;
+
+        try {
+            const result = await doc.getDocumentUrlByTaskId(empId, taskId);
+            if (!result.success) {
+                return res.status(404).json({ message: result.message });
+            }
+            
+            res.redirect(result.docUrl);
+        } catch (error) {
+            console.error("Error fetching document by task ID:", error);
+            return res.status(500).json({ message: "Failed to fetch document by task ID" });
+        }
+    });
 
 export default router 
