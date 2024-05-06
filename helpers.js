@@ -225,7 +225,7 @@ const checkPassConstraints = (str, minLen) => {
 
 }
 const isValidPhoneNumber = (phoneNumber) => {
-    if (typeof (phoneNumber) !== 'string') throw new Error('Date is not in proper data type.');
+    if (typeof (phoneNumber) !== 'string') throw new Error('Phone Number is not in proper data type.');
     let regex = /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/;
     if (!(regex.test(phoneNumber))) throw new Error('Phone Number must be in format 012-345-6789');
     return phoneNumber

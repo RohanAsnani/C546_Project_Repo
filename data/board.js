@@ -103,19 +103,19 @@ const exportedMethods = {
         employeeId = validation.checkStrCS(employeeId, 'Employee Id', 0, 100, true);
         taskId = validation.validObject(taskId);
         taskType = validation.checkStrCS(taskType, 'Task Type', 0, 100, true);
-
+        console.log('taskType : ', taskType);
         const boardingCollection = await boarding();
         const userCollection = await users();
         const totBoardingData = await this.getboardingDataByEmpId(employeeId);
         let updatedObj = updatedBoardObj(totBoardingData, taskId, taskType);
-
+        console.log('updatedObj : ', updatedObj);
         let patchedInfo;
 
         patchedInfo = await boardingCollection.findOneAndUpdate({ employeeId: employeeId },
             { $set: updatedObj },
             { returnDocument: 'after' }
         );
-
+        console.log('patchedInfo : ', patchedInfo);
         if (!patchedInfo) throw new Error(`Cannot update task for user with id: ${updationPatchInfo.employeeId}`);
         let empData;
         if (status !== 'Active') {
