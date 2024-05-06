@@ -14,12 +14,42 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  
 <script>
+    function isDateBeforeToday(dateString) {
+    const inputDate = new Date(dateString);
+
+    // Set the time to midnight (0:00)
+    inputDate.setHours(0);
+    inputDate.setMinutes(0);
+    inputDate.setSeconds(0);
+    inputDate.setMilliseconds(0);
+
+    // Offset the input date by a day
+    inputDate.setDate(inputDate.getDate() + 1);
+
+    // Get the current date
+    const currentDate = new Date();
+
+    currentDate.setHours(0);
+    currentDate.setMinutes(0);
+    currentDate.setSeconds(0);
+    currentDate.setMilliseconds(0);
+    // Set the time to midnight (0:00)
+    if(inputDate.getDate() === currentDate.getDate()){
+        return false
+    }   
+
+    if(inputDate < currentDate){
+        return true
+    }else{
+        return false
+    }
+    
+    }
     $("#endDateForm").submit((event)=>{
         try{
-            let endDate = new Date($('#endDate').val());
-
-        let currentDate = new Date();
-        if(endDate < currentDate)throw new Error("End Date cannot be earlier than today's date");
+            isDateBeforeToday($('#endDate').val());
+            $('#endDate').removeClass('error');
+            $('#labelEndDate').removeClass('error');
         }catch(e){
             $('#endDate').addClass('error');
             $('labelEndDate').addClass('error');
