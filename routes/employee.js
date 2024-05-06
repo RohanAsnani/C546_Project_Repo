@@ -87,7 +87,7 @@ router
     .route('/profile/edit')
     .get(async(req,res)=>{
         let userData = req.session.user;
-        return res. render('editProfile',{title:'Edit Profile',...userData,isLoggedIn:true})
+        return res.render('editProfile',{title:'Edit Profile',...userData,isLoggedIn:true}) 
     })
     .post(async (req,res)=>{
        

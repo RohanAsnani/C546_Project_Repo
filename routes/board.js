@@ -20,7 +20,12 @@ router.route('/')
 router.route('/getAllEmployees')
     .get(async (req, res) => {
         try {
-            const userdata = await user_Test.getAll();
+            let userdata = await user_Test.getAll();
+            userdata = userdata.map(user=>{
+                if(user.employeeId !== req.session.user.employeeId){
+                    return user;
+                }
+            }).filter(Boolean);
             return res.render('./data_functions/getAllEmp', { title: 'Employee Details', empList: userdata, firstName: req.session.user.firstName, role: req.session.user.role, isLoggedIn: true });
         } catch (e) {
             return res.status(500).json(e.message);
