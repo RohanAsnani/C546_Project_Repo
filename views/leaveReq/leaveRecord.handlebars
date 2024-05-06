@@ -1,0 +1,16 @@
+<h1>List of past leave records with status</h1>
+<button class="backButton" onclick="window.location.href='/hrc/employee/leaveReq/form'"> Go Back</button>
+<ul class="leaveRecord">
+  {{#each leaveRecords}}
+  <li>
+    <h3>Subject:- {{subject}}</h3>
+    <p><span class="highlight">Reason:</span> {{reason}}</p>
+    <p><span class="highlight">Start Date: </span>{{startDate}}</p>
+    <p><span class="highlight">End Date:</span> {{endDate}}</p>
+    <p><span class="highlight">Status:</span> {{status}}</p>
+    {{#if reviewerID}}
+    <p><span class="highlightt">HR's comment :- </span>{{commentsReviewer}}</p>
+    {{/if}}
+  </li>
+  {{/each}}
+</ul>

@@ -3,23 +3,44 @@
 <h5>{{msg}}</h5>
 
 <nav class="sidebar">
-    <button onclick="window.location.href='/hrc/employee/profile'" id="EmpDetails">My Profile</button>
+  <button onclick="window.location.href='/hrc/employee/profile'" id="EmpDetails" class="Gbutton">My Profile</button>
 
-    {{#if isNotActive}}
-    <button onclick="window.location.href='/hrc/employee/getAllToDoByEmpId'" id="myToDoTasks">My To-Do
-        tasks</button>
-    {{/if}}
+
     <button onclick="window.location.href='/hrc/employee/getAllByEmpId'" id="myTasks">View all my tasks</button>
     <button onclick="window.location.href='/hrc/employee/getAllNotesByEmpId'" id="myNotes">My Notes</button>   
     <button onclick="window.location.href='/hrc/employee/uploadDocs'" id="myTasks">My Documents</button>
 
     <button onclick="window.location.href='/hrc/employee/resign'" id="resign">Resign</button>
+  {{#if isNotActive}}
+  <button class="Gbutton" onclick="window.location.href='/hrc/employee/getAllToDoByEmpId'" id="myToDoTasks">My To-Do
+    tasks</button>
+  {{/if}}
+  <button class="Gbutton" onclick="window.location.href='/hrc/employee/getAllByEmpId'" id="myTasks">View all my
+    tasks</button>
+
+  <button class="Gbutton" onclick="window.location.href='/hrc/employee/leaveReq/form'">Leave Request</button>
+
+  {{! <button onclick="window.location.href='/hrc/employee/getAllByEmpId'" id="myTasks">My Tasks</button>
+  <div class="dropdown">
+    <button class="dropbtn">My Tasks
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <button onclick="window.location.href='/hrc/employee/getAllToDoByEmpId'" id="myToDoTasks">To
+        Do</button><br>
+      <button onclick="window.location.href='/hrc/employee/getAllByEmpId'" id="myTasks">View all tasks</button>
+
+      <button><a href="/hrc/employee/getAllToDoByEmpId">To Do</a></button>
+
+      <button><a href="/hrc/employee/getAllByEmpId">View all tasks</a></button>
+    </div>
+  </div> }}
 
 </nav>
 {{#if isAdmin}}
-<a class="page-link" id="adminLink" href="/hrc/admin">Admin Page</a><br>
+<a class="page-link" id="adminLink" href="/hrc/admin">Admin Page</a><br />
 {{/if}}
 {{#if isHR}}
-<a class="page-link" id="hrLink" href="/hrc/hr">HR Page</a><br>
+<a class="page-link" id="hrLink" href="/hrc/hr">HR Page</a>
 {{/if}}
 <a class="page-link" id="logoutLink" href="/hrc/logout">Logout</a>

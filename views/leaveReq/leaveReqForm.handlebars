@@ -1,0 +1,42 @@
+<div id="leaveReqContainer">
+    <h1>Request for a Leave </h1>
+    <h3>Summary of Leave Bank</h3>
+
+    <p>Sick Days Provided are <span class="highlight">{{sickLeaves}} </span></p>
+    <p>Vacation Day Provided are <span class="highlight">{{vacation}}</span> </p>
+
+    <h3>To Look for past record of leaves </h3>
+    <button type="button" class="Gbutton" onclick="window.location.href='/hrc/employee/leaveReq/leaveRecord'">Past Leave
+        Records</button>
+
+    <div class="leaveFormContainer">
+
+        <h2>Apply below for a leave</h2>
+        <div class="centerMe">Enter Subject type of the leave, reason and the date range for the leave request dates
+        </div>
+
+        <form id="leaveRequestForm" action="/hrc/employee/leaveReq/form" method="POST">
+            {{! <div class="leaveRequestFormDiv"> }}
+                <label aria-placeholder="select" for="subject">Subject:</label>
+                <select id="subject" name="subject" required class="subjectLeave">
+                    {{! added required field for the dropdown }}
+                    <option value="" selected disabled>Select </option>
+                    {{!-- <option value="none" selected disabled hidden></option> --}}
+                    <option value="Sick Leave">Sick Leave</option>
+                    <option value="Vacation Leave">Vacation Leave</option>
+                </select>
+                <label for="reason">Reason:</label>
+                <textarea class="reasonLeave" id="reason" placeholder="Describe your reason for the leave" name="reason"></textarea>
+
+                <label for="startDate">Start Date:</label>
+                <input type="date" id="startDate" name="startDate" />
+                <label for="endDate">End Date:</label>
+                <input type="date" id="endDate" name="endDate" />
+                <button id="leaveFormButton" type="submit">Submit</button>
+                {{!
+            </div> }}
+        </form>
+
+    </div>
+    <button class="backButton" onclick="window.location.href='/hrc/employee'">Homepage</button>
+</div>
