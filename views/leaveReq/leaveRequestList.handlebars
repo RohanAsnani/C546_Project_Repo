@@ -4,7 +4,7 @@
         <tr>
             <th>Employee Name</th>
             <th>Subject</th>
-            <th>Comment</th>
+            <th>Reason</th>
             <th>Status</th>
             <th>Button</th>
         </tr>
@@ -15,11 +15,13 @@
             <td>{{employeeID}}</td>
             <td>{{subject}}</td>
             <td>{{reason}}</td>
-            <td>{{status}}</td> 
+            <td>{{status}}</td>
             <td> <a href="/hrc/hr/leaveReq/getAll/{{_id}}">
                     <button class="decisionButton" name="decisionButton" data-id="{{_id}}">Decide</button>
                 </a></td>
         </tr>
         {{/each}}
     </tbody>
+    <button onclick="window.location.href='/hrc/hr/'">Go Back</button>
+
 </table>

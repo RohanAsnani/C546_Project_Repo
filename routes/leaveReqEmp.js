@@ -13,10 +13,12 @@ router.route("/form").get(async (req, res) => {
   let empId = req.session.user.employeeId;
 
   try {
-    const { sickDaysLeft, vacationDaysLeft } = await getLeaveForm(empId);
+    const user = await getLeaveForm(empId);
+    const { leaveBank } = user;
+    const { sickLeaves, vacation } = leaveBank;
     return res.render("./leaveReq/leaveReqForm", {
-      sickDaysLeft,
-      vacationDaysLeft,
+      sickLeaves,
+      vacation,
       isSubmitted: false,
     });
   } catch (error) {
@@ -40,7 +42,7 @@ router.route("/form").post(async (req, res) => {
       endDate
     ));
   } catch (error) {
-    return res.status(400).json("Validation of leave request form failed");
+    return res.status(400).json(error.message);
   }
 
   try {
@@ -60,10 +62,13 @@ router.route("/form").post(async (req, res) => {
     //   sickDaysLeft,
     //   vacationDaysLeft,
     // });
-    res.status(201).json("Successfully created the request");
+
+    // res.status(201).json("Successfully created the request");
+
+    res.status(200).render("./leaveReq/success");
     // console.log("idk4");
   } catch (error) {
-    return res.status(404).json("Leave Request not created");
+    return res.status(404).json(error.message);
   }
 });
 
@@ -76,7 +81,7 @@ router.route("/leaveRecord").get(async (req, res) => {
 
     res.status(200).render("./leaveReq/leaveRecord", { leaveRecords });
   } catch (error) {
-    res.status(500).json(`Could not get the leave record of the employee`);
+    return res.status(404).json(error.message);
   }
 });
 

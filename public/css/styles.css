@@ -220,3 +220,13 @@ td {
   margin: auto;
   padding: 20px;
 }
+
+.highlight {
+  font-weight: 700;
+  color: rgb(59, 131, 131);
+}
+
+.highlightt {
+  font-weight: 900;
+  color: rgb(59, 131, 131);
+}

@@ -3,11 +3,14 @@ const router = Router();
 import {
   getAllLeaves,
   createReqDecision,
+  getLeave,
   //   getLeaveForm,
   //   getLeaveRecord,
   //   createLeaveReq,
 } from "../data/leaveReq.js";
 import * as validation from "../helpers.js";
+import { leaves } from "../config/mongoCollections.js";
+import { ObjectId } from "mongodb";
 
 // Route for HR manager to get all leave requests
 router.route("/getAll").get(async (req, res) => {
@@ -21,20 +24,22 @@ router.route("/getAll").get(async (req, res) => {
 
 // Route for HR manager to decide on leave requests
 
-router.route("/:objectId").get(async (req, res) => {
+router.route("/getAll/:objectId").get(async (req, res) => {
   let obj = req.params.objectId;
   try {
-    const leavesCollection = await leaves();
-    const leaveData = leavesCollection.findOne({ _id: obj });
-
-    return res.status(200).render("./leaveReq/decideHR", { leaveData });
+    const leaveData = await getLeave(obj);
+    return res
+      .status(200)
+      .render("./leaveReq/decideHR", { leaveData, obj: obj });
   } catch (e) {
     return res.status(400).json(e.message);
   }
 });
 
-router.route("/:objectId").post(async (req, res) => {
-  const { reasonHR, Approve, Decline, Pending } = req.body;
+router.route("/getAll/:objectId").post(async (req, res) => {
+  let obj = req.params.objectId;
+
+  let { reasonHR, radioButton } = req.body;
   try {
     reasonHR = validation.checkIsProperString(reasonHR);
   } catch (error) {
@@ -43,13 +48,11 @@ router.route("/:objectId").post(async (req, res) => {
 
   try {
     let empId = req.session.user.employeeId;
-
     const leaveRecords = await createReqDecision(
       empId,
       reasonHR,
-      Approve,
-      Decline,
-      Pending
+      radioButton,
+      obj
     );
     return res.status(200).render("./leaveReq/decideHR");
   } catch (error) {

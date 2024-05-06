@@ -64,36 +64,43 @@ export const getAllLeaves = async () => {
   return leave;
 };
 
+// Get HR id
+// put it into reviewer id
+// add comments into commentsReviewer
+// change status accordingly
+// push to employee view
+// if nothing don put status as pending again if no decision is made
 export const createReqDecision = async (
   employeeID,
   reasonHR,
-  Approve,
-  Decline,
-  Pending
+  radioButton,
+  obj
 ) => {
-  // Get HR id
-  // put it into reviewer id
-  // add comments into commentsReviewer
-  // change status accordingly
-  // push to employee view
-  // if nothing don put status as pending again if no decision is made
-
   reasonHR = validation.checkIsProperString(reasonHR);
 
+  if (!radioButton) {
+    throw new Error("No Radio button selected");
+  }
+
   //   How to get the particular leaveReq selected
-
   const leaveCollection = await leaves();
-  const leave = leaveCollection.findOne({ _id: new ObjectId() });
+  let leave = await leaveCollection.findOne({ _id: new ObjectId(obj) });
 
-  updatedLeaveData = {
-    ...leave,
-    reviewerID: employeeID,
-    commentsReviewer: reasonHR,
-  };
+  //   const updatedLeaveData = {
+  //     ...leave,
+  //     reviewerID: employeeID,
+  //     commentsReviewer: reasonHR,
+  //   };
 
-  const leaveUpdated = leaveCollection.findOneAndUpdate(
-    { employeeID: employeeID },
-    { $set: { leave: updatedLeaveData } },
+  const leaveUpdated = await leaveCollection.findOneAndUpdate(
+    { _id: new ObjectId(obj) },
+    {
+      $set: {
+        reviewerID: employeeID,
+        commentsReviewer: reasonHR,
+        status: radioButton,
+      },
+    },
     { returnDocument: "after" }
   );
 
@@ -107,4 +114,13 @@ export const getLeaveForm = async empId => {
   );
 
   return user;
+};
+
+export const getLeave = async leaveId => {
+  const leavesCollection = await leaves();
+  const leaveData = await leavesCollection.findOne({
+    _id: new ObjectId(leaveId),
+  });
+  console.log(leaveData);
+  return leaveData;
 };
