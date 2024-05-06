@@ -8,7 +8,7 @@ import login from '../data/login.js';
 router.route('/')
 .get(async (req,res) =>{
     try{
-        return res.render('homepage',{title:'Login',hidden: "hidden",isLoggedIn: false});
+        return res.render('homepage',{title:'Login',hidden: "hidden",isLoggedIn: false,forgotPass:"hidden"});
     }catch(e){
         return res.json({error:e.message});
     }
@@ -30,7 +30,7 @@ router.route('/')
             }
         
     }catch(e){
-        return res.status(400).render('homepage',{title:'login',message:e.message,hidden: "",username:req.body.username});
+        return res.status(400).render('homepage',{title:'login',message:e.message,hidden: "",username:req.body.username,forgotPass:''});
     }
 
 

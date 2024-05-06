@@ -199,6 +199,35 @@ const isFirstDateBeforeSecondDate=(dateString1, dateString2) =>{
     return date2 < date1;
 }
 
+const generatePassword=()=> {
+    const length = 11;
+    const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const specialChars = '!@#$%^&*()_+{}[]<>?';
+    const numbers = '0123456789';
+
+    let password = '';
+
+    // Ensure at least one uppercase letter
+    password += uppercaseChars.charAt(Math.floor(Math.random() * uppercaseChars.length));
+
+    // Ensure at least one special character
+    password += specialChars.charAt(Math.floor(Math.random() * specialChars.length));
+
+    // Ensure at least one number
+    password += numbers.charAt(Math.floor(Math.random() * numbers.length));
+
+    // Fill the rest of the password with random characters
+    for (let i = 0; i < length - 3; i++) {
+        const chars = uppercaseChars + specialChars + numbers;
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+
+    // Shuffle the password to ensure randomness
+    password = password.split('').sort(() => Math.random() - 0.5).join('');
+
+    return password;
+}
+
 const isValidEmployeeId = (employeeId) => {
     const regex = /^HRC[A-Z]{2}[0-9]{4}$/;
     if (!(regex.test(employeeId))) throw new Error('Employee Id must be in format of HRC followed by 2 Uppercase Characters and ending with 4 digits. Eg: HRCNS0001 , HRCST0002');
@@ -433,13 +462,22 @@ const checkTypeUserEmployee =(patchInfo)=>{
         "Italy", "Guinea", "Chad", "Ecuador", "Georgia", "Malawi", "Iraq", "Svalbard and Jan Mayen", "Benin", "Japan", "Dominican Republic", "Qatar",
         "Gabon",
     ]);
+    patchInfo.securityQuestion = checkState(patchInfo.securityQuestion,'Security Question',["What is your mother's maiden name?","What is the name of your first pet?","What city were you born in?"])
+
+    patchInfo.securityAnswer = checkStr(patchInfo.securityAnswer,'Security Answer',2,10,false);
+
+    if(patchInfo.securityAnswer.includes(' '))throw new Error('Security Answer cannot contain spaces in between.');
 
     patchInfo.phone = isValidPhoneNumber(patchInfo.phone);
     patchInfo.primaryAddress = checkStrCS(patchInfo.primaryAddress,'Primary Address',5,30,true,true);
     patchInfo.secondaryAddress = checkStrCS(patchInfo.secondaryAddress,'Secondary Address',5,30,true,true);
+    patchInfo.forgotPass = false;
 
     let updateUser = {
-         employeeId: patchInfo.employeeId,firstName : patchInfo.firstName,lastName:patchInfo.lastName,gender: patchInfo.gender,maritalStatus:patchInfo.maritalStatus,status:patchInfo.status,vet:patchInfo.vet,disability:patchInfo.disability,race:patchInfo.race,countryOfOrigin:patchInfo.countryOfOrigin,dob:patchInfo.dob,contactInfo:{phone:patchInfo.phone,personalEmail:patchInfo.personalEmail,primaryAddress:patchInfo.primaryAddress,secondaryAddress:patchInfo.secondaryAddress}
+         employeeId: patchInfo.employeeId,firstName : patchInfo.firstName,lastName:patchInfo.lastName,gender: patchInfo.gender,maritalStatus:patchInfo.maritalStatus,status:patchInfo.status,vet:patchInfo.vet,disability:patchInfo.disability,race:patchInfo.race,countryOfOrigin:patchInfo.countryOfOrigin,dob:patchInfo.dob,contactInfo:{phone:patchInfo.phone,personalEmail:patchInfo.personalEmail,primaryAddress:patchInfo.primaryAddress,secondaryAddress:patchInfo.secondaryAddress
+         }
+         ,
+            securityQuestion:patchInfo.securityQuestion,securityAnswer:patchInfo.securityAnswer,forgotPass:patchInfo.forgotPass
       }
 
     return updateUser
@@ -862,4 +900,4 @@ const getCurrDate = () => {
     return `${month}-${day}-${year}`;
 };
 
-export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch, isValidEmployeeId, checkPassConstraints, isValidEmail, isValidPhoneNumber, bcryptPass, checkStrCS, checkMasterUser, checkTypeUserHR, updateValuesOfTwoObjects, convertDateFormat, getLaterDate, checkTypeUserEmployee, isDateBeforeToday, getTaskList,getCurrDate,isPastDate,isFirstDateBeforeSecondDate}
+export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch, isValidEmployeeId, checkPassConstraints, isValidEmail, isValidPhoneNumber, bcryptPass, checkStrCS, checkMasterUser, checkTypeUserHR, updateValuesOfTwoObjects, convertDateFormat, getLaterDate, checkTypeUserEmployee, isDateBeforeToday, getTaskList,getCurrDate,isPastDate,isFirstDateBeforeSecondDate,generatePassword}

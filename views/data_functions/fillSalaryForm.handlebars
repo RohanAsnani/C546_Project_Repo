@@ -1,4 +1,4 @@
-<form action="/hrc/employee/fillSalaryForm" method="POST">
+<form id="salary-form" name="salary-form" class="salary-form" action="/hrc/employee/fillSalaryForm" method="POST">
     <label for="employeeId" id="labelemployeeId" hidden>Task Type:</label>
     <input type="text" class="employeeId" id="employeeId" name="employeeId" value="{{employeeId}}" readonly="readonly"
         hidden><br>
@@ -24,6 +24,12 @@
         <option value="direct deposit">Direct deposit</option>
         <option value="check">Check</option>
     </select>
+
+    <ul id="errorList" name="errorList" hidden> </ul>
+
+    <p id="error" name="error" class="error" {{hidden}}>
+        {{message}}
+    </p>
 
     <input type="submit" value="Submit">
 </form>

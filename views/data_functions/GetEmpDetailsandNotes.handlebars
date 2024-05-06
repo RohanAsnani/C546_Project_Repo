@@ -1,7 +1,7 @@
 <h1>Employee Details for {{employeeId}}</h1>
 <div class="user-details">
     <p><strong>First Name:</strong> {{firstName}}</p>
-    <p><strong>Last Name:</strong> {{lastName}}</p>
+    <p><strong>LastName:</strong> {{lastName}}</p>
     <p><strong>Employee ID:</strong> {{employeeId}}</p>
     <p><strong>Username:</strong> {{username}}</p>
     <p><strong>Department:</strong> {{department}}</p>
@@ -18,19 +18,19 @@
 </div>
 
 {{#if error}}
-<p class="error">{{error}}</p>
+    <p class="error">{{error}}</p>
 {{/if}}
 
 {{#if successMessage}}
-<p class="success">{{successMessage}}</p>
+    <p class="success">{{successMessage}}</p>
 {{/if}}
 
 <h2>Add a Note:</h2>
 <div class="notes-container">
     {{#each notes}}
-    <div class="note">
-        <p>{{this}}</p>
-    </div>
+        <div class="note">
+            <p>{{this}}</p>
+        </div>
     {{/each}}
 </div>
 
@@ -40,9 +40,21 @@
     <input type="hidden" name="employeeId" value="{{employeeId}}">
     <button type="submit">Submit Note</button>
 </form>
-
+{{employeeId}}
+<h2>Documents Submitted by This Employee</h2>
+{{#if documents}}
+    <ul>
+        {{#each documents}}
+            <li>
+                {{typeOfDoc}} - Submitted on: {{submittedOn}}
+                <!-- Ensure the button correctly builds the URL with docId and employeeId -->
+                <button onclick="window.location.href='/hrc/employee/uploadDocs/viewDocByDocIdEmpID/{{docId}}/{{../employeeId}}'">Download</button>
+            </li>
+        {{/each}}
+    </ul>
+{{else}}
+    <p>No documents have been submitted by this employee.</p>
+{{/if}}
 
 <button onclick="window.location.href='/hrc/hr'">Homepage</button>
 <a class="page-link" id="logoutLink" href="/hrc/logout">Logout</a>
-
-
