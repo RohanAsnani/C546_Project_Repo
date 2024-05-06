@@ -50,6 +50,22 @@ app.use(session({
   saveUninitialized: false
 }))
 
+app.use('/hrc/forgotpass',(req,res,next)=>{
+  if(req.session.user){
+    switch (req.session.user.role){
+        case 'Admin':
+          return res.redirect('/hrc/admin');
+        case 'Employee': 
+          return res.redirect('/hrc/employee');
+        case 'HR':
+          return res.redirect('/hrc/hr');
+        default:
+          return res.render('error',{message:'Forbidden',title:'Forbidden',class:'error',previous_Route:'hrc/login',linkMessage:'Click Here to Login.'})
+    }
+  }
+  next();
+})
+
 app.use('/hrc/onboarding',(req,res,next)=>{
   if(!req.session.user){
     return res.redirect('/hrc/login')
@@ -102,7 +118,7 @@ app.use('/hrc/admin',(req,res,next)=>{
 
 app.use('/hrc/employee', (req, res, next) => {
   if (req.session.user) {
-    if (req.originalUrl === '/hrc/employee/profile/edit' || req.originalUrl === '/hrc/employee/getAllToDoByEmpId' || req.originalUrl === '/hrc/employee/profile' || req.originalUrl.startsWith('/hrc/employee/fillForm') || req.originalUrl.startsWith('/hrc/employee/uploadDocs') || req.originalUrl === '/hrc/employee/selectBenifitsForm') {
+    if(req.originalUrl === '/hrc/employee/profile/edit'|| req.originalUrl ==='/hrc/employee/getAllToDoByEmpId'|| req.originalUrl === '/hrc/employee/profile'|| req.originalUrl.startsWith('hrc/employee/fillForm') || req.originalUrl.startsWith('/hrc/employee/fillForm/')|| req.originalUrl === '/hrc/employee/selectBenifitsForm' || req.originalUrl === '/hrc/employee/fillSalaryForm'){
       next();
     }else{
       if(req.session.user.status === 'Onboarding'){

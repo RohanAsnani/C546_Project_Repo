@@ -214,6 +214,46 @@ async  getNotesByEmployeeId(employeeId) {
   }
   return employeeData.notes ; 
 },
+async changeForgotPass(userId){
+  if(!userId)throw new Error('EmployeeID or Personal Email Needed.');
+
+  let userCollection = await users();
+  let checkUserId = await userCollection.findOne({employeeId: userId});
+
+  let checkPersonalEmail = await userCollection.findOne({'contactInfo.personalEmail': userId});
+
+  if(!checkUserId && !checkPersonalEmail)return false
+
+  let mailEmployeeId =""
+  let mailId='';
+  let firstName ='';
+  let lastName ='';
+  if(checkUserId){
+    mailEmployeeId = checkUserId.employeeId;
+    mailId = checkUserId.contactInfo.personalEmail;
+    firstName = checkUserId.firstName;
+    lastName = checkUserId.lastName;
+  }else{
+    mailEmployeeId = checkPersonalEmail.employeeId;
+    mailId = checkPersonalEmail.contactInfo.personalEmail;
+    firstName = checkPersonalEmail.firstName;
+    lastName = checkPersonalEmail.lastName;
+  }
+
+  let randomPass = validation.generatePassword()
+  let sendPass = randomPass;
+  randomPass = await validation.bcryptPass(randomPass);
+
+  let resetPass = await userCollection.updateOne({employeeId: mailEmployeeId},{$set:{password:randomPass,forgotPass:true}});
+
+  if(!resetPass.acknowledged)throw new Error('Could not Rest the Password.');
+
+  let status = await sendEmail(mailId,"HR:Centrtal-PassWord Reset",`PassWord reset has been triggerd.
+Hello ${firstName} ${lastName},
+Your password has been reset. You will find the temporary Passowrd Below.
+Temporary Password:${sendPass}. You wont be able to access other features if you dont change your password upon login.`);
+    
+},
 
   async getOnboardingHR() {
     let userCollection = await users();

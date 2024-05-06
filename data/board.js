@@ -251,6 +251,8 @@ const exportedMethods = {
 
         patchData = validation.updateValuesOfTwoObjects(existingData,patchData);
 
+        patchData.securityAnswer = await validation.bcryptPass(patchData.securityAnswer);
+
         let updatedData = await userCollection.findOneAndUpdate({employeeId: patchData.employeeId},
             {$set:patchData},
             {returnDocument: 'after'}
@@ -259,7 +261,7 @@ const exportedMethods = {
         if(!updatedData)throw new Error('Could not Update data in the system.')
         
         updatedData = await user_Test.getUserById(patchData.employeeId);
-
+            delete updatedData.securityAnswer
         return updatedData
     },
     async createSalaryBenifits(employeeId){
