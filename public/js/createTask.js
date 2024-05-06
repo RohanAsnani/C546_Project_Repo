@@ -5,12 +5,11 @@
         taskName = $('#taskName'),
         taskDesc = $('#taskDesc'),
         dueDate = $('#dueDate'),
-        //taskType = $('input[name="taskType"]'),
         taskType = $('#taskType'),
         type = $('#type'),
         errorList = $('#errorList'),
         errorDiv = $('#error'),
-        sendEmail = $('#sendEmail');
+        sendEmail = $('button#sendEmail[name="sendEmail"]');
 
     errorList.hide();
     errorList.empty();
@@ -40,11 +39,6 @@
                     let date = check[2];
                     isValidDate(month, date, year, 'Due Date');
                 }
-                // if (inputNamesArr[i] === 'Task Type') {
-                //     if (!(inputsArr[i][0].checked || inputsArr[i][1].checked)) {
-                //         throw new Error(`Please select an option for task type`);
-                //     }
-                // }
             } catch (e) {
                 errors.push(e);
             }
@@ -73,6 +67,7 @@
     });
 
     sendEmail.click(function (event) {
+        event.preventDefault();
         console.log('In sendEmail');
         errorDiv.empty();
         errorDiv.hide();
@@ -98,10 +93,6 @@
 
             } else {
                 alert(`We're sorry, an error occurred. Please try again later.`);
-                // errorDiv.empty();
-                // errorDiv.append(`We're sorry, an error occurred. Please try again later.`);
-                // errorDiv.show();
-                // return;
             }
         });
 

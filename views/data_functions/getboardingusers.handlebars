@@ -1,5 +1,5 @@
 <h2>{{title}}</h2>
-<ol class="user">
+<ol class="user" {{hideList}}>
     {{#if isOnboarding}}
     {{#each users}}
     <li>
@@ -16,11 +16,11 @@
         <p>Employee Id: {{employeeId}}</p>
     </li>
     {{/each }}
-</ol> 
-<ol>
-        <h2>Awaiting User Action</h2>
+</ol>
+<ol {{hideList}}>
+    <h2>Awaiting User Action</h2>
     {{#each usersES}}
-        <li>
+    <li>
         <a href="/hrc/hr/onboarding/{{employeeId}}" data-employeeId="{{employeeId}}">
             <h3>{{firstName}} {{lastName}}</h3>
         </a>
@@ -36,7 +36,8 @@
     {{/each}}
 </ol>
 
-    {{else}}
+{{else}}
+<ol {{hideList}}>
     {{#each users}}
     <li>
         <a href="/hrc/hr/offboarding/{{employeeId}}" data-employeeId="{{employeeId}}">
@@ -52,6 +53,11 @@
     </li>
     {{/each}}
     {{/if}}
+</ol>
+<ul id="errorList" name="errorList" hidden> </ul>
 
+<p id="error" name="error" class="error" {{hidden}}>
+    {{message}}
+</p>
 <button onclick="window.location.href='/hrc/hr'">Back</button>
 <a class="page-link" id="logoutLink" href="/hrc/logout">Logout</a>

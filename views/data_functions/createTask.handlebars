@@ -1,4 +1,4 @@
-<form id="createTask-form" name="createTask-form" class="createTask-form" action="../" method="POST">
+<form id="createTask-form" name="createTask-form" class="createTask-form" action="../" method="POST" {{hideForm}}>
     <h2>{{title}}</h2>
     <h4>Task Details</h4>
 
@@ -47,17 +47,18 @@
     <label for="offboard">Offboard</label> --}}
 
 
-    <ul id="errorList" name="errorList" hidden> </ul>
 
-    <p id="error" name="error" class="error" {{hidden}}>
-        {{message}}
-    </p>
 
     <button type="submit" class="submitButton" id="submitButton" name="submitButton">Create</button><br>
 
 </form>
+<ul id="errorList" name="errorList" hidden> </ul>
+
+<p id="error" name="error" class="error" {{hidden}}>
+    {{message}}
+</p>
 <h4>Assigned tasks</h4>
-<table class="taskTable">
+<table class="taskTable" {{hideTable}}>
     <tr>
         <th>First Name</th>
         <th>Last Name</th>

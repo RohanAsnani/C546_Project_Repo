@@ -1,6 +1,6 @@
 <article>
     <h2>{{taskTypeList}}</h2>
-    <table class="taskTable">
+    <table class="taskTable" {{hideTable}}>
         <tr>
             <th>First Name</th>
             <th>Last Name</th>
@@ -96,10 +96,13 @@
         integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     <script src="../../../public/js/createTask.js"></script>
 </article>
+
+<p id="error" name="error" class="error" {{hidden}}>
+    {{message}}
+</p>
+
 {{#if isEmp}}
 <button onclick="window.location.href='/hrc/employee'">Homepage</button>
 {{else}}
 <button onclick="window.location.href='/hrc/hr'">Homepage</button>
 {{/if}}
-
-<a class="page-link" id="logoutLink" href="/hrc/logout">Logout</a>

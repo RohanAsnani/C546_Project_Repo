@@ -29,7 +29,7 @@ router
             }
             return res.render('./users/employee', { title: 'Employee', firstName: req.session.user.firstName, role: req.session.user.role, employeeId: req.session.user.employeeId, isAdmin: (req.session.user.role === 'Admin') ? true : false, isHR: (req.session.user.role === 'HR') ? true : false, msg: msg, isLoggedIn: true, isNotActive: (status !== 'Active') ? true : false });
         } catch (e) {
-            return res.json('Not yet Set Up');
+            return res.status(404).render('404Page', { title: '404 Not Found.', message: e.message });
         }
     });
 
@@ -38,19 +38,31 @@ router
     .get(async(req,res)=>{
         try{
             let userData = req.session.user;
-            return res.render('profile',{title:'My Profile',...userData,isLoggedIn:true});
-            
-        }catch(e){
-            return res.status(500).json(e.message)
+            return res.render('profile', { title: 'My Profile', ...userData, isLoggedIn: true });
+
+        } catch (e) {
+            return res.status(400).json(e.message).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: e.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back'
+            });
         }
     })
     router
     .route('/profile/changepass')
-    .get(async(req,res)=>{
-        try{
-            return res.render('./data_functions/changePass',{title:'Change Password',currentPass:'',newPass:'hidden',errorList:'hidden'});
-        }catch(e){
-            return res.status(500).json(e.message);
+    .get(async (req, res) => {
+        try {
+            return res.render('./data_functions/changePass', { title: 'Change Password', currentPass: '', newPass: 'hidden', errorList: 'hidden' });
+        } catch (e) {
+            return res.status(400).json(e.message).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: e.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back'
+            });
         }
     })
     .post(async (req,res)=>{
@@ -154,10 +166,10 @@ router
             } else {
                 msg = `No tasks assigned.`;
             }
-            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: true, taskTypeList: 'Task List' ,isLoggedIn:true});
+            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: true, taskTypeList: 'Task List', isLoggedIn: true, hidden: 'hidden', hideTable: '' });
             // return res.json(boardUserData);
         } catch (e) {
-            return res.status(500).json(e.message);
+            return res.status(400).render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: true, taskTypeList: 'Task List', isLoggedIn: true, hideTable: 'hidden', hidden: '', message: e.message });
         }
     });
 
@@ -188,7 +200,13 @@ router
             }
         } catch (e) {
             console.error("Error fetching notes:", e);
-            return res.status(500).json({ message: e.message });
+            return res.status(400).json(e.message).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: e.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back'
+            });
         }
     });
 
@@ -220,10 +238,10 @@ router
             } else {
                 msg = `No tasks assigned.`;
             }
-            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: false, isEmp: true, taskTypeList: 'To-Do Task List', isLoggedIn: true });
+            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: false, isEmp: true, taskTypeList: 'To-Do Task List', isLoggedIn: true, hidden: 'hidden', hideTable: '' });
             // return res.json(boardUserData);
         } catch (e) {
-            return res.status(500).json(e.message);
+            return res.status(400).render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: true, taskTypeList: 'To-Do Task List', isLoggedIn: true, hideTable: 'hidden', hidden: '', message: e.message });
         }
     });
 
@@ -239,25 +257,39 @@ router.route('/fillForm/:employeeId/:taskId/:type')
             }
             type = validation.checkStrCS(req.params.type, 'Type');
         } catch (error) {
-            return res.status(400).json(error.message).render('error', { title: 'Error',
-            class: 'error-class',
-            message: error.message,
-            previous_Route: '/hrc/login',
-            linkMessage: 'Go back' });
+            return res.status(400).json(error.message).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: error.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back'
+            });
         }
         try {
             if (type === 'form') {
-                console.log('fillSalaryForm', { employeeId: employeeId, taskId: taskId})
-                return res.render('./data_functions/fillSalaryForm', { title: 'Salary Form', employeeId: employeeId, taskId: taskId, isLoggedIn: true});
-            } else{
-                if(type === 'select'){
-                    return res.render('./data_functions/selectBenifitsForm', { title: 'Select Form', employeeId: employeeId, taskId: taskId, isLoggedIn: true});
+                console.log('fillSalaryForm', { employeeId: employeeId, taskId: taskId })
+                return res.render('./data_functions/fillSalaryForm', { title: 'Salary Form', employeeId: employeeId, taskId: taskId, isLoggedIn: true });
+            } else {
+                if (type === 'select') {
+                    return res.render('./data_functions/selectBenifitsForm', { title: 'Select Form', employeeId: employeeId, taskId: taskId, isLoggedIn: true });
                 } else {
-                    return res.status(404).json('Task Not Found');
+                    return res.status(400).json('Task Not Found').render('error', {
+                        title: 'Error',
+                        class: 'error-class',
+                        message: 'Task Not Found',
+                        previous_Route: '/hrc/login',
+                        linkMessage: 'Go back'
+                    });
                 }
             }
         } catch (e) {
-            return res.status(500).json(e.message);
+            return res.status(400).json(error.message).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: error.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back'
+            });;
         }
     })
 
@@ -295,11 +327,13 @@ router.route('/fillSalaryForm')
                 throw new Error('Invalid Payment Type');
             }
         } catch (error) {
-            return res.status(400).render('error', { title: 'Error',
-            class: 'error-class',
-            message: error.message,
-            previous_Route: '/hrc/login',
-            linkMessage: 'Go back home' });
+            return res.status(400).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: error.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back home'
+            });
         }
         try {
             let hourlyPay = req.session.user.currentSalary
@@ -324,11 +358,13 @@ router.route('/fillSalaryForm')
                 return res.redirect('/hrc/employee/getAllToDoByEmpId');
             }
         } catch (error) {
-            return res.status(500).render('error', { title: 'Error',
-            class: 'error-class',
-            message: error.message,
-            previous_Route: '/hrc/login',
-            linkMessage: 'Go back home' });
+            return res.status(500).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: error.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back home'
+            });
         }
 })
 
@@ -366,11 +402,13 @@ router.route('/getAllSalaryByEmpId')
             });
         } catch (e) {
             console.log(e);
-            return res.status(500).render('error', { title: 'Error',
-            class: 'error-class',
-            message: e.message,
-            previous_Route: '/hrc/login',
-            linkMessage: 'Go back home' });
+            return res.status(500).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: e.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back home'
+            });
         }
     }
 )
@@ -388,11 +426,13 @@ router.route('/downloadSalaryBreakdown/:_id')
                 throw new Error('Invalid Id');
             }
         } catch (e) {
-            return res.status(400).render('error', { title: 'Error',
-            class: 'error-class',
-            message: e.message,
-            previous_Route: '/hrc/login',
-            linkMessage: 'Go back home' });
+            return res.status(400).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: e.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back home'
+            });
         }
         try {
             let breakdown = await salary.getSalaryBreakdown(employeeId,_id);
@@ -576,11 +616,13 @@ router.route('/selectBenifitsForm')
             }
             console.log(beneficiaries);
         } catch (e) {
-            return res.status(400).render('error', { title: 'Error',
-            class: 'error-class',
-            message: e.message,
-            previous_Route: '/hrc/login',
-            linkMessage: 'Go back home' });
+            return res.status(400).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: e.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back home'
+            });
         }
         try{
             if(benefitOption==='optOut'){
@@ -609,12 +651,14 @@ router.route('/selectBenifitsForm')
                     throw new Error('Could not create Benefits');
                 }
             }
-        }catch(e){
-            return res.status(500).render('error', { title: 'Error',
-            class: 'error-class',
-            message: e.message,
-            previous_Route: '/hrc/login',
-            linkMessage: 'Go back home' });
+        } catch (e) {
+            return res.status(400).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: e.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back home'
+            });
         }
 })
 
@@ -624,12 +668,22 @@ router
         try {
             if (!req.params.employeeId || req.params.employeeId.trim() === '' || !req.params.taskId || req.params.taskId.trim() === ''
                 || !req.params.taskType || req.params.taskType.trim() === '') {
-                res.status(400)
-                //res.render('home', { hasError400Id: true });
-                return;
+                return res.status(400).render('error', {
+                    title: 'Error',
+                    class: 'error-class',
+                    message: e.message,
+                    previous_Route: '/hrc/login',
+                    linkMessage: 'Go back home'
+                });
             }
         } catch (e) {
-            return res.status(400).json({ error: e });
+            return res.status(400).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: e.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back home'
+            });
         }
 
         try {
@@ -640,7 +694,13 @@ router
             return res.redirect('/hrc/employee/getAllToDoByEmpId');
             //return res.json(patchedInfo);
         } catch (e) {
-            return res.status(404).json(e.message);
+            return res.status(400).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: e.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back home'
+            });
         }
 
     });
@@ -653,7 +713,13 @@ router
             let empData = await userTest.getUserById(employeeId);
             return res.render('./data_functions/resign', { title: 'Emloyee Resignation', firstName: empData.firstName, lastName: empData.lastName, username: empData.username, employeeId: empData.employeeId });
         } catch (e) {
-            return res.status(400).json({ error: e });
+            return res.status(400).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: e.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back home'
+            });
         }
     })
     .post(async (req, res) => {
@@ -687,7 +753,13 @@ router
             return res.render('./users/employee', { title: 'Employee', firstName: req.session.user.firstName, role: req.session.user.role, employeeId: req.session.user.employeeId, isAdmin: (req.session.user.role === 'Admin') ? true : false, isHR: (req.session.user.role === 'HR') ? true : false, msg: msg, isLoggedIn: true, isNotActive: (status !== 'Active' && status.startsWith('Offboarding')) ? true : false });
 
         } catch (e) {
-            return res.status(400).json({ error: e });
+            return res.status(400).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: e.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back home'
+            });
         }
     });
     
@@ -695,7 +767,13 @@ router
     .route('/uploadDocs/:taskId?')
     .get(async (req, res) => {
         if (!req.session.user) {
-            return res.status(401).json({ message: "Unauthorized access" });
+            return res.status(401).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: 'Unauthorized access',
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back home'
+            });
         }
         
         try {
@@ -766,7 +844,13 @@ router
     .route('/uploadDocs/viewDocByDocId/:docId')
     .get(async (req, res) => {
         if (!req.session.user || !req.session.user.employeeId) {
-            return res.status(401).json({ message: "Unauthorized access" });
+            return res.status(401).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: 'Unauthorized access',
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back home'
+            });
         }
         
         const { docId } = req.params;
@@ -775,55 +859,85 @@ router
         try {
             const result = await doc.getDocumentUrlByDocId(empId, docId);
             if (!result.success) {
-                return res.status(404).json({ message: result.message });
+                return res.status(404).render('404Page', { title: '404 Not Found.', message: result.message });
             }
             
             res.redirect(result.docUrl);
         } catch (error) {
             console.error("Error fetching document:", error);
-            return res.status(500).json({ message: "Failed to fetch document" });
+            return res.status(500).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: 'Failed to fetch document',
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back home'
+            });
         }
     });
 
     router
     .route('/uploadDocs/viewDocByDocIdEmpID/:docId/:employeeId')
     .get(async (req, res) => {
-    if (!req.session.user) {
-        return res.status(401).json({ message: "Unauthorized access" });
-    }
+        if (!req.session.user) {
+            return res.status(401).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: 'Unauthorized access',
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back home'
+            });
+        }
 
     const { docId, employeeId } = req.params;  
 
-    try {
-        const result = await doc.getDocumentUrlByDocId(employeeId, docId);
-        if (!result.success) {
-            return res.status(404).json({ message: result.message });
-        }
+        try {
+            const result = await doc.getDocumentUrlByDocId(employeeId, docId);
+            if (!result.success) {
+                return res.status(404).render('404Page', { title: '404 Not Found.', message: result.message });
+            }
 
-        res.redirect(result.docUrl);
-    } catch (error) {
-        console.error("Error fetching document:", error);
-        return res.status(500).json({ message: "Failed to fetch document" });
-    }
-});
+            res.redirect(result.docUrl);
+        } catch (error) {
+            console.error("Error fetching document:", error);
+            return res.status(500).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: 'Failed to fetch document',
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back home'
+            });
+        }
+    });
 
 
 
     router
     .route('/uploadDocs/viewDocByTaskId/:taskId/:employeeId')
     .get(async (req, res) => {
-    if (!req.session.user || !req.session.user.employeeId) {
-        return res.status(401).json({ message: "Unauthorized access" });
-    }
+        if (!req.session.user || !req.session.user.employeeId) {
+            return res.status(401).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: 'Unauthorized access',
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back home'
+            });
+        }
 
-    let taskId, empId;
-    try {
-        taskId = req.params.taskId;
-        empId = req.params.employeeId;
-    } catch (error) {
-        console.error("Error parsing parameters:", error);
-        return res.status(400).json({ message: "Invalid parameter format" });
-    }
+        let taskId, empId;
+        try {
+            taskId = req.params.taskId;
+            empId = req.params.employeeId;
+        } catch (error) {
+            console.error("Error parsing parameters:", error);
+            return res.status(400).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: 'Invalid parameter format',
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back home'
+            });
+        }
 
     try {
         const result = await doc.getDocumentUrlByTaskId(empId, taskId);
@@ -841,39 +955,46 @@ router
 
     router
     .route('/getdocs/:employeeId')
-    router.get(async (req, res) => {
-        if (!req.session.user || req.session.user.employeeId !== req.params.employeeId) {
-            return res.status(403).json({ message: "Unauthorized access" });
-        }
-    
-        try {
-            const documentsData = await doc.getDocumentsByEmployeeId(req.params.employeeId);
-            if (documentsData.documents.length === 0) {
-                res.render('./data_functions/GetEmpDetailsandNotes', {
-                    title: 'Employee Documents',
-                    isLoggedIn: true,
-                    noDocuments: true
-                });
-            } else {
-                res.render('./data_functions/GetEmpDetailsandNotes', {
-                    title: 'Employee Documents',
-                    isLoggedIn: true,
-                    documents: documentsData.documents
-                });
-            }
-        } catch (error) {
-            console.error("Error fetching documents:", error);
-            res.status(500).render('./data_functions/GetEmpDetailsandNotes', {
+router.get(async (req, res) => {
+    if (!req.session.user || req.session.user.employeeId !== req.params.employeeId) {
+        return res.status(401).render('error', {
+            title: 'Error',
+            class: 'error-class',
+            message: 'Unauthorized access',
+            previous_Route: '/hrc/login',
+            linkMessage: 'Go back home'
+        });
+    }
+
+
+    try {
+        const documentsData = await doc.getDocumentsByEmployeeId(req.params.employeeId);
+        if (documentsData.documents.length === 0) {
+            res.render('./data_functions/GetEmpDetailsandNotes', {
                 title: 'Employee Documents',
-                message: 'Failed to fetch documents',
                 isLoggedIn: true,
+                noDocuments: true
+            });
+        } else {
+            res.render('./data_functions/GetEmpDetailsandNotes', {
+                title: 'Employee Documents',
+                isLoggedIn: true,
+                documents: documentsData.documents
             });
         }
-    });
-    
+    } catch (error) {
+        console.error("Error fetching documents:", error);
+        res.status(500).render('./data_functions/GetEmpDetailsandNotes', {
+            title: 'Employee Documents',
+            message: 'Failed to fetch documents',
+            isLoggedIn: true,
+        });
+    }
+});
 
 
 
 
 
-export default router 
+
+export default router;

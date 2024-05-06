@@ -14,7 +14,7 @@ router
         try {
             return res.render('./users/admin', { title: 'Admin', firstName: req.session.user.firstName, role: req.session.user.role,isLoggedIn:true});
         } catch (e) {
-            return res.json('Not yet Set Up');
+            return res.status(404).render('404Page', { title: '404 Not Found.', message: e.message });
         }
     })
 

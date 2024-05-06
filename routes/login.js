@@ -7,22 +7,22 @@ import xss from 'xss';
 
 
 router.route('/')
-.get(async (req,res) =>{
-    try{
-        return res.render('homepage',{title:'Login',hidden: "hidden",isLoggedIn: false,forgotPass:"hidden"});
-    }catch(e){
-        return res.json({error:e.message});
-    }
-})
-.post(async (req,res) =>{
-  
-    try{
-        req.body.username = xss(req.body.username)
+    .get(async (req, res) => {
+        try {
+            return res.render('homepage', { title: 'Login', hidden: "hidden", isLoggedIn: false, forgotPass: "hidden" });
+        } catch (e) {
+            return res.status(400).render('homepage', { title: 'Login', hidden: "", isLoggedIn: false, message: e.message });
+        }
+    })
+    .post(async (req, res) => {
+
+        try {
+            req.body.username = xss(req.body.username)
         req.body.password = xss(req.body.password)
-        let credentialsCheck =  await login.getUsernameAndValidate(req.body.username,req.body.password);
-         req.session.user = credentialsCheck
-        
-            switch(req.session.user.role){
+        let credentialsCheck = await login.getUsernameAndValidate(req.body.username, req.body.password);
+            req.session.user = credentialsCheck
+
+            switch (req.session.user.role) {
                 case 'Admin': return res.redirect('/hrc/admin');
                     
                 case 'HR': return res.redirect('/hrc/hr');

@@ -10,7 +10,7 @@ const exportedMethods = {
 
         let resObj = getTaskData(data);
 
-        let boardData = validation.validateBoardingData(null, userId, resObj.taskName, resObj.taskDesc, resObj.dueDate, resObj.taskType, false);
+        let boardData = validation.validateBoardingData(null, userId, resObj.taskName, resObj.taskDesc, resObj.dueDate, resObj.taskType, resObj.type, false);
 
         const boardingCollection = await boarding();
         let createdInfo = await boardingCollection.insertOne(boardData);
