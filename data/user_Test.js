@@ -151,6 +151,25 @@ async updatePut(updationInfo){
 
 },
 
+async updatePatchNotes(updationInfo) {
+  if (!updationInfo.employeeId) throw new Error('Missing employee id.');
+
+  updationInfo = validation.checkIfExistsAndValidate(updationInfo);
+  
+  const noteToAdd = updationInfo.notes;
+  if (!noteToAdd) throw new Error('Missing note content.');
+
+  let userCollection = await users();
+
+  let patchedInfo = await userCollection.findOneAndUpdate(
+      { employeeId: updationInfo.employeeId },
+      { $push: { notes: noteToAdd } },
+      { returnDocument: 'after' }
+  );
+  if (!patchedInfo) throw new Error(`Cannot update user with id: ${updationInfo.employeeId}`);
+  return patchedInfo;
+},
+
 async updatePatch(updationInfo){
 
   if(!updationInfo.employeeId)throw new Error('Missing employee id.');
@@ -165,6 +184,21 @@ async updatePatch(updationInfo){
 
   return patchedInfo
 
+},
+
+async  getNotesByEmployeeId(employeeId) {
+  const userCollection = await users()
+  const employeeData = await userCollection.findOne(
+      { employeeId: employeeId },
+      { projection: { notes: 1, _id: 0 } } 
+  );
+  if (!employeeData) {
+    throw new Error(`no user found with employee id: ${employeeId}`)
+  }
+  if(employeeData.notes.length===0){
+    return []
+  }
+  return employeeData.notes ; 
 },
 
   async getOnboardingHR() {

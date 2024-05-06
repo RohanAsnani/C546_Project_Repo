@@ -11,6 +11,7 @@
   "author": "team 14",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.1613.0",
     "axios": "^1.6.8",
     "bcryptjs": "^2.4.3",
     "cookie-handler": "^1.2.4",
@@ -21,6 +22,7 @@
     "express-session": "^1.18.0",
     "mailer": "^0.6.7",
     "mongodb": "^6.5.0",
+    "multer": "^1.4.5-lts.1",
     "node": "^22.1.0",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.13",

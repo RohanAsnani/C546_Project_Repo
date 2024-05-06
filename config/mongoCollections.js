@@ -20,3 +20,4 @@ const getCollectionFn = (collection) => {
 export const users = getCollectionFn('user');
 export const boarding = getCollectionFn('boarding');
 export const salary = getCollectionFn('salary');
+export const documents = getCollectionFn('documents')
