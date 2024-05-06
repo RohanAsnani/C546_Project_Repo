@@ -15,7 +15,7 @@ router.route('/')
         try {
             return res.render('./users/hr', { title: 'HR', firstName: req.session.user.firstName, role: req.session.user.role, isLoggedIn: true });
         } catch (e) {
-            return res.status(500).json(e.message);
+            return res.status(404).render('404Page', { title: '404 Not Found.', message: e.message });
         }
     });
 
@@ -28,9 +28,9 @@ router.route('/getAllEmployees')
                     return user;
                 }
             }).filter(Boolean);
-            return res.render('./data_functions/getAllEmp', { title: 'Employee Details', empList: userdata, firstName: req.session.user.firstName, role: req.session.user.role, isLoggedIn: true });
+            return res.render('./data_functions/getAllEmp', { title: 'Employee Details', empList: userdata, firstName: req.session.user.firstName, role: req.session.user.role, isLoggedIn: true, hideTable: '', hidden: 'hidden' });
         } catch (e) {
-            return res.status(500).json(e.message);
+            return res.status(400).render('./data_functions/getAllEmp', { title: 'Employee Details', empList: userdata, firstName: req.session.user.firstName, role: req.session.user.role, isLoggedIn: true, hidden: '', hideTable: 'hidden', message: e.message });
         }
     });
 /*
@@ -47,8 +47,8 @@ router.route('/getEmpDetails/:employeeId')
 
 
 router
-.route('/getEmpDetails/:employeeId')
-.get(async (req, res) => {
+    .route('/getEmpDetails/:employeeId')
+    .get(async (req, res) => {
         try {
             let employeeId = req.params.employeeId;
             let employeeDetails = await user_Test.getUserById(employeeId);
@@ -99,17 +99,16 @@ router.route('/submit-note')
                 isLoggedIn: true
             });
         }
-    })
-
+    });
 
 router.route('/getonboarding')
     .get(async (req, res) => {
         try {
             let onboardingUsers = await user_Test.getOnboardingHR();
             let onboardingUsersES = await user_Test.getOnboardingHRES()
-            return res.render('./data_functions/getboardingusers', { title: "Users Yet to be Onboarded", ...req.session.user, users: onboardingUsers, usersES: onboardingUsersES, isOnboarding: true, taskType: 'onboard', isLoggedIn: true });
+            return res.render('./data_functions/getboardingusers', { title: "Users Yet to be Onboarded", ...req.session.user, users: onboardingUsers, usersES: onboardingUsersES, isOnboarding: true, taskType: 'onboard', isLoggedIn: true, hideList: '', hidden: 'hidden' });
         } catch (e) {
-            return res.status(500).json(e.message);
+            return res.status(400).render('./data_functions/getboardingusers', { title: "Users Yet to be Onboarded", ...req.session.user, users: onboardingUsers, usersES: onboardingUsersES, isOnboarding: true, taskType: 'onboard', isLoggedIn: true, hidden: '', hideList: 'hidden', message: e.message });
         }
     });
 
@@ -117,9 +116,9 @@ router.route('/getoffboarding')
     .get(async (req, res) => {
         try {
             let offboardingUsers = await user_Test.getOffboardingHR();
-            return res.render('./data_functions/getboardingusers', { title: "Users Yet to be Offboarded", ...req.session.user, users: offboardingUsers, isOnboarding: false, taskType: 'offboard', isLoggedIn: true });
+            return res.render('./data_functions/getboardingusers', { title: "Users Yet to be Offboarded", ...req.session.user, users: offboardingUsers, isOnboarding: false, taskType: 'offboard', isLoggedIn: true, hideList: '', hidden: 'hidden' });
         } catch (e) {
-            return res.status(500).json(e.message);
+            return res.status(400).render('./data_functions/getboardingusers', { title: "Users Yet to be Offboarded", ...req.session.user, users: offboardingUsers, isOnboarding: false, taskType: 'offboard', isLoggedIn: true, hidden: '', hideList: 'hidden', message: e.message });
         }
     });
 router
@@ -139,7 +138,7 @@ router
         }catch(e){
             let employeeId = req.params.employeeId;
             let employeeDetails = await user_Test.getUserById(employeeId);
-            return res.render('./data_functions/endDate',{...employeeDetails,error:e.message});
+            return res.status(400).render('./data_functions/endDate', { ...employeeDetails, error: e.message });
         }
     })
 
@@ -156,7 +155,7 @@ router.route('/onboarding/:employeeId')
             })
             return res.render('./data_functions/patchFormHR', { title: 'Onboarding Edit User', ...employeeDetails, manager: managerDetails, isLoggedIn: true });
         } catch (e) {
-            return res.status(404).render('404Page', { title: '404 Not Found.', message: e });
+            return res.status(404).render('404Page', { title: '404 Not Found.', message: e.message });
         }
     })
     .post(async (req, res) => {
@@ -178,9 +177,9 @@ router.route('/onboarding/:employeeId')
 
         try {
             let updatedDetails = await boardData.updatePatchOnboardingData(patchInfo)
-            return res.render('./data_functions/newAdded', { title: 'Updated User', ...updatedDetails, hrView: true, adminButtons: 'hidden', isLoggedIn: true });
+            return res.render('./data_functions/newAdded', { title: 'Updated User', ...updatedDetails, hrView: true, adminButtons: 'hidden', isLoggedIn: true, hidden: 'hidden' });
         } catch (e) {
-            return res.status(400).json(e.message);
+            return res.status(400).render('./data_functions/patchFormHR', { title: 'Onboarding Edit User', ...employeeDetails, manager: managerDetails, hidden: '', message: e.message, isLoggedIn: true });
         }
     })
 
@@ -201,10 +200,10 @@ router
                 }
             }
             //console.dir(taskList)
-            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Onboard Task List', isLoggedIn: true });
+            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Onboard Task List', isLoggedIn: true, hidden: 'hidden', hideTable: '' });
             //return res.json(boardUserData);
         } catch (e) {
-            return res.status(500).json(e.message);
+            return res.status(400).render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Onboard Task List', isLoggedIn: true, hideTable: 'hidden', hidden: '', message: e.message });
         }
     });
 
@@ -224,10 +223,10 @@ router
                     msg = res.msg;
                 }
             }
-            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Offboard Task List', isLoggedIn: true });
+            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Offboard Task List', isLoggedIn: true, hidden: 'hidden', hideTable: '' });
             //return res.json(boardUserData);
         } catch (e) {
-            return res.status(500).json({ error: e });
+            return res.status(400).render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Offboard Task List', isLoggedIn: true, hideTable: 'hidden', hidden: '', message: e.message });
         }
     });
 
@@ -264,9 +263,9 @@ router
                 msg = `No tasks assigned.`;
             }
 
-            return res.render('./data_functions/createTask', { title: ((taskType === 'onboard') ? 'Create New Onboard Task' : 'Create New Offboard Task'), hidden: 'hidden', firstName: empData.firstName, lastName: empData.lastName, username: empData.username, employeeId: empData.employeeId, taskType: req.params.taskType, isOnboard: ((taskType === 'onboard') ? true : false), taskList: taskList, noDataPresentMsg: msg, isLoggedIn: true });
+            return res.render('./data_functions/createTask', { title: ((taskType === 'onboard') ? 'Create New Onboard Task' : 'Create New Offboard Task'), hidden: 'hidden', firstName: empData.firstName, lastName: empData.lastName, username: empData.username, employeeId: empData.employeeId, taskType: req.params.taskType, isOnboard: ((taskType === 'onboard') ? true : false), taskList: taskList, noDataPresentMsg: msg, isLoggedIn: true, hidden: 'hidden', hideForm: '', hideTable: '' });
         } catch (e) {
-            return res.status(400).json(e.message);
+            return res.status(400).render('./data_functions/createTask', { title: ((taskType === 'onboard') ? 'Create New Onboard Task' : 'Create New Offboard Task'), hidden: 'hidden', firstName: empData.firstName, lastName: empData.lastName, username: empData.username, employeeId: empData.employeeId, taskType: req.params.taskType, isOnboard: ((taskType === 'onboard') ? true : false), taskList: taskList, noDataPresentMsg: msg, isLoggedIn: true, hidden: '', hideForm: 'hidden', hideTable: 'hidden', message: e.message });
         }
     });
 
@@ -277,9 +276,14 @@ router
         let data = req.body;
         //make sure there is something present in the req.body
         if (!data || Object.keys(data).length === 0) {
-            return res
-                .status(400)
-                .json({ error: 'There are no fields in the request body' });
+
+            return res.status(400).json(e.message).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: e.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back'
+            });
         }
         try {
             let employeeId = xss(data.employeeId);
@@ -289,11 +293,7 @@ router
             let taskType = xss(data.taskType);
             let type = xss(data.type);
             data = validation.validateBoardingData(null, employeeId, taskName, taskDesc, dueDate, taskType, type, false);
-        } catch (e) {
-            return res.status(400).json({ error: e.message });
-        }
 
-        try {
             //check if boarding entry already present for user
             let existingBoardData = await boardData.getboardingDataByEmpId(data.employeeId);
             if (!existingBoardData || existingBoardData === null) {
@@ -304,12 +304,12 @@ router
             } else {
                 //update - PUT
                 let updatedBoardUserData = await boardData.updatePutBoardingTask(existingBoardData, data);
-                return res.render('./data_functions/newTaskAdded', { title: "Created Task", isLoggedIn: true });
+                return res.render('./data_functions/newTaskAdded', { title: "Created Task", isLoggedIn: true, hidden: 'hidden', hideTag: '' });
                 //return res.json(updatedBoardUserData);
             }
 
         } catch (e) {
-            return res.status(404).json({ error: e.message });
+            return res.status(400).render('./data_functions/newTaskAdded', { title: "Created Task", isLoggedIn: true, hidden: '', hideTag: 'hidden', message: e.message });
         }
 
     })
@@ -317,22 +317,27 @@ router
         let updateBoardData = req.body;
         //make sure there is something present in the req.body
         if (!updateBoardData || Object.keys(updateBoardData).length === 0) {
-            return res
-                .status(400)
-                .json({ error: 'There are no fields in the request body' });
+            return res.status(400).json(e.message).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: e.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back'
+            });
         }
         try {
             updateBoardData = validation.validateBoardingDataPatch(updateBoardData.employeeId, updateBoardData.taskId, updateBoardData.taskType, updateBoardData.updateBoardDataObj);
-        } catch (e) {
-            return res.status(400).json({ error: e.message });
-        }
-
-        try {
             let patchedInfo = await boardData.updatePatchBoardingTask(updateBoardData);
 
             return res.json(patchedInfo);
         } catch (e) {
-            return res.status(404).json({ error: e.message });
+            return res.status(400).json(e.message).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: e.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back'
+            });
         }
 
     });
@@ -343,9 +348,13 @@ router
 
         if (!req.params.employeeId || req.params.employeeId.trim() === '' || !req.params.taskId || req.params.taskId.trim() === ''
             || !req.params.taskType || req.params.taskType.trim() === '' || !req.params.byEmp || req.params.byEmp.trim() === '') {
-            res.status(400)
-            //res.render('home', { hasError400Id: true });
-            return;
+            return res.status(400).json(e.message).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: e.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back'
+            });
         }
         try {
             let employeeId = req.params.employeeId.trim();
@@ -364,7 +373,13 @@ router
                 }
             }
         } catch (e) {
-            return res.status(400).json(e.message)
+            return res.status(400).json(e.message).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: e.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back'
+            });
         }
     });
 
@@ -375,9 +390,13 @@ router
         try {
             let data = req.body;
             if (!data || Object.keys(data).length === 0) {
-                return res
-                    .status(400)
-                    .json({ error: 'There are no fields in the request body' });
+                return res.status(400).json(e.message).render('error', {
+                    title: 'Error',
+                    class: 'error-class',
+                    message: e.message,
+                    previous_Route: '/hrc/login',
+                    linkMessage: 'Go back'
+                });
             }
             let employeeId = xss(data.employeeId.trim());
             let taskType = xss(data.taskType.trim().toLowerCase());
@@ -397,7 +416,13 @@ router
             return res.status(200).json(info);
 
         } catch (e) {
-            return res.status(400).json(e.message)
+            return res.status(400).json(e.message).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: e.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back'
+            });
         }
     });
 
@@ -432,7 +457,13 @@ router
 
         } catch (e) {
             console.error("Failed to load HR dashboard:", e);
-            res.status(500).json({ error: e.message });
+            return res.status(400).json(e.message).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: e.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back'
+            });
         }
     });
 

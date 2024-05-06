@@ -1,6 +1,6 @@
 <article>
     <h2>{{title}}</h2>
-    <table class="taskTable">
+    <table class="taskTable" {{hideTable}}>
         <tr>
             <th>First Name</th>
             <th>Last Name</th>
@@ -22,7 +22,15 @@
         {{/each}}
     </table>
     <p>{{noDataPresentMsg}}</p>
+
+    <ul id="errorList" name="errorList" hidden> </ul>
+
+    <p id="error" name="error" class="error" {{hidden}}>
+        {{message}}
+    </p>
 </article>
+
+
 {{#if isEmp}}
 <button onclick="window.location.href='/hrc/employee'">Homepage</button>
 {{else}}

@@ -1,6 +1,8 @@
-<h2>Task Succesfully created</h2>
+<h2 {{hideTag}}>Task Succesfully created</h2>
 
-
+<p id="error" name="error" class="error" {{hidden}}>
+    {{message}}
+</p>
 <button onclick="window.location.href='/hrc/hr/getonboarding'">Assign another task</button>
 
 <button onclick="window.location.href='/hrc/hr'">Homepage</button>
