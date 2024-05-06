@@ -1,0 +1,41 @@
+<div>
+    <h2>Benefits Information</h2>
+    {{#if (eq benefits.opted "optOut")}}
+        <p>You have chosen to opt out of benefits. There will be no deductions from your salary for benefits.</p>
+    {{else}}
+        {{#if (eq benefits.opted "optInSelf")}}
+            <p>You have chosen to opt in for benefits. The following information is available:</p>
+        {{/if}}
+        {{#if (eq benefits.opted "optInPartner")}}
+            <p>You have chosen to opt in for benefits for you and your partner. The following information is available:</p>
+        {{/if}}
+        {{#if (eq benefits.opted "optInFamily")}}
+            <p>You have chosen to opt in for benefits for you and your Family. The following information is available:</p>
+        {{/if}}
+        <p>Term Start Date: {{benefits.term_start_date}}</p>
+        <p>Term End Date: {{benefits.term_end_date}}</p>
+        <p>Opted In: {{benefits.opted_date}}</p>
+        <h2>Beneficiaries</h2>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Relation</th>
+                <th>Date of Birth</th>
+                <th>Address</th>
+                <th>Email</th>
+                <th>Phone</th>
+            </tr>
+            {{#each benefits.benefeciary}}
+            <tr>
+                <td>{{benefeciary_name}}</td>
+                <td>{{benefeciary_relation}}</td>
+                <td>{{benefeciary_dob}}</td>
+                <td>{{benefeciary_address}}</td>
+                <td>{{benefeciary_email}}</td>
+                <td>{{benefeciary_phone}}</td>
+            </tr>
+            {{/each}}
+        </table>
+    {{/if}}
+    <button onclick="window.location.href='/hrc/employee/'">Home</button>
+</div>

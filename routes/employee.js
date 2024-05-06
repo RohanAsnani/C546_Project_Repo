@@ -8,6 +8,7 @@ import board from '../data/board.js';
 import login from '../data/login.js';
 import { ObjectId } from 'mongodb';
 import xss from 'xss';
+import puppeteer from 'puppeteer';
 import doc from '../data/documents.js'
 import multer from 'multer';
 
@@ -241,10 +242,10 @@ router.route('/fillForm/:employeeId/:taskId/:type')
         try {
             if (type === 'form') {
                 console.log('fillSalaryForm', { employeeId: employeeId, taskId: taskId})
-                return res.render('./data_functions/fillSalaryForm', { title: 'Salary Form', employeeId: employeeId, taskId: taskId});
+                return res.render('./data_functions/fillSalaryForm', { title: 'Salary Form', employeeId: employeeId, taskId: taskId, isLoggedIn: true});
             } else{
                 if(type === 'select'){
-                    return res.render('./data_functions/selectBenifitsForm', { title: 'Select Form', employeeId: employeeId, taskId: taskId});
+                    return res.render('./data_functions/selectBenifitsForm', { title: 'Select Form', employeeId: employeeId, taskId: taskId, isLoggedIn: true});
                 } else {
                     return res.status(404).json('Task Not Found');
                 }
@@ -319,6 +320,181 @@ router.route('/fillSalaryForm')
             linkMessage: 'Go back home' });
         }
 })
+
+router.route('/getAllBenefits')
+    .get(async (req, res) => {
+        try {
+            let employeeId = req.session.user.employeeId;
+            const benefitsData = await salary.getBenefitsByEmpId(employeeId);
+            console.log(benefitsData);
+            if(benefitsData){
+                return res.render('./data_functions/getBenefits', { title: 'Benefits', benefits: benefitsData, isLoggedIn: true });
+            } else {
+                return res.render('./users/employee', { title: 'Employee', firstName: req.session.user.firstName, role: req.session.user.role, employeeId: req.session.user.employeeId, isAdmin: (req.session.user.role === 'Admin') ? true : false, isHR: (req.session.user.role === 'HR') ? true : false, msg: 'No Benefits Assigned', isLoggedIn: true, isNotActive: (req.session.user.status !== 'Active') ? true : false });
+            }//return res.render('./data_functions/getBenefits', { title: 'Benefits', benefits: benefitsData, isLoggedIn: true });
+        } catch (e) {
+            return res.status(500).json(e.message);
+        }
+    });
+
+router.route('/getAllSalaryByEmpId')
+    .get(async (req, res) => {
+        try {
+            let employeeId = req.session.user.employeeId;
+            const salaryData = await salary.getSalaryByEmpId(employeeId);
+            console.log(salaryData);
+            return res.render('./data_functions/getSalary', { 
+                title: 'Salary', 
+                bankAccount: salaryData.bankAccount, 
+                position: salaryData.position, 
+                hourlyPay: salaryData.hourlyPay, 
+                federalTaxbracket: salaryData.federalTaxbracket, 
+                stateTaxBracket: salaryData.stateTaxBracket, 
+                salaryBreakdown: salaryData.salaryBreakdown, 
+                isLoggedIn: true 
+            });
+        } catch (e) {
+            console.log(e);
+            return res.status(500).render('error', { title: 'Error',
+            class: 'error-class',
+            message: e.message,
+            previous_Route: '/hrc/login',
+            linkMessage: 'Go back home' });
+        }
+    }
+)
+
+router.route('/downloadSalaryBreakdown/:_id')
+    .get(async (req, res) => {
+        let employeeId;
+        let _id;
+        try {
+            employeeId = req.session.user.employeeId;
+            if( ObjectId.isValid(req.params._id)){
+                _id = req.params._id;
+            }
+            else{
+                throw new Error('Invalid Id');
+            }
+        } catch (e) {
+            return res.status(400).render('error', { title: 'Error',
+            class: 'error-class',
+            message: e.message,
+            previous_Route: '/hrc/login',
+            linkMessage: 'Go back home' });
+        }
+        try {
+            let breakdown = await salary.getSalaryBreakdown(employeeId,_id);
+            if (!breakdown) {
+                throw new Error('Could not get Salary Breakdown');
+            }
+
+            // Generate HTML from breakdown here
+            let html = `
+            <html>
+            <head>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        margin: 0;
+                        padding: 0;
+                        background-color: #f0f0f0;
+                    }
+                    .container {
+                        width: 80%;
+                        margin: 0 auto;
+                        background-color: #fff;
+                        padding: 15px;
+                        border-radius: 5px;
+                        box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+                    }
+                    h1 {
+                        color: #333;
+                        text-align: center;
+                    }
+                    h2 {
+                        color: #666;
+                        margin-bottom: 10px;
+                    }
+                    p {
+                        color: #333;
+                        line-height: 1.6;
+                        margin-bottom: 10px;
+                    }
+                    .highlight {
+                        color: #f00;
+                        font-weight: bold;
+                        font-size: 1em;
+                    }
+                    .section {
+                        border: 1px solid #ddd;
+                        padding: 10px;
+                        margin-bottom: 10px;
+                    }
+                    .subtitle {
+                        background-color: #f0f0f0;
+                        padding: 10px;
+                        font-size: 1.2em;
+                        border-bottom: 1px solid #ddd;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1 class="title">Salary Breakdown</h1>
+                    <div class="section">
+                        <h2 class="subtitle">Employee Details</h2>
+                        <p>Employee ID: <span class="highlight">${breakdown.employeeId}</span></p>
+                        <p>Position: <span class="highlight">${breakdown.position}</span></p>
+                        <p>Billing Address: <span class="highlight">${breakdown.billingAddress}</span></p>
+                    </div>
+                    <div class="section">
+                        <h2 class="subtitle">Bank Account Details</h2>
+                        <p>Account Number: <span class="highlight">${breakdown.bankAccount.accountNo}</span></p>
+                        <p>Routing Number: <span class="highlight">${breakdown.bankAccount.routingNo}</span></p>
+                        <p>Payment Type: <span class="highlight">${breakdown.bankAccount.paymentType}</span></p>
+                    </div>
+                    <div class="section">
+                        <h2 class="subtitle">Salary Breakdown Details</h2>
+                        <p>Position: <span class="highlight">${breakdown.salaryBreakdown.position}</span></p>
+                        <p>Base Pay: <span class="highlight">${breakdown.salaryBreakdown.basePay}</span></p>
+                        <p>Federal Tax: <span class="highlight">${breakdown.salaryBreakdown.federalTax}</span></p>
+                        <p>State Tax: <span class="highlight">${breakdown.salaryBreakdown.stateTax}</span></p>
+                        <p>Start Date: <span class="highlight">${breakdown.salaryBreakdown.startDate}</span></p>
+                        <p>End Date: <span class="highlight">${breakdown.salaryBreakdown.endDate}</span></p>
+                        <p>Billing Address: <span class="highlight">${breakdown.salaryBreakdown.billingAddress}</span></p>
+                        <p>Benefits Amount: <span class="highlight">${breakdown.salaryBreakdown.benifits_amount}</span></p>
+                        <p>Total Compensation: <span class="highlight">${breakdown.salaryBreakdown.totalComp}</span></p>
+                        <p>Pay Day: <span class="highlight">${breakdown.salaryBreakdown.payDay}</span></p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            `;
+
+            let browser = await puppeteer.launch();
+            let page = await browser.newPage();
+
+            await page.setContent(html);
+            await page.emulateMediaType('screen');
+
+            let pdf = await page.pdf({
+            format: 'A4',
+            printBackground: true
+            });
+
+            await browser.close();
+            res.setHeader('Content-Disposition', 'attachment; filename=salary.pdf');
+            res.send(pdf);
+
+        } catch (e) {
+            return res.status(500).render('error', { title: 'Error',
+            class: 'error-class',
+            message: e.message,
+            previous_Route: '/hrc/login',
+            linkMessage: 'Go back home' });
+        }
+    });
 
 router.route('/selectBenifitsForm')
     .post(async (req, res) => {

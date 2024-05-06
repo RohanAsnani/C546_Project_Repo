@@ -2,6 +2,7 @@ import * as validation from "../helpers.js"
 import { salary } from "../config/mongoCollections.js"
 import { benefits } from "../config/mongoCollections.js"
 import { calculateTaxRate } from "../util/salaryFunc.js"
+import bcrypt from 'bcryptjs';
 import { ObjectId } from "mongodb"
 import cron from 'node-cron';
 
@@ -9,9 +10,11 @@ const exportedMethods = {
     async createSalary(employeeId, data) {
         employeeId = validation.checkStrCS(employeeId, 'Employee Id', 0, 100, true);
         data.ssn = validation.numberExistandType(data.ssn, 'SSN', true);
+        data.ssn = await bcrypt.hash(String(data.ssn), 12);
         data.hourlyPay = validation.numberExistandType(data.hourlyPay, 'Hourly Pay', false);
         validation.numberRange(data.hourlyPay, 'Hourly Pay', 15.13, 200);
         data.account_No = validation.numberExistandType(data.accountNo, 'Account Number', true);
+        data.account_No = await bcrypt.hash(String(data.account_No), 12);
         data.routing_No = validation.numberExistandType(data.routingNo, 'Routing Number', true);
         data.paymentType = validation.checkStrCS(data.paymentType, 'Payment Type', 0, 100, false);
         data.billingAddress = validation.checkStrCS(data.billingAddress, 'Billing Address', 10, 100, true);
@@ -58,12 +61,15 @@ const exportedMethods = {
         if (insertInfo.insertedCount === 0) throw new Error('Could not add salary details. Please try again');
         return insertInfo.insertedId;
     },
-    // just get surface data
-    async getSalary(employeeId) {
+    async getSalaryBreakdown(employeeId,_id) {
         employeeId = validation.checkStrCS(employeeId, 'employeeId');
         const salaryCollection = await salary();
-        const salaryData = await salaryCollection.findOne({ employeeId: employeeId }, { projection: { _id: 0, salaryBreakdown: 0} });
+        const salaryData = await salaryCollection.findOne({ employeeId: employeeId }, { projection: { _id: 0} });
+        //handle hashed values
         if (salaryData === null) throw new Error('Salary not found');
+        const breakdown = salaryData.salaryBreakdown.find(breakdown => breakdown._id.toString() === _id);
+        if (!breakdown) throw new Error('Salary breakdown not found');
+        salaryData.salaryBreakdown = breakdown;
         return salaryData;
     },
     //for emplyee to update their own salary
@@ -104,8 +110,8 @@ const exportedMethods = {
         const basePay = check.hourlyPay*40;
         const federalTax = basePay*check.federalTaxbracket;
         const stateTax = basePay*check.stateTaxBracket;
-        let startDate = validation.getLaterDate(-7);
-        let endDate = validation.getLaterDate(-21);
+        let startDate = validation.getLaterDate(-21);
+        let endDate = validation.getLaterDate(-7);
         let benifitsCollection = await benefits();
         let deductions = await benifitsCollection.findOne({employeeId: check.employeeId}, {projection: {benefeciary: 1}});
         let benifits_amount = deductions.benefeciary.length * 50;
@@ -132,10 +138,11 @@ const exportedMethods = {
         // const salaryData = await this.getSalary(employeeId);
         return {success: true /*salaryData*/};
     },
-    async getSalaryBreakdown(employeeId) {
+
+    async getSalaryByEmpId(employeeId) {
         employeeId = validation.checkStrCS(employeeId, 'employeeId');
         const salaryCollection = await salary();
-        const salaryData = await salaryCollection.findOne({ employeeId: employeeId }, { projection: { _id: 0, employeeId:1, salaryBreakdown: 1} });
+        const salaryData = await salaryCollection.findOne({ employeeId: employeeId }, { projection: { _id: 0} });
         if (salaryData === null) throw new Error('Salary not found');
         return salaryData;
     },
@@ -195,7 +202,14 @@ const exportedMethods = {
         const insertInfo = await benefitsCollection.insertOne(newBenefits);
         if (insertInfo.insertedCount === 0) throw new Error('Could not add benefits details. Please try again');
         return insertInfo.insertedId;
-    },        
+    },
+    async getBenefitsByEmpId(employeeId) {
+        employeeId = validation.checkStrCS(employeeId, 'employeeId');
+        const benefitsCollection = await benefits();
+        const benefitsData = await benefitsCollection.findOne({ employeeId: employeeId }, { projection: { _id: 0} });
+        if (benefitsData === null) throw new Error('Benefits not found');
+        return benefitsData;
+    },      
 }
 
 // Schedule generateSalaryBreakdown to run every minute

@@ -1,0 +1,51 @@
+<div>
+    <h2>Bank Account Details</h2>
+    <p>Account Number: {{bankAccount.accountNo}}</p>
+    <p>Routing Number: {{bankAccount.routingNo}}</p>
+    <p>Payment Type: {{bankAccount.paymentType}}</p>
+</div>
+
+<div>
+    <h2>Employment Details</h2>
+    <p>Position: {{position}}</p>
+    <p>Hourly Pay: {{hourlyPay}}</p>
+    <p>Federal Tax Bracket: {{federalTaxbracket}}</p>
+    <p>State Tax Bracket: {{stateTaxBracket}}</p>
+</div>
+
+<div>
+    <h2>Salary Breakdown</h2>
+    <table>
+        <tr>
+            <th>Position</th>
+            <th>Base Pay</th>
+            <th>Federal Tax</th>
+            <th>State Tax</th>
+            <th>Payment Period</th>
+            <th>Billing Address</th>
+            <th>Benefits Amount</th>
+            <th>Total Compensation</th>
+            <th>Pay Day</th>
+            <th>Download Salary Slip</th>
+        </tr>
+        {{#each salaryBreakdown}}
+        <tr>
+            <td>{{position}}</td>
+            <td>{{basePay}}</td>
+            <td>{{federalTax}}</td>
+            <td>{{stateTax}}</td>
+            <td>{{startDate}} - {{endDate}}</td>
+            <td>{{billingAddress}}</td>
+            <td>{{benifits_amount}}</td>
+            <td>{{totalComp}}</td>
+            <td>{{payDay}}</td>
+            <td><button onclick="window.location.href='/hrc/employee/downloadSalaryBreakdown/{{_id}}'">Download salary slip</button></td>
+        </tr>
+        {{else}}
+        <tr>
+            <td colspan="10">No salary breakdown</td>
+        </tr>
+        {{/each}}
+    </table>
+        <button onclick="window.location.href='/hrc/employee/'">Home</button>
+</div>
