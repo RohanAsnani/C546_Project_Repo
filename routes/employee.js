@@ -220,9 +220,31 @@ router.route('/fillForm/:employeeId/:taskId/:type')
 
 router.route('/fillSalaryForm')
     .post(async (req, res) => {
+        let employeeId
+        let taskId
+        let ssn
+        let accountNo
+        let routingNo
+        let billingAddress
+        let paymentType
         try {
             let salaryData = req.body;
             console.log(salaryData);
+            // {
+            //     employeeId: 'HRCST0009',
+            //     taskId: '6637ce5a453227efa79fe2c3',
+            //     ssn: '1234567890',
+            //     accountNo: '2456789763456',
+            //     routingNo: '34567865434234',
+            //     billingAddress: '622 liberty ave',
+            //     paymentType: 'direct deposit'
+            //   }
+            employeeId = validation.isValidEmployeeId(salaryData.employeeId);
+            if(ObjectId.isValid(salaryData.taskId)){
+                taskId = salaryData.taskId;
+            }
+            res.json ({ success: true });
+            
         } catch (e) {
             return res.status(400).json(e.message);
         }
