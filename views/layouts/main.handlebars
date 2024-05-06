@@ -1,28 +1,27 @@
-<!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8" />
     <title>{{title}}</title>
-    <link rel="stylesheet" href="/public/css/styles.css">
-</head>
+    <link rel="stylesheet" href="/public/css/styles.css" />
+  </head>
 
-<header>
+  <header>
     <h1>HR:Central</h1>
     {{#if isLoggedIn}}
-    <div id="logoutBtn" name="logoutBtn" class="logoutBtn">
+      <div id="logoutBtn" name="logoutBtn" class="logoutBtn">
         <button onclick="window.location.href='/hrc/logout'">Logout</button>
-    </div>
+      </div>
     {{/if}}
-</header>
+  </header>
 
-<body>
+  <body>
 
     <main>
-        {{{body}}}
+      {{{body}}}
     </main>
 
     <footer class="footer">@hrcentral.org</footer>
-</body>
+  </body>
 
 </html>

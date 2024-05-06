@@ -40,15 +40,15 @@ h2 {
   text-align: center;
   margin: 0 auto;
 }
-.details{
-    text-align: center;
-    margin: 0 auto;
+.details {
+  text-align: center;
+  margin: 0 auto;
 }
-.loginForm{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top:50px;
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
 }
 
 .loginForm label {
@@ -439,30 +439,87 @@ tbody tr:hover {
   border: 1px solid maroon;
 }
 
-
-.endDateForm{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.endDateForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.endDateForm label{
+.endDateForm label {
   margin-bottom: 5px;
-    text-align: center;
+  text-align: center;
 }
-.endDateForm input{
-    margin-bottom: 5px;
-}
-
-.endDateForm{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.endDateForm input {
+  margin-bottom: 5px;
 }
 
-.endDateForm label{
-    margin-bottom: 5px;
-    text-align: center;
+.endDateForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.endDateForm input{
-    margin-bottom: 5px;
-} 
+
+.endDateForm label {
+  margin-bottom: 5px;
+  text-align: center;
+}
+.endDateForm input {
+  margin-bottom: 5px;
+}
+
+#greenMessage {
+  color: green;
+}
+
+#redMessage {
+  color: red;
+}
+
+.docUpload {
+  /* width: 100%; */
+  padding: 5px;
+  border: 1px solid #d5d3d3;
+  border-radius: 3px;
+}
+
+.straightMe {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.fileHandle {
+  display: inline-block;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  padding: 7px 10px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.fileHandle span {
+  margin-right: 0px;
+}
+
+.loginButton {
+  font-size: large;
+  border-radius: 20px;
+  background-color: rgb(40, 196, 40);
+  border: 1px solid green;
+  padding: 7px 20px;
+  color: ghostwhite;
+  font-weight: bold;
+}
+
+.loginButton:hover {
+  background-color: ghostwhite;
+  color: rgb(40, 196, 40);
+  border: 1px solid green;
+  cursor: pointer;
+}
+
+header {
+}

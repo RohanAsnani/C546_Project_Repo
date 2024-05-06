@@ -1,41 +1,50 @@
+<h1>Upload Document</h1>
 
-    <h1>Upload Document</h1>
-    
-    {{#if success}}
-        <p style="color: green;">{{message}}</p>  
-    {{else}}
-        {{#if message}}
-            <p style="color: red;">{{message}}</p>
-        {{/if}}
-        <form action="/hrc/employee/uploadDocs/{{taskId}}" method="post" enctype="multipart/form-data">
-            <label for="file">Choose a document to upload:</label>
-            <input type="file" id="file" name="file" required>
-            <br><br>
-            <label for="typeOfDoc">Type of Document:</label>
-            <select id="typeOfDoc" name="typeOfDoc" required>
-                <option value="">Select Document Type</option>
-                <option value="ID">Id</option>
-                <option value="SSN">SSN</option>
-                <option value="Other">Other</option>
-            </select>
-            <br><br>
-            <button type="submit">Upload</button>
-        </form>
-    {{/if}}
+{{#if success}}
+<p id="greenMessage">{{message}}</p>
+{{else}}
+{{#if message}}
+<p id="redMessage">{{message}}</p>
+{{/if}}
+<form action="/hrc/employee/uploadDocs/{{taskId}}" method="post" enctype="multipart/form-data">
+    <div class="straightMe">
+        <label for="file" class="fileHandle"><span>Choose a document to upload:</span></label>
+        <input type="file" id="file" name="file" required />
+    </div>
 
-    <!-- Below displaying documents....whatever he/she has submitted -->
-    {{#if documents}}
-        <h2>Your Documents</h2>
-        <ul>
-            {{#each documents}}
-                <li>
-                    {{typeOfDoc}} - Submitted on: {{submittedOn}}
-                    <button onclick="window.location.href='/hrc/employee/uploadDocs/viewDocByDocId/{{docId}}'">Download</button>
-                </li>
-            {{else}}
-                <p>No documents have been submitted.</p>
-            {{/each}}
-        </ul>
-    {{/if}}
+    <div class="straightMe"><label for="typeOfDoc">
+            <h3>Type of Document:</h3>
+        </label>
+        <select class="docUpload" id="typeOfDoc" name="typeOfDoc" required>
+            <option value="">Select Document Type</option>
+            <option value="ID">Id</option>
+            <option value="SSN">SSN</option>
+            <option value="Other">Other</option>
+        </select>
 
-    <button onclick="window.location.href='/hrc/employee'">Homepage</button>
+        <button id="loginButton" type="submit">Upload</button>
+    </div>
+</form>
+{{/if}}
+
+<!-- Below displaying documents....whatever he/she has submitted -->
+{{#if documents}}
+<div class="straightMe">
+    <h2>Your Documents</h2>
+    <ul>
+        {{#each documents}}
+        <li>
+            {{typeOfDoc}}
+            - Submitted on:
+            {{submittedOn}}
+            <button class="Gbutton"
+                onclick="window.location.href='/hrc/employee/uploadDocs/viewDocByDocId/{{docId}}'">Download</button>
+        </li>
+        {{else}}
+        <p>No documents have been submitted.</p>
+        {{/each}}
+    </ul>
+</div>
+{{/if}}
+
+<button class="backButton" onclick="window.location.href='/hrc/employee'">Homepage</button>
