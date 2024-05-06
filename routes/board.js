@@ -410,24 +410,34 @@ router
             const totalEmployees = await analytics.getTotalEmployees();
             const employeesByDepartment = await analytics.getEmployeesByDepartment();
             const averageTenureResult = await analytics.getAverageTenure();
-            const incompleteBoardingTasks = await analytics.getIncompleteBoardingTasks(); 
+            const incompleteBoardingTasks = await analytics.getIncompleteBoardingTasks();
             const diversityCount = await analytics.getDiversityCount();
+            const churnRate = await analytics.calculateChurnRate();
+            const genderDistribution = await analytics.getGenderDistribution(); 
+            const veteranAndDisabilityDistribution = await analytics.getVeteranAndDisabilityDistribution(); 
 
-            console.log(totalEmployees, employeesByDepartment, averageTenureResult, incompleteBoardingTasks,diversityCount);
+            console.log(totalEmployees, employeesByDepartment, averageTenureResult, incompleteBoardingTasks, diversityCount, churnRate, genderDistribution, veteranAndDisabilityDistribution);
 
             const labels = employeesByDepartment.map(dept => dept._id);
             const data = employeesByDepartment.map(dept => dept.count);
             const boardingLabels = incompleteBoardingTasks.details.map(task => task.employeeId);
-            const boardingData = incompleteBoardingTasks.details.map(task => task.dueDates.join(', ')); 
+            const boardingData = incompleteBoardingTasks.details.map(task => task.dueDates.join(', '));
             const diversityLabels = diversityCount.map(race => race._id);
             const diversityData = diversityCount.map(race => race.count);
-            diversity: JSON.stringify({ labels: diversityLabels, data: diversityData })
+            const genderLabels = genderDistribution.map(gender => gender._id);
+            const genderData = genderDistribution.map(gender => gender.count);
+            const veteranDisabilityLabels = veteranAndDisabilityDistribution.map(item => item._id);
+            const veteranDisabilityData = veteranAndDisabilityDistribution.map(item => item.count);
+
             res.render('./data_functions/hr_dashboard', {
                 totalEmployees,
-                departments: JSON.stringify({ labels, data }), 
+                departments: JSON.stringify({ labels, data }),
                 averageTenureResult,
                 incompleteBoardingTasks: JSON.stringify({ labels: boardingLabels, data: boardingData }),
-                diversity: JSON.stringify({ labels: diversityLabels, data: diversityData }) 
+                diversity: JSON.stringify({ labels: diversityLabels, data: diversityData }),
+                churnRate: parseFloat(churnRate).toFixed(3),
+                genderDistribution: JSON.stringify({ labels: genderLabels, data: genderData }),
+                veteranAndDisabilityDistribution: JSON.stringify({ labels: veteranDisabilityLabels, data: veteranDisabilityData })
             });
 
         } catch (e) {
