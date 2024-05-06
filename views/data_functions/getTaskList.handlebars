@@ -43,7 +43,7 @@
             {{#if completed}}
             <td>
                 {{#if (eq type "document")}}
-                <button onclick="location.href='/hrc/employee/uploadDocs/viewDocByTaskId/{{taskId}}'">Download Document</button>
+                <button onclick="location.href='/hrc/employee/uploadDocs/viewDocByTaskId/{{taskId}}/{{employeeId}}'">Download Document</button>
                 {{else}}
                 <p>-</p>
                 {{/if}}
