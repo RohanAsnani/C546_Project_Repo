@@ -26,12 +26,17 @@ app.use('/public', express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-const hbs = exphbs.create({ defaultLayout: 'main' });
+const hbs = exphbs.create({ defaultLayout: 'main', helpers: {json: function (context) {return JSON.stringify(context)}}});
 
 hbs.handlebars.registerHelper('eq', function(a, b) {
   return a === b;
 });
 
+// app.engine('handlebars', exphbs.engine({defaultLayout: 'main',
+// helpers: {
+//   // Defined a json helper to stringify objects needed for charts
+//   json: function (context) {
+//       return JSON.stringify(context);}}}));
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 

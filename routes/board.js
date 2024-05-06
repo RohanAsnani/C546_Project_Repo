@@ -4,6 +4,7 @@ import boardData from '../data/board.js';
 import * as validation from '../helpers.js';
 import user_Test from '../data/user_Test.js';
 import xss from 'xss';
+import * as analytics from '../Analytics/Analytics_Functions.js';
 import { ObjectId } from "mongodb";
 import sendEmail from "../util/emailNotif.js";
 
@@ -377,5 +378,41 @@ router
         }
     });
 
+
+// HR Dashboard route to display analytics
+router
+    .route('/hr-dashboard')
+    .get(async (req, res) => {
+        try {
+            const totalEmployees = await analytics.getTotalEmployees();
+            const employeesByDepartment = await analytics.getEmployeesByDepartment();
+            const averageTenureResult = await analytics.getAverageTenure();
+            const incompleteBoardingTasks = await analytics.getIncompleteBoardingTasks(); 
+            const diversityCount = await analytics.getDiversityCount();
+
+            console.log(totalEmployees, employeesByDepartment, averageTenureResult, incompleteBoardingTasks,diversityCount);
+
+            const labels = employeesByDepartment.map(dept => dept._id);
+            const data = employeesByDepartment.map(dept => dept.count);
+            const boardingLabels = incompleteBoardingTasks.details.map(task => task.employeeId);
+            const boardingData = incompleteBoardingTasks.details.map(task => task.dueDates.join(', ')); 
+            const diversityLabels = diversityCount.map(race => race._id);
+            const diversityData = diversityCount.map(race => race.count);
+            diversity: JSON.stringify({ labels: diversityLabels, data: diversityData })
+            res.render('./data_functions/hr_dashboard', {
+                totalEmployees,
+                departments: JSON.stringify({ labels, data }), 
+                averageTenureResult,
+                incompleteBoardingTasks: JSON.stringify({ labels: boardingLabels, data: boardingData }),
+                diversity: JSON.stringify({ labels: diversityLabels, data: diversityData }) 
+            });
+
+        } catch (e) {
+            console.error("Failed to load HR dashboard:", e);
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    
 
 export default router;
