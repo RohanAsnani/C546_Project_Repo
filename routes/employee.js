@@ -934,36 +934,43 @@ router
 
     router
     .route('/getdocs/:employeeId')
-    router.get(async (req, res) => {
-        if (!req.session.user || req.session.user.employeeId !== req.params.employeeId) {
-            return res.status(403).json({ message: "Unauthorized access" });
-        }
-    
-        try {
-            const documentsData = await doc.getDocumentsByEmployeeId(req.params.employeeId);
-            if (documentsData.documents.length === 0) {
-                res.render('./data_functions/GetEmpDetailsandNotes', {
-                    title: 'Employee Documents',
-                    isLoggedIn: true,
-                    noDocuments: true
-                });
-            } else {
-                res.render('./data_functions/GetEmpDetailsandNotes', {
-                    title: 'Employee Documents',
-                    isLoggedIn: true,
-                    documents: documentsData.documents
-                });
-            }
-        } catch (error) {
-            console.error("Error fetching documents:", error);
-            res.status(500).render('./data_functions/GetEmpDetailsandNotes', {
+router.get(async (req, res) => {
+    if (!req.session.user || req.session.user.employeeId !== req.params.employeeId) {
+        return res.status(401).render('error', {
+            title: 'Error',
+            class: 'error-class',
+            message: 'Unauthorized access',
+            previous_Route: '/hrc/login',
+            linkMessage: 'Go back home'
+        });
+    }
+
+
+    try {
+        const documentsData = await doc.getDocumentsByEmployeeId(req.params.employeeId);
+        if (documentsData.documents.length === 0) {
+            res.render('./data_functions/GetEmpDetailsandNotes', {
                 title: 'Employee Documents',
-                message: 'Failed to fetch documents',
                 isLoggedIn: true,
+                noDocuments: true
+            });
+        } else {
+            res.render('./data_functions/GetEmpDetailsandNotes', {
+                title: 'Employee Documents',
+                isLoggedIn: true,
+                documents: documentsData.documents
             });
         }
-    });
-    
+    } catch (error) {
+        console.error("Error fetching documents:", error);
+        res.status(500).render('./data_functions/GetEmpDetailsandNotes', {
+            title: 'Employee Documents',
+            message: 'Failed to fetch documents',
+            isLoggedIn: true,
+        });
+    }
+});
+
 
 
 

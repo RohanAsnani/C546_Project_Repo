@@ -3,7 +3,13 @@
 <p id="error" name="error" class="error" {{hidden}}>
     {{message}}
 </p>
+
+{{#if isOnboard}}
 <button onclick="window.location.href='/hrc/hr/getonboarding'">Assign another task</button>
+{{else}}
+<button onclick="window.location.href='/hrc/hr/getoffboarding'">Assign another task</button>
+{{/if}}
+
 
 <button onclick="window.location.href='/hrc/hr'">Homepage</button>
 

@@ -299,17 +299,17 @@ router
             if (!existingBoardData || existingBoardData === null) {
                 //create
                 let createdBoardUserData = await boardData.createBoardingTask(data.employeeId, data);
-                return res.render('./data_functions/newTaskAdded', { title: "Created Task", isLoggedIn: true });
+                return res.render('./data_functions/newTaskAdded', { title: "Created Task", isLoggedIn: true, hidden: 'hidden', hideTag: '', isOnboard: taskType === 'onboard' ? true : false });
                 //return res.json(createdBoardUserData);
             } else {
                 //update - PUT
                 let updatedBoardUserData = await boardData.updatePutBoardingTask(existingBoardData, data);
-                return res.render('./data_functions/newTaskAdded', { title: "Created Task", isLoggedIn: true, hidden: 'hidden', hideTag: '' });
+                return res.render('./data_functions/newTaskAdded', { title: "Created Task", isLoggedIn: true, hidden: 'hidden', hideTag: '', isOnboard: taskType === 'onboard' ? true : false });
                 //return res.json(updatedBoardUserData);
             }
 
         } catch (e) {
-            return res.status(400).render('./data_functions/newTaskAdded', { title: "Created Task", isLoggedIn: true, hidden: '', hideTag: 'hidden', message: e.message });
+            return res.status(400).render('./data_functions/newTaskAdded', { title: "Created Task", isLoggedIn: true, hidden: '', hideTag: 'hidden', message: e.message, isOnboard: taskType === 'onboard' ? true : false });
         }
 
     })
