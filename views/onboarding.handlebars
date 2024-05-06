@@ -1,0 +1,5 @@
+<h2>Restricted Access untill you finish Onboarding tasks</h2>
+{{#unless countryOfOrigin}}
+<button onclick="window.location.href='/hrc/employee/profile/edit'">Complete Profile</button>
+{{/unless}}
+<button onclick="window.location.href='/hrc/employee/getAllToDoByEmpId'">Onboarding Tasks</button>

@@ -120,6 +120,26 @@ router.route('/getoffboarding')
             return res.status(500).json(e.message);
         }
     });
+router
+    .route('/offboarding/:employeeId')
+    .get(async (req,res)=>{
+        let employeeId = req.params.employeeId;
+            let employeeDetails = await user_Test.getUserById(employeeId);
+            return res.render('./data_functions/endDate',{...employeeDetails});
+    })
+    .post(async (req,res)=>{
+        try{
+            let data = req.body
+            let updatedUser = await boardData.addEndDate(data.employeeId,data.endDate);
+            if(updatedUser){
+                return res.render('offboardingAcknowledge',{title:`Offboarding ${updatedUser.employeeId}`,...updatedUser});
+            }
+        }catch(e){
+            let employeeId = req.params.employeeId;
+            let employeeDetails = await user_Test.getUserById(employeeId);
+            return res.render('./data_functions/endDate',{...employeeDetails,error:e.message});
+        }
+    })
 
 router.route('/onboarding/:employeeId')
     .get(async (req, res) => {

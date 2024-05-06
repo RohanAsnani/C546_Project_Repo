@@ -50,6 +50,13 @@ app.use(session({
   saveUninitialized: false
 }))
 
+app.use('/hrc/onboarding',(req,res,next)=>{
+  if(!req.session.user){
+    return res.redirect('/hrc/login')
+  }
+  next();
+})
+
 app.use('/hrc/login',(req,res,next)=>{
   if(req.session.user){
     switch(req.session.user.role){
@@ -66,10 +73,17 @@ app.use('/hrc/login',(req,res,next)=>{
   next();
 });
 
+
 app.use('/hrc/admin',(req,res,next)=>{
   if(req.session.user){
-    if(req.session.user.resignedOn){
-      let resignedDate = new Date(req.session.user.resignedOn);
+    if(req.session.user.status === 'Onboarding'){
+      return res.redirect('/hrc/notonboarded');
+    }
+    if(req.session.user.status === 'Onboarding(Employee-Side)'){
+      return res.redirect('/hrc/onboarding');
+    }
+    if(req.session.user.endDate){
+      let resignedDate = new Date(req.session.user.endDate);
       if(validation.isPastDate(resignedDate)) {
         userTest.deactivateUser(req.session.user.employeeId);
         return res.redirect('/hrc/deactivated');
@@ -84,27 +98,40 @@ app.use('/hrc/admin',(req,res,next)=>{
   }
 });
 
+
+
 app.use('/hrc/employee', (req, res, next) => {
   if (req.session.user) {
-    
-  if(req.session.user.resignedOn){
-    let resignedDate = new Date(req.session.user.resignedOn);
-    if(validation.isPastDate(resignedDate)) {
-      userTest.deactivateUser(req.session.user.employeeId);
-      return res.redirect('/hrc/deactivated');
-    }
-  }
-    if (req.session.user.role !== 'Employee' && req.session.user.role !== 'Admin' && req.session.user.role !== 'HR') {
-      return res.status(403).render('error', { message: 'Forbidden', title: 'Forbidden', class: 'error', previous_Route: 'hrc/login', linkMessage: 'Click Here to Login.' });
-    }
-    if (req.session.user.role === 'Employee') {
-      if (req.originalUrl.startsWith('/hrc/employee/completeTask')) {
-        if (req.method == 'GET') {
-          req.method = 'PATCH';
+    if(req.originalUrl === '/hrc/employee/profile/edit'|| req.originalUrl ==='/hrc/employee/getAllToDoByEmpId'|| req.originalUrl === '/hrc/employee/profile'){
+      next();
+    }else{
+      if(req.session.user.status === 'Onboarding'){
+        return res.redirect('/hrc/notonboarded');
+      }
+
+      if(req.session.user.status === 'Onboarding(Employee-Side)'){
+        return res.redirect('/hrc/onboarding');
+      }
+
+      if(req.session.user.endDate){
+        let resignedDate = new Date(req.session.user.endDate);
+        if(validation.isPastDate(resignedDate)) {
+          userTest.deactivateUser(req.session.user.employeeId);
+          return res.redirect('/hrc/deactivated');
         }
       }
+      if (req.session.user.role !== 'Employee' &&   req.session.user.role !== 'Admin' && req.session.user.role !== 'HR') {
+        return res.status(403).render('error', { message: 'Forbidden', title: 'Forbidden', class: 'error', previous_Route: 'hrc/login', linkMessage: 'Click Here to Login.' });
+      }
+      if (req.session.user.role === 'Employee') {
+        if (req.originalUrl.startsWith('/hrc/employee/completeTask')) {
+          if (req.method == 'GET') {
+            req.method = 'PATCH';
+          }
+        }
+      }
+      next();
     }
-    next();
   }else{
      return res.redirect('/hrc/login');
   }
@@ -113,8 +140,14 @@ app.use('/hrc/employee', (req, res, next) => {
 app.use('/hrc/hr', (req, res, next) => {
 
   if (req.session.user) {
-    if(req.session.user.resignedOn){
-      let resignedDate = new Date(req.session.user.resignedOn);
+    if(req.session.user.status === 'Onboarding'){
+      return res.redirect('/hrc/notonboarded');
+    }
+    if(req.session.user.status === 'Onboarding(Employee-Side)'){
+      return res.redirect('/hrc/onboarding');
+    }
+    if(req.session.user.endDate){
+      let resignedDate = new Date(req.session.user.endDate);
       if(validation.isPastDate(resignedDate)) {
         userTest.deactivateUser(req.session.user.employeeId);
         return res.redirect('/hrc/deactivated');

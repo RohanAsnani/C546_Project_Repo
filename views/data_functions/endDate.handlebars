@@ -1,0 +1,32 @@
+<h3 class="details">Enter End Date for {{firstName}} {{lastName}}</h3>
+<form action="" method="POST" id="endDateForm" name="endDateForm" class="endDateForm">
+    <label for="employeeId" id="labelEmployeeId" name="labelEmployeeId">Employee Id:</label>
+    <input type="text" id='employeeId' name='employeeId' value="{{employeeId}}" readonly> 
+    <label for="endDate" id="labelEndDate" name="labelEndDate">End Date:</label>
+    <input type="date" id="endDate" name="endDate" value="{{endDate}}">
+    <button type="submit">Submit</button>
+   {{#if error}}
+   <p class="error">{{error}}</p>
+   {{/if}}
+   <ul id="errorList" name="errorList" hidden>
+   </ul>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  
+<script>
+    $("#endDateForm").submit((event)=>{
+        try{
+            let endDate = new Date($('#endDate').val());
+
+        let currentDate = new Date();
+        if(endDate < currentDate)throw new Error("End Date cannot be earlier than today's date");
+        }catch(e){
+            $('#endDate').addClass('error');
+            $('labelEndDate').addClass('error');
+            const li= `<li class='error'>${e.message}</li>`;
+            $('#errorList').append(li);
+            $('#errorList').show();
+            event.preventDefault();
+        }
+    })
+</script>

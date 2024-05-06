@@ -177,6 +177,7 @@ const numberRange = (num, param, low, high) => {
     if (num > high) {
         throw new Error(`${(param)} parameter with value ${num}, cannot be greater than ${high}`)
     }
+    return num
 }
 
 const isValidEmail = (email) => {
@@ -189,6 +190,14 @@ const isValidEmail = (email) => {
     if (!(email.endsWith('.com'))) throw new Error("Email Id should end with '.com'");
     return email
 }
+const isFirstDateBeforeSecondDate=(dateString1, dateString2) =>{
+    
+    const date2 = new Date(dateString1);
+    const date1 = new Date(dateString2);
+
+   
+    return date2 < date1;
+}
 
 const isValidEmployeeId = (employeeId) => {
     const regex = /^HRC[A-Z]{2}[0-9]{4}$/;
@@ -196,21 +205,33 @@ const isValidEmployeeId = (employeeId) => {
     return employeeId
 }
 function isDateBeforeToday(dateString) {
-    // Parse the input date string
     const inputDate = new Date(dateString);
-    
-    // Get today's date without the time component
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to zero
-    
-    // Set the time component of the input date to zero for comparison
-    inputDate.setHours(0, 0, 0, 0);
-  
-    // Check if the input date is before today
-    if (inputDate < today) {
-        return true; // The input date is before today
-    } else {
-        return false; // The input date is not before today
+
+    // Set the time to midnight (0:00)
+    inputDate.setHours(0);
+    inputDate.setMinutes(0);
+    inputDate.setSeconds(0);
+    inputDate.setMilliseconds(0);
+
+    // Offset the input date by a day
+    inputDate.setDate(inputDate.getDate() + 1);
+
+    // Get the current date
+    const currentDate = new Date();
+
+    currentDate.setHours(0);
+    currentDate.setMinutes(0);
+    currentDate.setSeconds(0);
+    currentDate.setMilliseconds(0);
+    // Set the time to midnight (0:00)
+    if(inputDate.getDate() === currentDate.getDate()){
+        return false
+    }   
+
+    if(inputDate < currentDate){
+        return true
+    }else{
+        return false
     }
 }
 
@@ -262,6 +283,8 @@ const checkMasterUser =(creationInfo)=>{
     isValidDate(month, date, year,'Start Date',true);
     creationInfo.startDate = String(creationInfo.startDate[0]) + '-' + String(creationInfo.startDate[1]) + '-' + String(creationInfo.startDate[2]);
 
+    isDateBeforeToday(creationInfo.startDate);
+
     creationInfo.email = isValidEmail(creationInfo.email);
     creationInfo.personalEmail = isValidEmail(creationInfo.personalEmail);
     creationInfo.gender = "";
@@ -311,8 +334,10 @@ const checkTypeUserHR =(patchInfo)=>{
     let month = patchInfo.startDate[1];
     let date = patchInfo.startDate[2];
 
-    isValidDate(month, date, year,'Date of Birth',true);
+    isValidDate(month, date, year,'Start Date',true);
     patchInfo.startDate = String(patchInfo.startDate[0]) + '-' + String(patchInfo.startDate[1]) + '-' + String(patchInfo.startDate[2]);
+
+    isDateBeforeToday(patchInfo.startDate);
 
     patchInfo.email = isValidEmail(patchInfo.email);
     if(patchInfo.isManager){
@@ -322,7 +347,11 @@ const checkTypeUserHR =(patchInfo)=>{
         patchInfo.isManager = false;
     }
 
+    if(patchInfo.managerId){
     patchInfo.managerId = isValidEmployeeId(patchInfo.managerId);
+    }else{
+        patchInfo.managerId = "";
+    }
     
     patchInfo.gender = "";
     patchInfo.maritalStatus = "";
@@ -833,4 +862,4 @@ const getCurrDate = () => {
     return `${month}-${day}-${year}`;
 };
 
-export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch, isValidEmployeeId, checkPassConstraints, isValidEmail, isValidPhoneNumber, bcryptPass, checkStrCS, checkMasterUser, checkTypeUserHR, updateValuesOfTwoObjects, convertDateFormat, getLaterDate, checkTypeUserEmployee, isDateBeforeToday, getTaskList,getCurrDate,isPastDate}
+export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch, isValidEmployeeId, checkPassConstraints, isValidEmail, isValidPhoneNumber, bcryptPass, checkStrCS, checkMasterUser, checkTypeUserHR, updateValuesOfTwoObjects, convertDateFormat, getLaterDate, checkTypeUserEmployee, isDateBeforeToday, getTaskList,getCurrDate,isPastDate,isFirstDateBeforeSecondDate}
