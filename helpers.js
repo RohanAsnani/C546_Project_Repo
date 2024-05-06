@@ -551,12 +551,13 @@ let checkUndefinedOrNull = (obj, variable) => {
     if (obj === undefined || obj === null) throw `All fields need to have valid values. Input for '${variable || 'provided variable'}' param is undefined or null.`;
 };
 
-const validateBoardingData = (existingBoardData, userId, taskName, taskDesc, dueDate, taskType, isUpdate) => {
+const validateBoardingData = (existingBoardData, userId, taskName, taskDesc, dueDate, taskType, type, isUpdate) => {
     checkUndefinedOrNull(userId, 'userId');
     checkUndefinedOrNull(taskName, 'taskName');
     checkUndefinedOrNull(taskDesc, 'taskDesc');
     checkUndefinedOrNull(dueDate, 'dueDate');
     checkUndefinedOrNull(taskType, 'taskType');
+    checkUndefinedOrNull(type, 'type');
 
     userId = checkStrCS(userId, 'Employee Id', 0, 100, true,false);
 
@@ -572,12 +573,14 @@ const validateBoardingData = (existingBoardData, userId, taskName, taskDesc, due
     dueDate = dueDate.trim();
 
     taskType = checkStrCS(taskType, 'Task Type', 0, 100, true);
+    type = checkStrCS(type, 'Type', 0, 100, true);
     let task = {
         _id: new ObjectId(),
         taskName: taskName,
         taskDesc: taskDesc,
         dueDate: dueDate,
-        completedOn: null
+        completedOn: null,
+        type: type
     }
     let taskArr = [];
     taskArr.push(task);

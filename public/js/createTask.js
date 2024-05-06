@@ -7,6 +7,7 @@
         dueDate = $('#dueDate'),
         //taskType = $('input[name="taskType"]'),
         taskType = $('#taskType'),
+        type = $('#type'),
         errorList = $('#errorList'),
         errorDiv = $('#error');
 
@@ -19,8 +20,8 @@
 
 
         let errors = [];
-        let inputsArr = [employeeId, taskName, taskDesc, dueDate, taskType];
-        let inputNamesArr = ['Employee Id', 'Task Name', 'Task Description', 'Due Date', 'Task Type'];
+        let inputsArr = [employeeId, taskName, taskDesc, dueDate, taskType, type];
+        let inputNamesArr = ['Employee Id', 'Task Name', 'Task Description', 'Due Date', 'Task Type', 'Type'];
         errorDiv.hide();
         errorDiv.textContent = "";
         for (let i = 0; i < inputsArr.length; i++) {

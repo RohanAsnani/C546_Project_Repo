@@ -1,0 +1,54 @@
+<form id="benefitsForm" action="/hrc/employee/selectBenifitsForm" method="POST">
+    <input type="hidden" name="employeeId" value="{{employeeId}}">
+    <input type="hidden" name="taskId" value="{{taskId}}">
+
+    <div>
+        <input type="radio" id="optOut" name="benefitOption" value="optOut">
+        <label for="optOut">Opt Out</label>
+    </div>
+
+    <div>
+        <input type="radio" id="optInSelf" name="benefitOption" value="optInSelf">
+        <label for="optInSelf">Opt In (Self)</label>
+    </div>
+
+    <div>
+        <input type="radio" id="optInPartner" name="benefitOption" value="optInPartner">
+        <label for="optInPartner">Opt In (Self + Partner)</label>
+    </div>
+
+    <div>
+        <input type="radio" id="optInFamily" name="benefitOption" value="optInFamily">
+        <label for="optInFamily">Opt In (Self + Family)</label>
+    </div>
+
+    <div id="beneficiaryDetails" style="display: none;">
+        <div class="beneficiaryField">
+            <label for="beneficiaryName1">Beneficiary Name:</label>
+            <input type="text" id="beneficiaryName1" name="beneficiaryName1">
+            <label for="beneficiaryRelation1">Relation:</label>
+             <select id="beneficiaryRelation1" name="beneficiaryRelation1">
+                <option value="Spouse">Spouse</option>
+                <option value="Daughter">Daughter</option>
+                <option value="Son">Son</option>
+                <option value="Mother">Mother</option>
+                <option value="Father">Father</option>
+            </select>
+            <label for="beneficiaryDob1">Date of Birth:</label>
+            <input type="date" id="beneficiaryDob1" name="beneficiaryDob1">
+            <label for="beneficiaryAddress1">Address:</label>
+            <input type="text" id="beneficiaryAddress1" name="beneficiaryAddress1">
+            <label for="beneficiaryEmail1">Email:</label>
+            <input type="email" id="beneficiaryEmail1" name="beneficiaryEmail1">
+            <label for="beneficiaryPhone1">Phone:</label>
+            <input type="tel" id="beneficiaryPhone1" name="beneficiaryPhone1">
+            <button type="button" class="removeBeneficiary firstBeneficiaryRemove">Remove</button>
+        </div>
+    </div>
+    <button type="button" id="addBeneficiary">Add Beneficiary</button>
+    <input type="submit" value="Submit">
+</form>
+<button onclick="window.location.href='/hrc/employee/getAllToDoByEmpId'" id="myToDoTasks">Back To tasks</button>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/public/js/benifits.js">
+</script>

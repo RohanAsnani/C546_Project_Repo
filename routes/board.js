@@ -201,7 +201,8 @@ router
             let taskDesc = xss(data.taskDesc);
             let dueDate = validation.convertDateFormat(xss(data.dueDate));
             let taskType = xss(data.taskType);
-            data = validation.validateBoardingData(null, employeeId, taskName, taskDesc, dueDate, taskType, false);
+            let type = xss(data.type);
+            data = validation.validateBoardingData(null, employeeId, taskName, taskDesc, dueDate, taskType, type, false);
         } catch (e) {
             return res.status(400).json({ error: e.message });
         }

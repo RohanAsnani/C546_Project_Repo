@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs';
 import userTest from '../data/user_Test.js';
 import board from '../data/board.js';
 import login from '../data/login.js';
+import { ObjectId } from 'mongodb';
 
 
 router
@@ -172,6 +173,61 @@ router
             return res.status(500).json(e.message);
         }
     });
+
+router.route('/fillForm/:employeeId/:taskId/:type')
+    .get(async (req, res) => {
+        let employeeId;
+        let taskId;
+        let type;
+        try {
+            employeeId = validation.isValidEmployeeId(req.params.employeeId);
+            if(ObjectId.isValid(req.params.taskId)){
+                taskId = req.params.taskId;
+            }
+            type = validation.checkStrCS(req.params.type, 'Type');
+        } catch (error) {
+            return res.status(400).json(error.message).render('error', { title: 'Error',
+            class: 'error-class',
+            message: error.message,
+            previous_Route: '/hrc/login',
+            linkMessage: 'Go back' });
+        }
+        try {
+            if (type === 'form') {
+                console.log('fillSalaryForm', { employeeId: employeeId, taskId: taskId})
+                return res.render('./data_functions/fillSalaryForm', { title: 'Salary Form', employeeId: employeeId, taskId: taskId});
+            } else{
+                if(type === 'select'){
+                    return res.render('./data_functions/selectBenifitsForm', { title: 'Select Form', employeeId: employeeId, taskId: taskId});
+                } else {
+                    return res.status(404).json('Task Not Found');
+                }
+            }
+        } catch (e) {
+            return res.status(500).json(e.message);
+        }
+    })
+
+router.route('/fillSalaryForm')
+    .post(async (req, res) => {
+        try {
+            let salaryData = req.body;
+            console.log(salaryData);
+        } catch (e) {
+            return res.status(400).json(e.message);
+        }
+})
+
+router.route('/selectBenifitsForm')
+    .post(async (req, res) => {
+        try {
+            let benifitsData = req.body;
+            console.log(benifitsData);
+            res.json ({ success: true });
+        } catch (e) {
+            return res.status(400).json(e.message);
+        }
+})
 
 router
     .route('/completeTask/:employeeId/:taskId/:taskType')

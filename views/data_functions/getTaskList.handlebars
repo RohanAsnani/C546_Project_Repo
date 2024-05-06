@@ -51,8 +51,19 @@
             <td>{{taskName}}</td>
             <td>{{taskDesc}}</td>
             <td>{{dueDate}}</td>
-            <td><a href="/hrc/employee/completeTask/{{employeeId}}/{{taskId}}/{{taskType}}" id="completeTask"
+            <td>
+                {{#if (eq type "document")}}
+                <a href="/hrc/employee/uploadDoc/{{employeeId}}/{{taskId}}/{{taskType}}/{{type}}" id="completeTaskDoc"
+                    name="completeTaskDoc" class="completeTaskDoc" data-id="{{taskId}}">Upload Document</a></td>
+                {{else}}
+                {{#if (eq type "normal")}}
+                <a href="/hrc/employee/completeTask/{{employeeId}}/{{taskId}}/{{taskType}}" id="completeTask"
                     name="completeTask" class="completeTask" data-id="{{taskId}}">Mark as complete</a></td>
+                {{else}}
+                <a href="/hrc/employee/fillForm/{{employeeId}}/{{taskId}}/{{type}}" id="completeTaskForm"
+                    name="completeTaskForm" class="completeTaskForm" data-id="{{taskId}}">Fill Form</a></td>
+                {{/if}}
+                {{/if}}
         </tr>
         {{/each}}
         {{/if}}

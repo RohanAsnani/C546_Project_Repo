@@ -4,9 +4,14 @@ const benefits_OptIn = {
     term_end_date: Date,
     window_start_date: String,
     window_end_date: String,
-    Opted_date: Date,
+    opted: Boolean,
+    opted_date: Date,
     benefeciary: [{
         benefeciary_name: String,
-        Opted: Boolean
+        benefeciary_relation: String,
+        benefeciary_dob: Date,
+        benefeciary_address: String,
+        benefeciary_email: String,
+        benefeciary_phone: String
     }]
 }

@@ -3,6 +3,7 @@ import * as validation from "../helpers.js"
 import { boarding, users } from "../config/mongoCollections.js"
 import { ObjectId } from "mongodb"
 import user_Test from '../data/user_Test.js';
+import { type } from "os";
 
 const exportedMethods = {
     async createBoardingTask(userId, data) {
@@ -62,7 +63,7 @@ const exportedMethods = {
 
         let resObj = getTaskData(data);
 
-        let boardData = validation.validateBoardingData(existingBoardData, data.employeeId, resObj.taskName, resObj.taskDesc, resObj.dueDate, resObj.taskType, true);
+        let boardData = validation.validateBoardingData(existingBoardData, data.employeeId, resObj.taskName, resObj.taskDesc, resObj.dueDate, resObj.taskType, resObj.type, true);
 
         const boardingCollection = await boarding();
         let updatedInfo = await boardingCollection.findOneAndReplace(
@@ -234,21 +235,24 @@ const exportedMethods = {
                     taskName: 'Bank Account Details',
                     taskDesc: 'please provide your bank account details',
                     dueDate: dueDate,
-                    completedOn: ''
+                    completedOn: null,
+                    type: 'form'
                 },
                 {
                     _id: new ObjectId(),
                     taskName: 'Tax Forms',
                     taskDesc: 'please provide your tax forms',
                     dueDate: dueDate,
-                    completedOn: ''
+                    completedOn: null,
+                    type: 'document'
                 },
                 {
                     _id: new ObjectId(),
                     taskName: 'Health Insurance',
                     taskDesc: 'please provide your health insurance details',
                     dueDate: dueDate,
-                    completedOn: ''
+                    completedOn: null,
+                    type: 'select'
                 },
             ],
         }
@@ -313,10 +317,12 @@ const getTaskData = (data) => {
     let taskDesc;
     let dueDate;
     let taskType;
+    let type;
     if (data.on) {
         taskName = data.on[0].taskName;
         taskDesc = data.on[0].taskDesc;
         dueDate = data.on[0].dueDate;
+        type = data.on[0].type;
         taskType = "onboard";
     } else {
         taskName = data.off[0].taskName;
@@ -329,7 +335,7 @@ const getTaskData = (data) => {
     resObj.taskDesc = taskDesc;
     resObj.dueDate = dueDate;
     resObj.taskType = taskType;
-
+    resObj.type = type;
     return resObj;
 };
 

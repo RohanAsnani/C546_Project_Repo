@@ -33,6 +33,12 @@
     <input type="text" class="taskType" id="taskType" name="taskType" value="{{taskType}}" readonly="readonly"
         hidden><br>
 
+    <label for="type" id="labelType">Type:</label>
+    <select name="type" id="type">
+        <option value="document">Document</option>
+        <option value="normal">Normal</option>
+    </select><br>
+
     {{!-- Task Type - Radio button--}}
     {{!-- <p>Please select a task type:</p>
     <input type="radio" id="onboard" name="taskType" value="onboard">

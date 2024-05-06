@@ -26,8 +26,13 @@ app.use('/public', express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
+const hbs = exphbs.create({ defaultLayout: 'main' });
 
-app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
+hbs.handlebars.registerHelper('eq', function(a, b) {
+  return a === b;
+});
+
+app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
 app.use(cookieParser());
