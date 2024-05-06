@@ -3,6 +3,7 @@ const router = Router();
 import * as validation from '../helpers.js';
 import bcrypt from 'bcryptjs';
 import userTest from '../data/user_Test.js';
+import salary from '../data/salary.js';
 import board from '../data/board.js';
 import login from '../data/login.js';
 import { ObjectId } from 'mongodb';
@@ -86,7 +87,7 @@ router
     .route('/profile/edit')
     .get(async(req,res)=>{
         let userData = req.session.user;
-        return res. render('editProfile',{title:'Edit Profile',...userData,isLoggedIn:true})
+        return res.render('editProfile',{title:'Edit Profile',...userData,isLoggedIn:true}) 
     })
     .post(async (req,res)=>{
        
@@ -264,35 +265,164 @@ router.route('/fillSalaryForm')
         let paymentType
         try {
             let salaryData = req.body;
-            console.log(salaryData);
-            // {
-            //     employeeId: 'HRCST0009',
-            //     taskId: '6637ce5a453227efa79fe2c3',
-            //     ssn: '1234567890',
-            //     accountNo: '2456789763456',
-            //     routingNo: '34567865434234',
-            //     billingAddress: '622 liberty ave',
-            //     paymentType: 'direct deposit'
-            //   }
             employeeId = validation.isValidEmployeeId(salaryData.employeeId);
             if(ObjectId.isValid(salaryData.taskId)){
                 taskId = salaryData.taskId;
             }
-            res.json ({ success: true });
-            
-        } catch (e) {
-            return res.status(400).json(e.message);
+            salaryData.ssn = validation.checkStrCS(salaryData.ssn, 'SSN', 9, 9, true);
+            ssn = validation.numberExistandType(Number(salaryData.ssn));
+            salaryData.accountNo = validation.checkStrCS(salaryData.accountNo, 'Account Number', 8, 12, true);
+            accountNo = validation.numberExistandType(Number(salaryData.accountNo));
+            salaryData.routingNo = validation.checkStrCS(salaryData.routingNo, 'Routing Number', 9, 9, true);
+            routingNo = validation.numberExistandType(Number(salaryData.routingNo));
+            salaryData.billingAddress = validation.checkStrCS(salaryData.billingAddress, 'Billing Address', 10, 100, true);
+            billingAddress = validation.checkStrCS(salaryData.billingAddress, 'Billing Address', 10, 100, true);
+            if(salaryData.paymentType === 'direct deposit' || salaryData.paymentType === 'check'){
+                paymentType = salaryData.paymentType;
+            } else {
+                throw new Error('Invalid Payment Type');
+            }
+        } catch (error) {
+            return res.status(400).render('error', { title: 'Error',
+            class: 'error-class',
+            message: error.message,
+            previous_Route: '/hrc/login',
+            linkMessage: 'Go back home' });
+        }
+        try {
+            let hourlyPay = req.session.user.currentSalary
+            let position = req.session.user.currentPosition
+            let salaryData = {
+                hourlyPay: hourlyPay,
+                position: position,
+                employeeId: employeeId,
+                ssn: ssn,
+                accountNo: accountNo,
+                routingNo: routingNo,
+                paymentType: paymentType,
+                billingAddress: billingAddress
+            }
+            let salaryInfo = await salary.createSalary(employeeId, salaryData);
+            if (salaryInfo) {
+
+                let empData = await board.updatePatchBoardingCompleteTask(employeeId, req.body.taskId, 'Onboard', req.session.user.status, req.session.user.countryOfOrigin);
+                if (empData) {
+                    req.session.user = empData;
+                }
+                return res.redirect('/hrc/employee/getAllToDoByEmpId');
+            }
+        } catch (error) {
+            return res.status(500).render('error', { title: 'Error',
+            class: 'error-class',
+            message: error.message,
+            previous_Route: '/hrc/login',
+            linkMessage: 'Go back home' });
         }
 })
 
 router.route('/selectBenifitsForm')
     .post(async (req, res) => {
+        let employeeId;
+        let taskId;
+        let benefitOption;
+        let beneficiaries=[];
         try {
             let benifitsData = req.body;
-            console.log(benifitsData);
-            res.json ({ success: true });
+            employeeId = xss(validation.isValidEmployeeId(benifitsData.employeeId));
+            if(ObjectId.isValid(benifitsData.taskId)){
+                taskId = benifitsData.taskId;
+            }
+            benefitOption = xss(validation.checkStrCS(benifitsData.benefitOption, 'Benefit Option', 1, 100, true));
+            if(benefitOption !== 'optInSelf' && benefitOption !== 'optOut' && benefitOption !== 'optInFamily' && benefitOption !== 'optInPartner'){
+                throw new Error('Invalid Benefit Option');
+            }
+            if(benefitOption === 'optInSelf'){
+                beneficiaries.push({benefeciary_name: req.session.user.firstName + ' ' + req.session.user.lastName,
+                    benefeciary_relation: 'Self',
+                    benefeciary_dob: req.session.user.dob,
+                    benefeciary_address: req.session.user.contactInfo.primaryAddress,
+                    benefeciary_email: req.session.user.contactInfo.email,
+                    benefeciary_phone: req.session.user.contactInfo.phone});
+            }
+            if(benefitOption === 'optInPartner'){
+                beneficiaries.push({benefeciary_name: req.session.user.firstName + ' ' + req.session.user.lastName,
+                    benefeciary_relation: 'Self',
+                    benefeciary_dob: req.session.user.dob,
+                    benefeciary_address: req.session.user.contactInfo.primaryAddress,
+                    benefeciary_email: req.session.user.contactInfo.email,
+                    benefeciary_phone: req.session.user.contactInfo.phone});
+                    let year = benifitsData.beneficiaries[0].benefeciary_dob.split('-')[0];
+                    let month = benifitsData.beneficiaries[0].benefeciary_dob.split('-')[1];
+                    let day = benifitsData.beneficiaries[0].benefeciary_dob.split('-')[2];
+                    validation.isValidDate(month, day, year, 'benefeciary_dob', false);
+                beneficiaries.push({benefeciary_name: validation.checkStrCS(xss(benifitsData.beneficiaries[0].benefeciary_name), 'Beneficiary Name', 1, 100, false),
+                    benefeciary_relation: validation.checkStrCS(xss(benifitsData.beneficiaries[0].benefeciary_relation), 'Beneficiary Relation', 1, 100, false),
+                    benefeciary_dob: xss(benifitsData.beneficiaries[0].benefeciary_dob),
+                    benefeciary_address: validation.checkStrCS(xss(benifitsData.beneficiaries[0].benefeciary_address), 'Beneficiary Address', 1, 100, true),
+                    benefeciary_email: validation.isValidEmail(xss(benifitsData.beneficiaries[0].benefeciary_email)),
+                    benefeciary_phone: validation.checkStrCS(xss(benifitsData.beneficiaries[0].benefeciary_phone), 'Beneficiary Phone', 1, 100, true)});
+            }
+            if(benefitOption === 'optInFamily'){
+                beneficiaries.push({benefeciary_name: req.session.user.firstName + ' ' + req.session.user.lastName,
+                    benefeciary_relation: 'Self',
+                    benefeciary_dob: req.session.user.dob,
+                    benefeciary_address: req.session.user.contactInfo.primaryAddress,
+                    benefeciary_email: req.session.user.contactInfo.email,
+                    benefeciary_phone: req.session.user.contactInfo.phone});
+                for(let i=0; i<benifitsData.beneficiaries.length; i++){
+                    let year = benifitsData.beneficiaries[0].benefeciary_dob.split('-')[0];
+                    let month = benifitsData.beneficiaries[0].benefeciary_dob.split('-')[1];
+                    let day = benifitsData.beneficiaries[0].benefeciary_dob.split('-')[2];
+                    validation.isValidDate(month, day, year, 'benefeciary_dob', false);
+                beneficiaries.push({benefeciary_name: validation.checkStrCS(xss(benifitsData.beneficiaries[0].benefeciary_name), 'Beneficiary Name', 1, 100, false),
+                    benefeciary_relation: validation.checkStrCS(xss(benifitsData.beneficiaries[0].benefeciary_relation), 'Beneficiary Relation', 1, 100, false),
+                    benefeciary_dob: xss(benifitsData.beneficiaries[0].benefeciary_dob),
+                    benefeciary_address: validation.checkStrCS(xss(benifitsData.beneficiaries[0].benefeciary_address), 'Beneficiary Address', 1, 100, true),
+                    benefeciary_email: validation.isValidEmail(xss(benifitsData.beneficiaries[0].benefeciary_email)),
+                    benefeciary_phone: validation.checkStrCS(xss(benifitsData.beneficiaries[0].benefeciary_phone), 'Beneficiary Phone', 1, 100, true)});
+                }
+            }
+            console.log(beneficiaries);
         } catch (e) {
-            return res.status(400).json(e.message);
+            return res.status(400).render('error', { title: 'Error',
+            class: 'error-class',
+            message: e.message,
+            previous_Route: '/hrc/login',
+            linkMessage: 'Go back home' });
+        }
+        try{
+            if(benefitOption==='optOut'){
+                let benefitData = await salary.optOutBenefits(employeeId);
+                if (benefitData) {
+                    let empData = await board.updatePatchBoardingCompleteTask(employeeId, taskId, 'Onboard', req.session.user.status, req.session.user.countryOfOrigin);
+                    if (empData) {
+                        req.session.user = empData;
+                    }
+                    res.json ({ success: true });
+                }
+                else{
+                    throw new Error('Could not Opt Out');
+                }
+            }
+            else{
+                let benefitData = await salary.createBenefits(employeeId, benefitOption, beneficiaries);
+                if (benefitData) {
+                    let empData = await board.updatePatchBoardingCompleteTask(employeeId, taskId, 'Onboard', req.session.user.status, req.session.user.countryOfOrigin);
+                    if (empData) {
+                        req.session.user = empData;
+                    }
+                    res.json ({ success: true });
+                }
+                else{
+                    throw new Error('Could not create Benefits');
+                }
+            }
+        }catch(e){
+            return res.status(500).render('error', { title: 'Error',
+            class: 'error-class',
+            message: e.message,
+            previous_Route: '/hrc/login',
+            linkMessage: 'Go back home' });
         }
 })
 

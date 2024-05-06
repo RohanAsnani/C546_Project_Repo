@@ -103,19 +103,19 @@ const exportedMethods = {
         employeeId = validation.checkStrCS(employeeId, 'Employee Id', 0, 100, true);
         taskId = validation.validObject(taskId);
         taskType = validation.checkStrCS(taskType, 'Task Type', 0, 100, true);
-
+        console.log('taskType : ', taskType);
         const boardingCollection = await boarding();
         const userCollection = await users();
         const totBoardingData = await this.getboardingDataByEmpId(employeeId);
         let updatedObj = updatedBoardObj(totBoardingData, taskId, taskType);
-
+        console.log('updatedObj : ', updatedObj);
         let patchedInfo;
 
         patchedInfo = await boardingCollection.findOneAndUpdate({ employeeId: employeeId },
             { $set: updatedObj },
             { returnDocument: 'after' }
         );
-
+        console.log('patchedInfo : ', patchedInfo);
         if (!patchedInfo) throw new Error(`Cannot update task for user with id: ${updationPatchInfo.employeeId}`);
         let empData;
         if (status !== 'Active') {
@@ -146,6 +146,37 @@ const exportedMethods = {
 
         if (!managerList) return "No Managers."
         return managerList.toArray()
+    },
+
+    async addEndDate(userId,endDate){
+        if(!userId || !endDate)throw new Error('EmployeeId and End Date both needed.');
+
+        userId = validation.isValidEmployeeId(userId);
+        
+        endDate = validation.dateFormat(endDate,'Start Date');
+    
+         let year = endDate[0];
+         let month = endDate[1];
+         let date = endDate[2];
+
+         validation.isValidDate(month, date, year,'Start Date',true);
+         endDate = String(endDate[0]) + '-' + String(endDate[1]) + '-' + String(endDate[2]);
+
+         if(validation.isDateBeforeToday(endDate))throw new Error('End Date Cannot be in the past.');
+
+        let userCollection = await users();
+        let checkDate = await userCollection.find({employeeId: userId},{projection:{startDate:1}}).toArray();
+
+        
+
+        if(validation.isFirstDateBeforeSecondDate(endDate,checkDate[0].startDate))throw new Error('End Date Cannot be before Start Date.');
+
+        let updatedUser = await userCollection.updateOne({employeeId: userId},{$set:{endDate: endDate,status:'Offboarding(Notice Period)'}});
+
+        if(!updatedUser)throw new Error('Could not Add End Date.');
+
+        let updatedInfo = await user_Test.getUserById(userId);
+        return updatedInfo
     },
 
     async updatePatchOnboardingData(updationInfo){
@@ -204,10 +235,17 @@ const exportedMethods = {
         
         let checkPersonalEmail = await userCollection.findOne({'contactInfo.personalEmail': patchData.contactInfo.personalEmail})
 
-        if(checkPhone.employeeId !== patchData.employeeId && checkPersonalEmail.employeeId !== patchData.employeeId){
-            if(checkPhone)throw new Error('Phone number already exists try another one.');
-            if(checkPersonalEmail)throw new Error('email Id already Exists , try another Personal Email Id')
-        }
+       
+            
+            if(checkPhone){
+                if(checkPhone.employeeId !== patchData.employeeId)throw new Error('Phone Number Already exists.');
+            }
+
+            if(checkPersonalEmail){
+                if(checkPersonalEmail.employeeId !== patchData.employeeId )throw new Error('email Id already Exists , try another Personal Email Id');
+            }
+            
+        
     
         let existingData = await userCollection.findOne({employeeId: patchData.employeeId});
 

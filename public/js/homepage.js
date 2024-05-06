@@ -1,21 +1,35 @@
 // clientside JS
 
 function isDateBeforeToday(dateString) {
-    const today = new Date();
-    const todayDay = today.toISOString().slice(0, 10);
-    if(today !== todayDay){
     const inputDate = new Date(dateString);
-    
-    const todayUTC = new Date(today.toISOString().slice(0, 10)); 
-  
-    const inputDateUTC = new Date(inputDate.toISOString().slice(0, 10)); 
-    
-    if (inputDateUTC < todayUTC) {
-        return true; 
-    } else {
-        return false;
+
+    // Set the time to midnight (0:00)
+    inputDate.setHours(0);
+    inputDate.setMinutes(0);
+    inputDate.setSeconds(0);
+    inputDate.setMilliseconds(0);
+
+    // Offset the input date by a day
+    inputDate.setDate(inputDate.getDate() + 1);
+
+    // Get the current date
+    const currentDate = new Date();
+
+    currentDate.setHours(0);
+    currentDate.setMinutes(0);
+    currentDate.setSeconds(0);
+    currentDate.setMilliseconds(0);
+    // Set the time to midnight (0:00)
+    if(inputDate.getDate() === currentDate.getDate()){
+        return false
+    }   
+
+    if(inputDate < currentDate){
+        return true
+    }else{
+        return false
     }
-    }return false   
+    
 }
 
 
@@ -411,7 +425,7 @@ $('#createUser-form').submit((event)=>{
     let month = check[1];
     let date = check[2];
     isValidDate(month, date, year,'Start Date',true);
-    if(isDateBeforeToday($('#startDate').val().toString()))throw new Error("Start Date Cannot be Today's date or before that.");
+    if(isDateBeforeToday($('#startDate').val().toString()))throw new Error("Start Date Cannot be in past.");
     $('#startDate').removeClass('error');
     $('#labelStartDate').removeClass('error');
    }catch(e){
