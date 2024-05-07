@@ -1,0 +1,66 @@
+<div class="decideHR">
+    <h2>Decide the Leave Request status</h2>
+    <h4>Approve, Decline or keep the status of the leave as pending</h4>
+    {{!-- The leave req form filled by the employee --}}
+    <div>
+        {{!-- We can additionally passs the name and department of the employee --}}
+        <p> <span class="highlight">Employee ID :- </span> {{leaveData.employeeID}}</p>
+        {{!-- additionally --}}
+        {{!-- <p> <span class="highlight">Employee Name </span>:- {{employeeName}}</p>
+        <p> <span class="highlight">Employee Department </span>:- {{employeeDepartment}}</p> --}}
+        {{!-- --}}
+        <p> <span class="highlight">Start Date:- </span> {{leaveData.startDate}}</p>
+        <p> <span class="highlight">End Date:- </span> {{leaveData.endDate}}</p>
+        <p> <span class="highlight">Type of Leave:- </span> {{leaveData.subject}}</p>
+        <p> <span class="highlight">Reason for the Leave:- </span> {{leaveData.reason}}</p>
+    </div>
+    <div class="HrForm">
+        <form id="decideForm" action="/hrc/hr/leaveReq/getAll/{{obj}}" method="POST">
+            <label class="highlight" for="reasonHR">Reason for the Decision:-</label>
+            <textarea id="reasonHR" name="reasonHR"
+                placeholder="Provide a reason">{{leaveData.commentsReviewer}}</textarea>
+            <p class="highlight">Final Decision for the leave Request :- </p>
+            <label>
+                <input type="radio" name="radioButton" value="Approve">
+                Approve
+            </label>
+            <label>
+                <input type="radio" name="radioButton" value="Decline">
+                Decline
+            </label>
+            <label>
+                <input type="radio" name="radioButton" value="Pending" checked>
+                Pending
+            </label>
+            <button type="submit" class="decisionButton">Submit</button>
+        </form>
+        <button class="backButton" onclick="window.location.href='/hrc/hr/leaveReq/getAll'">Go Back</button>
+        {{!-- On click submit the form submitted messaged should be appear --}}
+        {{!-- For client side validation atleast and exactly one of the checkbox should be checked --}}
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#decideForm').submit(function (e) {
+            e.preventDefault();
+            var reasonHR = $('#reasonHR').val();
+            if (reasonHR.trim() === "") {
+                displayError("Please enter a valid reasonHR");
+                return;
+            }
+            if (reasonHR === null) {
+                displayError("Please enter a valid reasonHR");
+                return;
+            }
+            
+            $(this).unbind('submit').submit();
+        });
+
+        function displayError(message) {
+            var errorContainer = $('#errorContainer');
+            errorContainer.text(message).show();
+        }
+    });
+</script>

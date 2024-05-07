@@ -9,18 +9,18 @@
     <button onclick="window.location.href='/hrc/employee/getAllToDoByEmpId'" id="myToDoTasks">My To-Do
         tasks</button>
     {{/if}}
-    <button onclick="window.location.href='/hrc/employee/getAllByEmpId'" id="myTasks">View all my tasks</button>
-    <button onclick="window.location.href='/hrc/employee/getAllNotesByEmpId'" id="myNotes">My Notes</button>
-    <button onclick="window.location.href='/hrc/employee/uploadDocs'" id="myTasks">My Documents</button>
-    <button onclick="window.location.href='/hrc/employee/getAllBenefits'" id="myBenefits">My Benefits</button>
-    <button onclick="window.location.href='/hrc/employee/getAllSalaryByEmpId'" id="mySalary">My Salary</button>
-    <button onclick="window.location.href='/hrc/employee/resign'" id="resign">Resign</button>
+    <button onclick="window.location.href='/hrc/employee/getAllByEmpId'" id="myTasks" class="Gbutton">View all my tasks</button>
+    <button onclick="window.location.href='/hrc/employee/getAllNotesByEmpId'" id="myNotes" class="Gbutton">My Notes</button>
+    <button onclick="window.location.href='/hrc/employee/uploadDocs'" id="myTasks" class="Gbutton">My Documents</button>
+    <button onclick="window.location.href='/hrc/employee/getAllBenefits'" id="myBenefits" class="Gbutton">My Benefits</button>
+    <button onclick="window.location.href='/hrc/employee/getAllSalaryByEmpId'" id="mySalary" class="Gbutton">My Salary</button>
+    <button onclick="window.location.href='/hrc/employee/resign'" id="resign" class="Gbutton">Resign</button>
 
 </nav>
 {{#if isAdmin}}
-<a class="page-link" id="adminLink" href="/hrc/admin">Admin Page</a><br>
+  <a class="page-link" id="adminLink" href="/hrc/admin">Admin Page</a><br />
 {{/if}}
 {{#if isHR}}
-<a class="page-link" id="hrLink" href="/hrc/hr">HR Page</a><br>
+  <a class="page-link" id="hrLink" href="/hrc/hr">HR Page</a>
 {{/if}}
 <a class="page-link" id="logoutLink" href="/hrc/logout">Logout</a>

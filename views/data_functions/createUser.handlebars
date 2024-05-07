@@ -1,4 +1,5 @@
-<form id="createUser-form" name="createUser-form" class="createUser-form" action="../admin/addEmp" method="POST">
+<form class="loginForm" id="createUser-form" name="createUser-form" class="createUser-form" action="../admin/addEmp"
+    method="POST">
     <h2>Create New User</h2>
     <h4>Account Details</h4>
     <label for="firstName" id="labelFirstName">First Name:</label>
@@ -14,7 +15,7 @@
     <input type="text" class="username" id="username" name="username" value="{{username}}"><br>
 
     <label for="password" id="labelPassword">Password:</label>
-    <input type="password" class="password" id="password" name="password" ><br>
+    <input type="password" class="password" id="password" name="password"><br>
 
     <label for="confirmPassword" id="labelConfirmPassword">Confirm Password:</label>
     <input type="password" class="confirmPassword" id="confirmPassword" name="confirmPassword"><br>
@@ -48,7 +49,7 @@
 
     <label for="role" id="labelId">Role:</label>
     <select id="role" name="role">
-         <option value="none" selected disabled hidden></option>
+        <option value="none" selected disabled hidden></option>
         <option value="Admin">Admin</option>
         <option value="HR">HR</option>
         <option value="Employee">Employee</option>
@@ -95,7 +96,7 @@
 
     <label for="email" id="labelEmail">Email Id:</label>
     <input type="email" class="email" id="email" name="email" value="{{email}}"><br>
-    
+
     <label for="personalEmail" id="labelPersonalEmail" name="labelPersonalEmail">Personal Email:</label>
     <input type="email" class="personalEmail" id="personalEmail" name="personalEmail" value="{{personalEmail}}"><br>
 
@@ -137,15 +138,15 @@
         integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 
     <script>
-      $('#department').val("{{department}}");
-      $('#role').val("{{role}}");
-     
-      if('{{isManager}}'=== 'true'){
-          $('#isManager').prop("checked",true);
-      }else{
-          $('#isManager').prop("checked",false);
-      }
-      $('#startDate').val("{{startDate}}");
+        $('#department').val("{{department}}");
+        $('#role').val("{{role}}");
+
+        if ('{{isManager}}' === 'true') {
+            $('#isManager').prop("checked", true);
+        } else {
+            $('#isManager').prop("checked", false);
+        }
+        $('#startDate').val("{{startDate}}");
     </script>
     <script src="/public/js/homepage.js"></script>
 

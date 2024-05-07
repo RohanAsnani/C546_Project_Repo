@@ -1,0 +1,27 @@
+<h3>Leave Request List table having list of all the leave request entered by all the employees</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Employee Id</th>
+            <th>Subject</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Button</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each leaveRequests}}
+        <tr>
+            <td>{{employeeID}}</td>
+            <td>{{subject}}</td>
+            <td>{{reason}}</td>
+            <td>{{status}}</td>
+            <td> <a href="/hrc/hr/leaveReq/getAll/{{_id}}">
+                    <button class="decisionButton" name="decisionButton" data-id="{{_id}}">Decide</button>
+                </a></td>
+        </tr>
+        {{/each}}
+    </tbody>
+    <button class="backButton" onclick="window.location.href='/hrc/hr/'">Go Back</button>
+
+</table>
