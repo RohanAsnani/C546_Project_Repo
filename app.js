@@ -118,7 +118,8 @@ app.use('/hrc/admin',(req,res,next)=>{
 
 app.use('/hrc/employee', (req, res, next) => {
   if (req.session.user) {
-    if(req.originalUrl === '/hrc/employee/profile/edit'|| req.originalUrl ==='/hrc/employee/getAllToDoByEmpId'|| req.originalUrl === '/hrc/employee/profile'|| req.originalUrl.startsWith('hrc/employee/fillForm') || req.originalUrl.startsWith('/hrc/employee/fillForm/')|| req.originalUrl === '/hrc/employee/selectBenifitsForm' || req.originalUrl === '/hrc/employee/fillSalaryForm'||req.originalUrl.startsWith('/hrc/employee/uploadDocs')){
+    console.log(req.originalUrl, "employee");
+    if(req.originalUrl === '/hrc/employee/profile/edit'|| req.originalUrl ==='/hrc/employee/getAllToDoByEmpId'|| req.originalUrl === '/hrc/employee/profile'|| req.originalUrl.startsWith('hrc/employee/fillForm') || req.originalUrl.startsWith('/hrc/employee/fillForm/')|| req.originalUrl === '/hrc/employee/selectBenifitsForm' || req.originalUrl === '/hrc/employee/fillSalaryForm'||req.originalUrl.startsWith('/hrc/employee/uploadDocs')||req.originalUrl==='/hrc/employee/getAllSalaryByEmpId'||req.originalUrl==='/hrc/employee/getAllBenefits'){
       next();
     }else{
       if(req.session.user.status === 'Onboarding'){
