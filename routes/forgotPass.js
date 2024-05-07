@@ -22,9 +22,15 @@ router
                 return res.render('./data_functions/forgotpass',{title:'Forgot Password',secQues:'hidden',message:'No user found with that personal Email or username.',notVisible:'hidden'});
             }
             let data = await user_Test.getUserById(idStat);
-            return res.render('./data_functions/forgotpass',{title:'Forgot Password.',error:'hidden',secQues:'',mailID:'hidden',notVisible:'hidden',...data});
-        }catch(e){
-            return res.json(e.message);
+            return res.render('./data_functions/forgotpass', { title: 'Forgot Password.', error: 'hidden', secQues: '', mailID: 'hidden', notVisible: 'hidden', ...data });
+        } catch (e) {
+            return res.status(400).json(e.message).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: e.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back'
+            });
         }
 
     })
@@ -43,9 +49,15 @@ router
             try{
                 let data = req.body
                 data.secAnswer = data.secAnswer.toLowerCase()
-                await user_Test.changeForgotPass(data.employeeId,data.secAnswer)
-            }catch(e){
-                return res.render()
+            await user_Test.changeForgotPass(data.employeeId, data.secAnswer)
+        } catch (e) {
+            return res.status(400).json(e.message).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: e.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back'
+            });
 
             }
             
