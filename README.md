@@ -44,7 +44,3 @@ npm start
 - Mohini Mayekar
 - Rohan Asnani
 - Nishank Shetty
-
----
-
-This README is intended to give users and potential contributors a comprehensive overview of your project. If you have additional sections like 'License', 'Contributing Guidelines', or specific details about the architecture or API endpoints, those can also be included as per your project's documentation standards.
