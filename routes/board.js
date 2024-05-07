@@ -9,6 +9,7 @@ import { ObjectId } from "mongodb";
 import sendEmail from "../util/emailNotif.js";
 import doc from '../data/documents.js'
 import multer from 'multer';
+import { title } from 'process';
 
 router.route('/')
     .get(async (req, res) => {
@@ -79,7 +80,7 @@ router.route('/submit-note')
         const notes  = xss(req.body.notes);
         if (!employeeId || !notes) {
             return res.status(400).render('./data_functions/GetEmpDetailsandNotes', {
-                error: "Both Employee ID and note are required and cannot be empty."
+                error: "Both Employee ID and note are required and cannot be empty.", title: 'error'
             })
         }
         try {
@@ -126,7 +127,7 @@ router
     .get(async (req,res)=>{
         let employeeId = req.params.employeeId;
             let employeeDetails = await user_Test.getUserById(employeeId);
-            return res.render('./data_functions/endDate',{...employeeDetails});
+            return res.render('./data_functions/endDate',{...employeeDetails, title: 'End Date'});
     })
     .post(async (req,res)=>{
         try{
@@ -204,10 +205,10 @@ router
                 }
             }
             //console.dir(taskList)
-            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Onboard Task List', isLoggedIn: true, hidden: 'hidden', hideTable: '' });
+            return res.render('./data_functions/getTaskList', { title: "Task list", taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Onboard Task List', isLoggedIn: true, hidden: 'hidden', hideTable: '' });
             //return res.json(boardUserData);
         } catch (e) {
-            return res.status(400).render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Onboard Task List', isLoggedIn: true, hideTable: 'hidden', hidden: '', message: e.message });
+            return res.status(400).render('./data_functions/getTaskList', { title:"error", taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Onboard Task List', isLoggedIn: true, hideTable: 'hidden', hidden: '', message: e.message });
         }
     });
 
@@ -227,10 +228,10 @@ router
                     msg = res.msg;
                 }
             }
-            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Offboard Task List', isLoggedIn: true, hidden: 'hidden', hideTable: '' });
+            return res.render('./data_functions/getTaskList', { title: "Task list", taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Offboard Task List', isLoggedIn: true, hidden: 'hidden', hideTable: '' });
             //return res.json(boardUserData);
         } catch (e) {
-            return res.status(400).render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Offboard Task List', isLoggedIn: true, hideTable: 'hidden', hidden: '', message: e.message });
+            return res.status(400).render('./data_functions/getTaskList', { title: "error", taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Offboard Task List', isLoggedIn: true, hideTable: 'hidden', hidden: '', message: e.message });
         }
     });
 
@@ -466,6 +467,7 @@ router
             const veteranDisabilityData = veteranAndDisabilityDistribution.map(item => item.count);
 
             res.render('./data_functions/hr_dashboard', {
+                title: 'HR Dashboard',
                 totalEmployees,
                 departments: JSON.stringify({ labels, data }),
                 averageTenureResult,

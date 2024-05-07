@@ -16,9 +16,9 @@ import { ObjectId } from "mongodb";
 router.route("/getAll").get(async (req, res) => {
   try {
     const leaveRequests = await getAllLeaves();
-    res.status(200).render("./leaveReq/leaveRequestList", { leaveRequests });
+    res.status(200).render("./leaveReq/leaveRequestList", { leaveRequests, title: "Leave Requests" });
   } catch (error) {
-    return res.status(400).render("./404Page/", { message: e.message });
+    return res.status(404).render("./404Page/", { message: e.message, title: "Error"});
   }
 });
 
@@ -30,9 +30,9 @@ router.route("/getAll/:objectId").get(async (req, res) => {
     const leaveData = await getLeave(obj);
     return res
       .status(200)
-      .render("./leaveReq/decideHR", { leaveData, obj: obj });
+      .render("./leaveReq/decideHR", { leaveData, obj: obj, title: "Leave Request Decision"});
   } catch (e) {
-    return res.status(400).render("./404Page/", { message: e.message });
+    return res.status(404).render("./404Page/", { message: e.message, title: "Error"});
   }
 });
 
@@ -54,9 +54,9 @@ router.route("/getAll/:objectId").post(async (req, res) => {
       radioButton,
       obj
     );
-    return res.status(200).render("./leaveReq/decideHR");
+    return res.status(200).render("./leaveReq/decideHR", { title: "Decision"});
   } catch (e) {
-    return res.status(400).render("./404Page/", { message: e.message });
+    return res.status(400).render("./404Page/", { message: e.message, title: "Error"});
   }
 });
 

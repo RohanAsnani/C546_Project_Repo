@@ -4,9 +4,7 @@ import * as mongoCollections from "../config/mongoCollections.js";
 import { ObjectId } from "mongodb";
 import userData from '../data/user_Test.js';
 import boardData from '../data/board.js';
-
-
-
+import { closeConnection } from '../config/mongoConnection.js';
 
 const adminCreationInfo = {
     employeeId: "HRCSP0001",
@@ -42,8 +40,6 @@ const adminCreationInfo = {
         vacation: 5
     }
 };
-const adminUser = await userData.create(adminCreationInfo);
-console.log(adminUser);
 const hrCreationInfo = {
     employeeId: "HRCRS0001",
     firstName: "Rob",
@@ -79,8 +75,6 @@ const hrCreationInfo = {
     }
 };
 
-const hrUser = await userData.create(hrCreationInfo);
-console.log(hrUser);
 const employeeCreationInfo1 = {
     employeeId: "HRCAC0001",
     firstName: "Amy",
@@ -116,13 +110,26 @@ const employeeCreationInfo1 = {
     }
 };
 
-const empUser1 = await userData.create(employeeCreationInfo1);
-console.log(empUser1);
+const run = async () => {
+    const adminUser = await userData.create(adminCreationInfo);
+    console.log(adminUser);
 
-const empUser1EmpId = empUser1.employeeId.toString();
+    const hrUser = await userData.create(hrCreationInfo);
+    console.log(hrUser);
 
-const empUser1Task = await boardData.createSalaryBenifits(empUser1EmpId);
+    const empUser1 = await userData.create(employeeCreationInfo1);
+    console.log(empUser1);
 
-console.log(empUser1Task);
+    const empUser1EmpId = empUser1.employeeId.toString();
+
+    const empUser1Task = await boardData.createSalaryBenifits(empUser1EmpId);
+
+    console.log(empUser1Task);
+
+    // Close the database connection
+    await closeConnection();
+};
+
+run();
 
 

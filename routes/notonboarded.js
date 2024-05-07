@@ -9,7 +9,7 @@ import sendEmail from "../util/emailNotif.js";
 
 router
     .route('/').get(async (req,res)=>{
-        return res.render('notonboarded');
+        return res.render('notonboarded', {title: 'Not Onboarded'});
     });
     
 router

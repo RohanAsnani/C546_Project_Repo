@@ -11,6 +11,7 @@ import xss from 'xss';
 import puppeteer from 'puppeteer';
 import doc from '../data/documents.js'
 import multer from 'multer';
+import { title } from 'process';
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -167,10 +168,10 @@ router
             } else {
                 msg = `No tasks assigned.`;
             }
-            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: true, taskTypeList: 'Task List', isLoggedIn: true, hidden: 'hidden', hideTable: '' });
+            return res.render('./data_functions/getTaskList', { title: "Task list" ,taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: true, taskTypeList: 'Task List', isLoggedIn: true, hidden: 'hidden', hideTable: '' });
             // return res.json(boardUserData);
         } catch (e) {
-            return res.status(400).render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: true, taskTypeList: 'Task List', isLoggedIn: true, hideTable: 'hidden', hidden: '', message: e.message });
+            return res.status(400).render('./data_functions/getTaskList', { title: "Error", taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: true, taskTypeList: 'Task List', isLoggedIn: true, hideTable: 'hidden', hidden: '', message: e.message });
         }
     });
 
@@ -189,12 +190,14 @@ router
             console.log('after')
             if (notes.length === 0) {
                 return res.render('displaynotes', { 
+                    title: 'Notes',
                     employeeId: employeeId,
                     noNotes: true, 
                     message: "No notes available for you"
                 });
             } else {
                 return res.render('displaynotes', { 
+                    title: 'Notes',
                     employeeId: employeeId,
                     notes: notes
                 });
@@ -239,10 +242,10 @@ router
             } else {
                 msg = `No tasks assigned.`;
             }
-            return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: false, isEmp: true, taskTypeList: 'To-Do Task List', isLoggedIn: true, hidden: 'hidden', hideTable: '' });
+            return res.render('./data_functions/getTaskList', { title: "Task list" ,taskList: taskList, noDataPresentMsg: msg, viewAll: false, isEmp: true, taskTypeList: 'To-Do Task List', isLoggedIn: true, hidden: 'hidden', hideTable: '' });
             // return res.json(boardUserData);
         } catch (e) {
-            return res.status(400).render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: true, taskTypeList: 'To-Do Task List', isLoggedIn: true, hideTable: 'hidden', hidden: '', message: e.message });
+            return res.status(400).render('./data_functions/getTaskList', { title: "Task list", taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: true, taskTypeList: 'To-Do Task List', isLoggedIn: true, hideTable: 'hidden', hidden: '', message: e.message });
         }
     });
 

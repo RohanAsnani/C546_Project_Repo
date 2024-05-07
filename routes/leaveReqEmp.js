@@ -20,9 +20,10 @@ router.route("/form").get(async (req, res) => {
       sickLeaves,
       vacation,
       isSubmitted: false,
+      title: "Leave Request Form",
     });
   } catch (error) {
-    return res.status(400).render("./404Page/", { message: e.message });
+    return res.status(404).render("./404Page/", { message: e.message, title: "Error"});
   }
 });
 
@@ -43,7 +44,7 @@ router.route("/form").post(async (req, res) => {
     ));
   } catch (e) {
     console.log("here");
-    return res.status(400).render("./404Page/", { message: e.message });
+    return res.status(404).render("./404Page/", { message: e.message, title: "Error"});
   }
 
   try {
@@ -66,10 +67,10 @@ router.route("/form").post(async (req, res) => {
 
     // res.status(201).json("Successfully created the request");
 
-    res.status(200).render("./leaveReq/success");
+    res.status(200).render("./leaveReq/success", { title: "Success" });
     // console.log("idk4");
   } catch (error) {
-    return res.status(404).json(error.message);
+    return res.status(404).render("./404Page/", { message: e.message, title: "Error"});
   }
 });
 
@@ -80,9 +81,9 @@ router.route("/leaveRecord").get(async (req, res) => {
     let empId = req.session.user.employeeId;
     const leaveRecords = await getLeaveRecord(empId);
 
-    res.status(200).render("./leaveReq/leaveRecord", { leaveRecords });
+    res.status(200).render("./leaveReq/leaveRecord", { leaveRecords, title: "Leave Record"});
   } catch (error) {
-    return res.status(400).render("./404Page/", { message: e.message });
+    return res.status(404).render("./404Page/", { message: e.message, title: "Error"});
   }
 });
 
