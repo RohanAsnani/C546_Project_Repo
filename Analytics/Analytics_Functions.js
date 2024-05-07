@@ -53,6 +53,50 @@ export async function getAverageTenure() {
         throw new Error("Error calculating average tenure in months:", error)
     }
 }
+export async function calculateChurnRate() {
+    try {
+        const userCollection = await users(); 
+        //console.log("User collection accessed.");
+
+        const format = "YYYY-MM-DD";
+        const startDateStr = moment().startOf('month').format(format);
+        const endDateStr = moment().endOf('month').format(format);
+        //console.log("Start date:", startDateStr);
+        //console.log("End date:", endDateStr);
+
+
+        const totalCount = await userCollection.countDocuments({});
+        //console.log("Total count of employees:", totalCount);
+
+
+        const activeCount = await userCollection.countDocuments({
+            $or: [
+                { endDate: { $gt: endDateStr } }, 
+                { endDate: "" },                   
+                { endDate: { $exists: false } }   
+            ]
+        });
+        console.log("Active count of employees:", activeCount);
+
+        const leavingCount = await userCollection.countDocuments({
+            endDate: { $gte: startDateStr, $lte: endDateStr },
+            status: { $in: ["Offboarding", "Inactive"] }
+        });
+        //console.log("Leaving count:", leavingCount);
+
+ 
+        const churnRate = totalCount > 0 ? (leavingCount / totalCount) * 100 : 0;
+        //console.log("Churn Rate:", churnRate.toFixed(2) + '%');
+
+        return churnRate.toFixed(2) + '%';
+    } catch (error) {
+        //console.error("Error calculating churn rate:", error);
+        throw new Error("Error calculating churn rate:", error);
+    }
+}
+
+
+
 
 export async function getIncompleteBoardingTasks() {
     try {
@@ -74,6 +118,48 @@ export async function getIncompleteBoardingTasks() {
         };
     } catch (error) {
         throw new Error("Error fetching incomplete boarding tasks:", error)
+    }
+}
+export async function getGenderDistribution() {
+    try {
+        const userCollection = await users(); 
+        const genderDistribution = await userCollection.aggregate([
+            {
+                $group: {
+                    _id: "$gender",
+                    count: { $sum: 1 }
+                }
+            }
+        ]).toArray();
+
+        console.log("Gender Distribution:", genderDistribution);
+        return genderDistribution;
+    } catch (error) {
+        console.error("Error calculating gender distribution:", error);
+        throw new Error("Error calculating gender distribution:", error);
+    }
+}
+
+export async function getVeteranAndDisabilityDistribution() {
+    try {
+        const userCollection = await users(); 
+        const veteranCount = await userCollection.countDocuments({ vet: "Veteran" });
+        const disabilityCount = await userCollection.countDocuments({ disability: { $ne: "No" } });
+        const totalEmployees = await userCollection.countDocuments({});
+
+        const othersCount = totalEmployees - veteranCount - disabilityCount;
+
+        const distribution = [
+            { _id: "Veterans", count: veteranCount },
+            { _id: "Employees with Disabilities", count: disabilityCount },
+            { _id: "Others", count: othersCount }
+        ];
+
+        console.log("Veteran and Disability Distribution:", distribution);
+        return distribution;
+    } catch (error) {
+        console.error("Error calculating veteran and disability distribution:", error);
+        throw new Error("Error calculating veteran and disability distribution:", error);
     }
 }
 
