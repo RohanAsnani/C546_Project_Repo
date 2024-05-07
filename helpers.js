@@ -429,7 +429,7 @@ const checkTypeUserEmployee =(patchInfo)=>{
     patchInfo.lastName = checkStrCS(patchInfo.lastName,'First Name',2,20,false,false)
     
     if(!patchInfo.dob) throw new Error('Date of Birth Needed.');
-    patchInfo.dob =     dateFormat(patchInfo.dob,'Date of Birth');
+    patchInfo.dob =  dateFormat(patchInfo.dob,'Date of Birth');
 
     let year = patchInfo.dob[0];
     let month = patchInfo.dob[1];
@@ -438,7 +438,7 @@ const checkTypeUserEmployee =(patchInfo)=>{
     isValidDate(month, date, year,'Date Of Birth',false);
     patchInfo.dob = String(patchInfo.dob[0]) + '-' + String(patchInfo.dob[1]) + '-' + String(patchInfo.dob[2]);
 
-    checkAgeOver18(dob);
+    checkAgeOver18(patchInfo.dob);
           
     patchInfo.personalEmail = isValidEmail(patchInfo.personalEmail);
     
