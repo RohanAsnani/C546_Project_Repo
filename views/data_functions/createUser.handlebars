@@ -1,155 +1,235 @@
-<form class="loginForm" id="createUser-form" name="createUser-form" class="createUser-form" action="../admin/addEmp"
-    method="POST">
-    <h2>Create New User</h2>
-    <h4>Account Details</h4>
-    <label for="firstName" id="labelFirstName">First Name:</label>
-    <input type="text" class="firstName" id="firstName" name="firstName" value="{{firstName}}"><br>
+<form
+  class="loginForm"
+  id="createUser-form"
+  name="createUser-form"
+  class="createUser-form"
+  action="../admin/addEmp"
+  method="POST"
+>
+  <h2>Create New Users</h2>
+  <h4>Account Details</h4>
+  <label for="firstName" id="labelFirstName">First Name:</label>
+  <input
+    type="text"
+    placeholder="firstName"
+    class="firstName"
+    id="firstName"
+    name="firstName"
+    value="{{firstName}}"
+  /><br />
 
-    <label for="lastName" id="labelLastName">Last Name:</label>
-    <input type="text" class="lastName" id="lastName" name="lastName" value="{{lastName}}"><br>
+  <label for="lastName" id="labelLastName">Last Name:</label>
+  <input
+    placeholder="lastName"
+    type="text"
+    class="lastName"
+    id="lastName"
+    name="lastName"
+    value="{{lastName}}"
+  /><br />
 
-    <label for="employeeId" id="labelEmployeeId">Employee Id:</label>
-    <input type="text" class="employeeId" id="employeeId" name="employeeId" value="{{employeeId}}"><br>
+  <label for="employeeId" id="labelEmployeeId">Employee Id:</label>
+  <input
+    placeholder="employeeId"
+    type="text"
+    class="employeeId"
+    id="employeeId"
+    name="employeeId"
+    value="{{employeeId}}"
+  /><br />
 
-    <label for="username" id="labelUsername">Username:</label>
-    <input type="text" class="username" id="username" name="username" value="{{username}}"><br>
+  <label for="username" id="labelUsername">Username:</label>
+  <input
+    placeholder="username"
+    type="text"
+    class="username"
+    id="username"
+    name="username"
+    value="{{username}}"
+  /><br />
 
-    <label for="password" id="labelPassword">Password:</label>
-    <input type="password" class="password" id="password" name="password"><br>
+  <label for="password" id="labelPassword">Password:</label>
+  <input
+    placeholder="password"
+    type="password"
+    class="password"
+    id="password"
+    name="password"
+  /><br />
 
-    <label for="confirmPassword" id="labelConfirmPassword">Confirm Password:</label>
-    <input type="password" class="confirmPassword" id="confirmPassword" name="confirmPassword"><br>
+  <label
+    placeholder="confirmPassword"
+    for="confirmPassword"
+    id="labelConfirmPassword"
+  >Confirm Password:</label>
+  <input
+    type="password"
+    placeholder="confirmPassword"
+    class="confirmPassword"
+    id="confirmPassword"
+    name="confirmPassword"
+  /><br />
 
-    {{!-- <label for="gender" id="labelGender">Gender:</label>
+  {{! <label placeholder="gender" for="gender" id="labelGender">Gender:</label>
     <select id="gender" name="gender">
         <option value="Male">Male</option>
         <option value="Female">Female</option>
         <option value="Other">Other</option>
     </select><br>
 
-    <label for="maritalStatus" id="labelMaritalStatus">Marital Status:</label>
+    <label placeholder="maritalStatus" for="maritalStatus" id="labelMaritalStatus">Marital Status:</label>
     <select id="maritalStatus" name="maritalStatus">
         <option value="Single">Single</option>
         <option value="Married">Married</option>
         <option value="Seperated">Seperated</option>
         <option value="Widowed">Widowed</option>
         <option value="Divorced">Divorced</option>
-    </select><br> --}}
+    </select><br> }}
 
-    <label for="department" id="labelDepartment">Department:</label>
-    <select id="department" name="department">
-        <option value="none" selected disabled hidden></option>
-        <option value="IT">IT</option>
-        <option value="Finance">Finance</option>
-        <option value="Human Resources">Human Resources</option>
-        <option value="Adminstration">Adminstration</option>
-        <option value="Research And Development">Research And Developement</option>
-        <option value="Customer Service">Customer Service</option>
-    </select><br>
+  <label for="department" id="labelDepartment">Department:</label>
+  <select id="department" name="department" placeholder="department">
+    <option value="none" selected disabled hidden></option>
+    <option value="IT">IT</option>
+    <option value="Finance">Finance</option>
+    <option value="Human Resources">Human Resources</option>
+    <option value="Adminstration">Adminstration</option>
+    <option value="Research And Development">Research And Developement</option>
+    <option value="Customer Service">Customer Service</option>
+  </select><br />
 
-    <label for="role" id="labelId">Role:</label>
-    <select id="role" name="role">
-        <option value="none" selected disabled hidden></option>
-        <option value="Admin">Admin</option>
-        <option value="HR">HR</option>
-        <option value="Employee">Employee</option>
-    </select><br>
+  <label placeholder="role" for="role" id="labelId">Role:</label>
+  <select id="role" name="role">
+    <option value="none" selected disabled hidden></option>
+    <option value="Admin">Admin</option>
+    <option value="HR">HR</option>
+    <option value="Employee">Employee</option>
+  </select><br />
 
-    <label for="isManager" id="labelIsManager">Is Manager:</label>
-    <input type="checkbox" id="isManager" name="isManager" value="true">
-    {{!--
+  <label for="isManager" id="labelIsManager">Is Manager:</label>
+  <input
+    placeholder="isManager"
+    type="checkbox"
+    id="isManager"
+    name="isManager"
+    value="true"
+  />
+  {{!
     Notes
     Status
     Vet
-    --}}
+    }}
 
-    {{!-- <label for="disability" id="labelDisability">Disability:</label>
+  {{! <label placeholder="disability" for="disability" id="labelDisability">Disability:</label>
     <input type="text" class="disability" id="disability" name="disability"><br>
 
-    <label for="race" id="labelRace">Race:</label>
+    <label placeholder="race" for="race" id="labelRace">Race:</label>
     <input type="text" class="race" id="race" name="race"><br>
 
-    <label for="countryOfOrigin" id="labelCountryOfOrigin">Country Of Origin:</label>
-    <input type="text" class="countryOfOrigin" id="countryOfOrigin" name="countryOfOrigin"><br> --}}
+    <label placeholder="countryOfOrigin" for="countryOfOrigin" id="labelCountryOfOrigin">Country Of Origin:</label>
+    <input type="text" class="countryOfOrigin" id="countryOfOrigin" name="countryOfOrigin"><br> }}
 
-    <label for="startDate" id="labelStartDate">Start Date:</label>
-    <input type="date" class="startDate" id="startDate" name="startDate" value="{{startDate}}"><br>
-    {{!-- <label for="endDate" id="labelEndDate">End Date:</label>
-    <input type="date" class="endDate" id="endDate" name="endDate"><br> Intitalise End date as none at first--}}
-    {{!--
-    <label for="dob" id="labelDob">Date of Birth:</label>
-    <input type="date" class="dob" id="dob" name="dob"><br> --}}
+  <label for="startDate" id="labelStartDate">Start Date:</label>
+  <input
+    type="date"
+    placeholder="startDate"
+    class="startDate"
+    id="startDate"
+    name="startDate"
+    value="{{startDate}}"
+  /><br />
+  {{! <label placeholder="endDate" for="endDate" id="labelEndDate">End Date:</label>
+    <input type="date" class="endDate" id="endDate" name="endDate"><br> Intitalise End date as none at first}}
+  {{!
+    <label placeholder="dob" for="dob" id="labelDob">Date of Birth:</label>
+    <input type="date" class="dob" id="dob" name="dob"><br> }}
 
-
-    {{!-- <label for="currentPosition" id="labelCurrentPosition">Current Position:</label>
+  {{! <label placeholder="currentPosition" for="currentPosition" id="labelCurrentPosition">Current Position:</label>
     <input type="text" id="currentPosition" name="currentPosition" class="currentPosition"><br>
 
-    <label for="currentSalary" id="labelCurrentSalary">Current Salary:</label>
-    <input type="number" class="currentSalary" id="currentSalary" name="currentSalary"><br> --}}
+    <label placeholder="currentSalary" for="currentSalary" id="labelCurrentSalary">Current Salary:</label>
+    <input type="number" class="currentSalary" id="currentSalary" name="currentSalary"><br> }}
 
+  {{! ContactInfo }}
+  {{! <h4>Contact Info</h4>
 
-    {{!-- ContactInfo --}}
-    {{!-- <h4>Contact Info</h4>
+    <label placeholder="phone" for="phone" id="labelPhone">Phone Number:</label>
+    <input type="tel" class="phone" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"><br> }}
 
-    <label for="phone" id="labelPhone">Phone Number:</label>
-    <input type="tel" class="phone" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"><br> --}}
+  <label for="email" id="labelEmail">Email Id:</label>
+  <input
+    type="email"
+    placeholder="email"
+    class="email"
+    id="email"
+    name="email"
+    value="{{email}}"
+  /><br />
 
-    <label for="email" id="labelEmail">Email Id:</label>
-    <input type="email" class="email" id="email" name="email" value="{{email}}"><br>
+  <label
+    for="personalEmail"
+    id="labelPersonalEmail"
+    name="labelPersonalEmail"
+  >Personal Email:</label>
+  <input
+    type="email"
+    placeholder="personalEmail"
+    class="personalEmail"
+    id="personalEmail"
+    name="personalEmail"
+    value="{{personalEmail}}"
+  /><br />
 
-    <label for="personalEmail" id="labelPersonalEmail" name="labelPersonalEmail">Personal Email:</label>
-    <input type="email" class="personalEmail" id="personalEmail" name="personalEmail" value="{{personalEmail}}"><br>
-
-    {{!-- <label for="primaryAddress" id="labelPrimaryAddress">Primary Address:</label>
+  {{! <label placeholder="primaryAddress" for="primaryAddress" id="labelPrimaryAddress">Primary Address:</label>
     <input type="text" class="primaryAddress" id="primaryAddress" name="primaryAddress"><br>
 
-    <label for="secondaryAddress" id="labelSecondaryAddress">Secondary Address:</label>
+    <label placeholder="secondaryAddress" for="secondaryAddress" id="labelSecondaryAddress">Secondary Address:</label>
     <input type="text" class="secondaryAddress" id="secondaryAddress" name="secondaryAddress"><br>
 
     <h4>Team Assignment</h4>
     <h6>for subordinates and managers i will be implementing multiple select dropdown</h6><br>
-    <label for="subordinates" id="labelSubordinates">Subordinates:</label>
+    <label placeholder="subordinates" for="subordinates" id="labelSubordinates">Subordinates:</label>
     <select id="subordinates" name="subordinates" multiple>
         <option value="Employee 1">Employee 1</option>
         <option value="Employee 2">Employee 2</option>
         <option value="Employee 3">Employee 3</option>
     </select><br>
 
-    <label for="managerId" id="labelManagerId">Manager Assigned:</label>
+    <label placeholder="managerId" for="managerId" id="labelManagerId">Manager Assigned:</label>
     <select id="managerId" name="managerId" multiple>
         <option value="Manager 1">Manager 1</option>
         <option value="Manager 2">Manager 2</option>
         <option value="Manager 3">Manager 3</option>
-    </select> --}}
+    </select> }}
 
-    {{!-- leaves --}}
-    {{!-- leaves Bank --}}
+  {{! leaves }}
+  {{! leaves Bank }}
 
-    {{!-- <h6>Leaves and Leave Banks yet to implement</h6><br> --}}
-    <ul id="errorList" name="errorList" class="error" hidden> </ul>
+  {{! <h6>Leaves and Leave Banks yet to implement</h6><br> }}
+  <ul id="errorList" name="errorList" class="error" hidden> </ul>
 
-    <p id="error" name="error" class="error" {{hidden}}>
-        {{message}}
-    </p>
+  <p id="error" name="error" class="error" {{hidden}}>
+    {{message}}
+  </p>
 
-    <button type="submit" class="submitButton" id="submitButton" name="submitButton">Submit</button><br>
+  <button
+    type="submit"
+    class="submitButton loginButton"
+    id="submitButton"
+    name="submitButton"
+  >Submit</button><br />
 
-    <script src="https://code.jquery.com/jquery-3.5.1.js"
-        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+  <script
+    src="https://code.jquery.com/jquery-3.5.1.js"
+    integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous"
+  ></script>
 
-    <script>
-        $('#department').val("{{department}}");
-        $('#role').val("{{role}}");
-
-        if ('{{isManager}}' === 'true') {
-            $('#isManager').prop("checked", true);
-        } else {
-            $('#isManager').prop("checked", false);
-        }
-        $('#startDate').val("{{startDate}}");
-    </script>
-    <script src="/public/js/homepage.js"></script>
-
+  <script>
+    $('#department').val("{{department}}"); $('#role').val("{{role}}"); if ('{{isManager}}'
+    === 'true') { $('#isManager').prop("checked", true); } else {
+    $('#isManager').prop("checked", false); } $('#startDate').val("{{startDate}}");
+  </script>
+  <script src="/public/js/homepage.js"></script>
 
 </form>
 <a class="page-link" id="logoutLink" href="/hrc/logout">Logout</a>
