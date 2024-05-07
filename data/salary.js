@@ -10,10 +10,12 @@ const exportedMethods = {
     async createSalary(employeeId, data) {
         employeeId = validation.checkStrCS(employeeId, 'Employee Id', 0, 100, true);
         data.ssn = validation.numberExistandType(data.ssn, 'SSN', true);
+        let ssnLast4 = String(data.ssn).slice(-4);
         data.ssn = await bcrypt.hash(String(data.ssn), 12);
         data.hourlyPay = validation.numberExistandType(data.hourlyPay, 'Hourly Pay', false);
         validation.numberRange(data.hourlyPay, 'Hourly Pay', 15.13, 200);
         data.account_No = validation.numberExistandType(data.accountNo, 'Account Number', true);
+        let account_NoLast4 = data.accountNo.slice(-4);
         data.account_No = await bcrypt.hash(String(data.account_No), 12);
         data.routing_No = validation.numberExistandType(data.routingNo, 'Routing Number', true);
         data.paymentType = validation.checkStrCS(data.paymentType, 'Payment Type', 0, 100, false);
@@ -42,8 +44,10 @@ const exportedMethods = {
         const salaryCollection = await salary();
         const newSalary = {
             employeeId: employeeId,
+            ssnLast4: ssnLast4,
             SSN: data.ssn,
             bankAccount: {
+                account_NoLast4: account_NoLast4,
                 accountNo: data.account_No,
                 routingNo: data.routing_No,
                 paymentType: data.paymentType
@@ -64,9 +68,12 @@ const exportedMethods = {
     async getSalaryBreakdown(employeeId,_id) {
         employeeId = validation.checkStrCS(employeeId, 'employeeId');
         const salaryCollection = await salary();
-        const salaryData = await salaryCollection.findOne({ employeeId: employeeId }, { projection: { _id: 0} });
+        const salaryData = await salaryCollection.findOne({ employeeId: employeeId }, { projection: { _id: 0, SSN: 0, bankAccount: {accountNo: 0}} });
         //handle hashed values
+
         if (salaryData === null) throw new Error('Salary not found');
+        salaryData.SSN = '***-**-' + salaryData.ssnLast4;
+        salaryData.bankAccount.accountNo = '********' + salaryData.bankAccount.account_NoLast4;
         const breakdown = salaryData.salaryBreakdown.find(breakdown => breakdown._id.toString() === _id);
         if (!breakdown) throw new Error('Salary breakdown not found');
         salaryData.salaryBreakdown = breakdown;
