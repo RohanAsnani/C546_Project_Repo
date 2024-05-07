@@ -1,25 +1,39 @@
 // clientside JS
+function checkAgeOver18(birthDate) {
+   
+    const dob = new Date(birthDate);
 
+
+    const currentDate = new Date();
+
+
+    const age = currentDate.getFullYear() - dob.getFullYear();
+
+
+    if (age < 18) {
+        throw new Error('Start date should reflect user being over 18.');
+    }
+}
 function isDateBeforeToday(dateString) {
     const inputDate = new Date(dateString);
 
-    // Set the time to midnight (0:00)
+
     inputDate.setHours(0);
     inputDate.setMinutes(0);
     inputDate.setSeconds(0);
     inputDate.setMilliseconds(0);
 
-    // Offset the input date by a day
+
     inputDate.setDate(inputDate.getDate() + 1);
 
-    // Get the current date
+
     const currentDate = new Date();
 
     currentDate.setHours(0);
     currentDate.setMinutes(0);
     currentDate.setSeconds(0);
     currentDate.setMilliseconds(0);
-    // Set the time to midnight (0:00)
+
     if(inputDate.getDate() === currentDate.getDate()){
         return false
     }   
@@ -860,6 +874,7 @@ $('#editForm').submit((event)=>{
         let dob = new Date($('#dob').val())
         let startDate = new Date($('#startDate').val())
         if(startDate <= dob)throw new Error('Date of Birth cannot be After Start Date.');
+        checkAgeOver18($('#dob').val());
         $('#labelDob').removeClass('error');
         $('#dob').removeClass('error');
      }catch(e){

@@ -112,7 +112,8 @@ router
                 if (typeof patchData[key] === 'string') {
                     patchData[key] = xss(patchData[key]);
                 }
-            }
+            }   
+                
                 patchData = validation.checkTypeUserEmployee(patchData);
         }catch(e){
             let existingData =req.session.user// await userTest.getUserById(req.session.user.employeeId);

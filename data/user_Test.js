@@ -40,8 +40,7 @@ async create(creationInfo){
   validation.isValidDate(month, date, year);
   creationInfo.startDate = String(creationInfo.startDate[0]) + '-' + String(creationInfo.startDate[1]) + '-' + String(creationInfo.startDate[2]);
 
-  creationInfo.securityQuestion = "";
-  creationInfo.securityAnswer  = "";
+
         
   creationInfo.email = validation.isValidEmail(creationInfo.email);
   creationInfo.personalEmail = validation.isValidEmail(creationInfo.personalEmail);
@@ -233,33 +232,6 @@ async getUserIdFromUOE(userId){
     mailEmployeeId = checkPersonalEmail.employeeId;
   }
   return mailEmployeeId
-},
-async changeForgotPass(userId,secAns){
-  if(!userId)throw new Error('EmployeeId needed.');
-
-  let userCollection = await users();
-  let data = await userCollection.findOne({employeeId: userId});
-
-  let check = await bcrypt.compare(secAns,data.securityAnswer);
-
-  if(check === false)throw new Error('Incorrect Answer.');
-
-  let randomPass = validation.generatePassword()
-  let sendPass = randomPass;
-  randomPass = await validation.bcryptPass(randomPass);
-
-  let resetPass = await userCollection.updateOne({employeeId: userId},{$set:{password:randomPass,forgotPass:true}});
-
-  if(!resetPass.acknowledged)throw new Error('Could not Rest the Password.');
-
-  let status = await sendEmail(data.contactInfo.personalEmail,"HR:Centrtal-PassWord Reset",`PassWord reset has been triggerd.
-Hello ${data.firstName} ${data.lastName},
-Your password has been reset. You will find the temporary Passowrd Below.
-Temporary Password:   ${sendPass}
-You wont be able to access other features if you dont change your password upon login.
-Regards,
-HR:Central Team.`);
-    
 },
 
   async getOnboardingHR() {

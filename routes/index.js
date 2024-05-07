@@ -8,14 +8,14 @@ import employee from "./employee.js";
 import deactivated from './deactivated.js';
 import notonboarded from './notonboarded.js';
 import onboarding from './onboarding.js';
-import forgotpass from './forgotPass.js';
+
 import leaveReqEmp from "./leaveReqEmp.js";
 import leaveReqHR from "./leaveReqHR.js";
 import path from "path";
 import { static as staticDir } from "express";
 
 const constructorMethod = (app) => {
-  app.use('/hrc/forgotpass',forgotpass);
+
   app.use('/hrc/notonboarded',notonboarded);
   app.use('/hrc/deactivated',deactivated);
   app.use('/hrc/onboarding',onboarding);

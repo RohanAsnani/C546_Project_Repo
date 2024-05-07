@@ -333,7 +333,7 @@ const checkMasterUser =(creationInfo)=>{
     creationInfo.currentSalary = 0;
     creationInfo.notes = [];
     creationInfo.managerId = "";
-    creationInfo.leaveBank = {sickLeaves:5,vacation:5};
+    creationInfo.leaveBank = {sickLeaves:5,vacation:30};
 
     let createUser = {
         employeeId: creationInfo.employeeId, firstName : creationInfo.firstName,lastName:creationInfo.lastName,username: creationInfo.username,password: creationInfo.password,gender: creationInfo.gender,maritalStatus:creationInfo.maritalStatus,department:creationInfo.department,role:creationInfo.role,isManager:creationInfo.isManager,notes:creationInfo.notes,status:creationInfo.status,vet:creationInfo.vet,disability:creationInfo.disability,race:creationInfo.race,countryOfOrigin:creationInfo.countryOfOrigin,startDate:creationInfo.startDate,endDate:creationInfo.endDate,dob:creationInfo.dob,currentPosition:creationInfo.currentPosition,currentSalary:creationInfo.currentSalary,contactInfo:{phone:creationInfo.phone,email:creationInfo.email,
@@ -400,7 +400,7 @@ const checkTypeUserHR =(patchInfo)=>{
     patchInfo.currentSalary = numberExistandType(patchInfo.currentSalary,`Salary`, false, 2);
     patchInfo.currentSalary = numberRange(patchInfo.currentSalary, 'Salary', 15.13, 200);
     patchInfo.notes = [];
-    patchInfo.leaveBank = { sickLeaves: 5, vacation: 5 };
+    patchInfo.leaveBank = { sickLeaves: 5, vacation: 30 };
 
     let updateUser = {
         employeeId: patchInfo.employeeId, firstName : patchInfo.firstName,lastName:patchInfo.lastName,gender: patchInfo.gender,maritalStatus:patchInfo.maritalStatus,department:patchInfo.department,role:patchInfo.role,isManager:patchInfo.isManager,notes:patchInfo.notes,status:patchInfo.status,vet:patchInfo.vet,disability:patchInfo.disability,race:patchInfo.race,countryOfOrigin:patchInfo.countryOfOrigin,startDate:patchInfo.startDate,endDate:patchInfo.endDate,dob:patchInfo.dob,currentPosition:patchInfo.currentPosition,currentSalary:patchInfo.currentSalary,contactInfo:{phone:patchInfo.phone,email:patchInfo.email,primaryAddress:patchInfo.primaryAddress,secondaryAddress:patchInfo.secondaryAddress},managerId:patchInfo.managerId,leaveBank:patchInfo.leaveBank
@@ -408,6 +408,21 @@ const checkTypeUserHR =(patchInfo)=>{
 
       return updateUser
 
+}
+const checkAgeOver18 = (birthDate)=> {
+   
+    const dob = new Date(birthDate);
+
+
+    const currentDate = new Date();
+
+
+    const age = currentDate.getFullYear() - dob.getFullYear();
+
+
+    if (age < 18) {
+        throw new Error('Start date should reflect user being over 18.');
+    }
 }
 const checkTypeUserEmployee =(patchInfo)=>{
     patchInfo.firstName = checkStrCS(patchInfo.firstName,'First Name',2,20,false,false)
@@ -422,6 +437,8 @@ const checkTypeUserEmployee =(patchInfo)=>{
     
     isValidDate(month, date, year,'Date Of Birth',false);
     patchInfo.dob = String(patchInfo.dob[0]) + '-' + String(patchInfo.dob[1]) + '-' + String(patchInfo.dob[2]);
+
+    checkAgeOver18(dob);
           
     patchInfo.personalEmail = isValidEmail(patchInfo.personalEmail);
     
@@ -463,11 +480,7 @@ const checkTypeUserEmployee =(patchInfo)=>{
         "Italy", "Guinea", "Chad", "Ecuador", "Georgia", "Malawi", "Iraq", "Svalbard and Jan Mayen", "Benin", "Japan", "Dominican Republic", "Qatar",
         "Gabon",
     ]);
-    patchInfo.securityQuestion = checkState(patchInfo.securityQuestion,'Security Question',["What is your mother's maiden name?","What is the name of your first pet?","What city were you born in?"])
-
-    patchInfo.securityAnswer = checkStr(patchInfo.securityAnswer,'Security Answer',2,10,false);
-
-    if(patchInfo.securityAnswer.includes(' '))throw new Error('Security Answer cannot contain spaces in between.');
+  
 
     patchInfo.phone = isValidPhoneNumber(patchInfo.phone);
     patchInfo.primaryAddress = checkStrCS(patchInfo.primaryAddress,'Primary Address',5,30,true,true);
@@ -477,13 +490,13 @@ const checkTypeUserEmployee =(patchInfo)=>{
     let updateUser = {
          employeeId: patchInfo.employeeId,firstName : patchInfo.firstName,lastName:patchInfo.lastName,gender: patchInfo.gender,maritalStatus:patchInfo.maritalStatus,status:patchInfo.status,vet:patchInfo.vet,disability:patchInfo.disability,race:patchInfo.race,countryOfOrigin:patchInfo.countryOfOrigin,dob:patchInfo.dob,contactInfo:{phone:patchInfo.phone,personalEmail:patchInfo.personalEmail,primaryAddress:patchInfo.primaryAddress,secondaryAddress:patchInfo.secondaryAddress
          }
-         ,
-            securityQuestion:patchInfo.securityQuestion,securityAnswer:patchInfo.securityAnswer,forgotPass:patchInfo.forgotPass
-      }
+    }
 
+      
     return updateUser
-
 }
+
+
 
 
 const updateValuesOfTwoObjects = (obj1, obj2)=> {
@@ -967,4 +980,4 @@ const validateLeaveReqForm = (subject, reason, startDate, endDate) => {
     return `${month}-${day}-${year}`;
 };
 
-export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch, isValidEmployeeId, checkPassConstraints, isValidEmail, isValidPhoneNumber, bcryptPass, checkStrCS, checkMasterUser, checkTypeUserHR, updateValuesOfTwoObjects, convertDateFormat, getLaterDate, checkTypeUserEmployee, isDateBeforeToday, getTaskList,getCurrDate,checkIsProperString, checkifEmptySubject, validateLeaveReqForm,getDateFormat,isPastDate,isFirstDateBeforeSecondDate,generatePassword}
+export { arrayExistandType, booleanExistsandType, dateFormat, isValidDate, isValidWebsite, numberExistandType, numberRange, checkStr, checkState, validObject, checkTypeMaster, checkIfExistsAndValidate, validateBoardingData, validateBoardingDataPatch, isValidEmployeeId, checkPassConstraints, isValidEmail, isValidPhoneNumber, bcryptPass, checkStrCS, checkMasterUser, checkTypeUserHR, updateValuesOfTwoObjects, convertDateFormat, getLaterDate, checkTypeUserEmployee, isDateBeforeToday, getTaskList,checkAgeOver18,getCurrDate,checkIsProperString, checkifEmptySubject, validateLeaveReqForm,getDateFormat,isPastDate,isFirstDateBeforeSecondDate,generatePassword}
