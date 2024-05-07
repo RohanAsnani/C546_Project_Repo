@@ -283,10 +283,10 @@ router.route('/fillForm/:employeeId/:taskId/:type')
                 }
             }
         } catch (e) {
-            return res.status(400).json(error.message).render('error', {
+            return res.status(400).json(e.message).render('error', {
                 title: 'Error',
                 class: 'error-class',
-                message: error.message,
+                message: e.message,
                 previous_Route: '/hrc/login',
                 linkMessage: 'Go back'
             });;
@@ -380,7 +380,13 @@ router.route('/getAllBenefits')
                 return res.render('./users/employee', { title: 'Employee', firstName: req.session.user.firstName, role: req.session.user.role, employeeId: req.session.user.employeeId, isAdmin: (req.session.user.role === 'Admin') ? true : false, isHR: (req.session.user.role === 'HR') ? true : false, msg: 'No Benefits Assigned', isLoggedIn: true, isNotActive: (req.session.user.status !== 'Active') ? true : false });
             }//return res.render('./data_functions/getBenefits', { title: 'Benefits', benefits: benefitsData, isLoggedIn: true });
         } catch (e) {
-            return res.status(500).json(e.message);
+            return res.status(500).render('error', {
+                title: 'Error',
+                class: 'error-class',
+                message: e.message,
+                previous_Route: '/hrc/login',
+                linkMessage: 'Go back home'
+            });
         }
     });
 
@@ -671,7 +677,7 @@ router
                 return res.status(400).render('error', {
                     title: 'Error',
                     class: 'error-class',
-                    message: e.message,
+                    message: 'There are no fields in the request body.',
                     previous_Route: '/hrc/login',
                     linkMessage: 'Go back home'
                 });
@@ -731,9 +737,13 @@ router
                 }
             }
             if (!data || Object.keys(data).length === 0) {
-                return res
-                    .status(400)
-                    .json({ error: 'There are no fields in the request body' });
+                return res.status(400).render('error', {
+                    title: 'Error',
+                    class: 'error-class',
+                    message: 'There are no fields in the request body.',
+                    previous_Route: '/hrc/login',
+                    linkMessage: 'Go back home'
+                });
             }
             let employeeId = xss(data.employeeId);
             let resignReason = xss(data.resignReason);

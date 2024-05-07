@@ -63,7 +63,7 @@ router
             });
         } catch (error) {
             console.error("Error fetching data:", error);
-            return res.status(500).render('404Page', {
+            return res.status(404).render('404Page', {
                 title: 'Error',
                 message: 'Failed to retrieve employee details or documents.',
                 isLoggedIn: true
@@ -284,7 +284,7 @@ router
             return res.status(400).json(e.message).render('error', {
                 title: 'Error',
                 class: 'error-class',
-                message: e.message,
+                message: 'There are no fields in the request body.',
                 previous_Route: '/hrc/login',
                 linkMessage: 'Go back'
             });
@@ -324,7 +324,7 @@ router
             return res.status(400).json(e.message).render('error', {
                 title: 'Error',
                 class: 'error-class',
-                message: e.message,
+                message: 'There are no fields in the request body.',
                 previous_Route: '/hrc/login',
                 linkMessage: 'Go back'
             });
@@ -355,7 +355,7 @@ router
             return res.status(400).json(e.message).render('error', {
                 title: 'Error',
                 class: 'error-class',
-                message: e.message,
+                message: 'All required params to be passed in the request.',
                 previous_Route: '/hrc/login',
                 linkMessage: 'Go back'
             });
@@ -366,11 +366,11 @@ router
             let taskId = xss(req.params.taskId.trim());
             let byEmp = xss(req.params.byEmp.trim());
             employeeId = validation.isValidEmployeeId(employeeId);
-            if(taskType !== 'onboard' && taskType !== 'offboard'){
+            if (taskType !== 'onboard' && taskType !== 'offboard') {
                 throw new Error('Invalid Task Type for deletion of task.');
             }
             taskId = ObjectId.isValid(taskId);
-            if(byEmp !== 'true' && byEmp !== 'false'){
+            if (byEmp !== 'true' && byEmp !== 'false') {
                 throw new Error('Invalid Request for deletion of task.');
             }
             const deletedInfo = await boardData.deleteTask(employeeId, taskType, taskId);
@@ -404,7 +404,7 @@ router
                 return res.status(400).json(e.message).render('error', {
                     title: 'Error',
                     class: 'error-class',
-                    message: e.message,
+                    message: 'There are no fields in the request body.',
                     previous_Route: '/hrc/login',
                     linkMessage: 'Go back'
                 });
