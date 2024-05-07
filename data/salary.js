@@ -15,7 +15,7 @@ const exportedMethods = {
         data.hourlyPay = validation.numberExistandType(data.hourlyPay, 'Hourly Pay', false);
         validation.numberRange(data.hourlyPay, 'Hourly Pay', 15.13, 200);
         data.account_No = validation.numberExistandType(data.accountNo, 'Account Number', true);
-        let account_NoLast4 = data.accountNo.slice(-4);
+        let account_NoLast4 = String(data.accountNo).slice(-4);
         data.account_No = await bcrypt.hash(String(data.account_No), 12);
         data.routing_No = validation.numberExistandType(data.routingNo, 'Routing Number', true);
         data.paymentType = validation.checkStrCS(data.paymentType, 'Payment Type', 0, 100, false);
@@ -151,6 +151,8 @@ const exportedMethods = {
         const salaryCollection = await salary();
         const salaryData = await salaryCollection.findOne({ employeeId: employeeId }, { projection: { _id: 0} });
         if (salaryData === null) throw new Error('Salary not found');
+        salaryData.SSN = '***-**-' + salaryData.ssnLast4;
+        salaryData.bankAccount.accountNo = '********' + salaryData.bankAccount.account_NoLast4;
         return salaryData;
     },
     async generateSalaryBreakdown() {

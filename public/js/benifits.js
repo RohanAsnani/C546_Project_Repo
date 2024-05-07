@@ -94,11 +94,13 @@ $(document).ready(function() {
         console.log(formattedData);
         // validation here
         errorDiv.hide();
+        errorList.empty();
         errorDiv.textContent = "";
         let errors = [];
         if (formattedData.beneficiaries) {
             let currDate = getCurrDate();
             let beneArr = formattedData.beneficiaries;
+            if (beneArr.length === 0) errors.push('Atleast one beneficiary is required.');
             for (let i = 0; i < beneArr.length; i++) {
                 let currBene = beneArr[i];
 
@@ -138,7 +140,7 @@ $(document).ready(function() {
                 }
 
                 try {
-                    isValidPhoneNumber(benePh);
+                    checkStrCS(benePh);
                 }
                 catch (e) {
                     errors.push(e);
