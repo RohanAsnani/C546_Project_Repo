@@ -42,15 +42,61 @@ const adminCreationInfo = {
     }
 };
 const adminSalaryData = {
-    ssn: 123456789, // replace with actual SSN
-    hourlyPay: 30, // replace with actual hourly pay
-    accountNo: 12345678, // replace with actual account number
-    routingNo: 123456789, // replace with actual routing number
-    paymentType: 'Direct Deposit', // replace with actual payment type
-    billingAddress: '123 Main St, Anytown, USA', // replace with actual billing address
-    position: 'Admin', // replace with actual position
+    ssn: 123456789,
+    hourlyPay: 30,
+    accountNo: 12345678,
+    routingNo: 123456789,
+    paymentType: 'Direct Deposit',
+    billingAddress: '123 Main St, Anytown, USA',
+    position: 'Admin',
 };
-const adminEmployeeId = 'HRCSP0001'; 
+const adminEmployeeId = 'HRCSP0001';
+
+
+
+const adminBenifitOption = "optInPartner";
+const adminData = [
+    {
+        benefeciary_name: "Sally Potter",
+        benefeciary_relation: "Self",
+        benefeciary_dob: "",
+        benefeciary_address: "",
+        benefeciary_email: "sallypotter01a@hrccentral.com",
+        benefeciary_phone: ""
+    },
+    {
+        benefeciary_name: "Alexis",
+        benefeciary_relation: "Spouse",
+        benefeciary_dob: "2000-01-14",
+        benefeciary_address: "23 Hancock Ave Jersey Heights NJ 07307",
+        benefeciary_email: "alexis@gmail.com",
+        benefeciary_phone: "123-456-7890"
+    }
+];
+
+const hrBenifitOption = "optInSelf";
+const hrData = [
+    {
+        benefeciary_name: "Manav Mody",
+        benefeciary_relation: "Self",
+        benefeciary_dob: "",
+        benefeciary_address: "",
+        benefeciary_email: "manavmody@hrccentral.com",
+        benefeciary_phone: ""
+    }
+];
+const hrSalaryData = {
+    ssn: 987654321,
+    hourlyPay: 35,
+    accountNo: 87654321,
+    routingNo: 987654321,
+    paymentType: 'Direct Deposit',
+    billingAddress: '456 Elm St, Springfield, USA',
+    position: 'Senior Admin',
+};
+
+const hrEmployeeId = 'HRCRS0001';
+const emp1EmployeeId = 'HRCAC0001';
 const hrCreationInfo = {
     employeeId: "HRCRS0001",
     firstName: "Rob",
@@ -127,11 +173,23 @@ const run = async () => {
     // await salaryData.createSalary(adminEmployeeId, adminSalaryData);
 
     // // Add salary breakdown to admin user's salary record
-    // const adminSalary = await salaryData.getSalaryByEmpId(adminEmployeeId);
-    // await salaryData.addSalaryBreakdown(adminSalary);
+    const createAdminBene = await salaryData.createBenefits(adminEmployeeId, adminBenifitOption, adminData)
+
+    const createAdminSal = await salaryData.createSalary(adminEmployeeId, adminSalaryData)
+    const adminSalary = await salaryData.getSalaryByEmpId(adminEmployeeId);
+
+    const addAdminSal = await salaryData.addSalaryBreakdown(adminSalary);
 
     const hrUser = await userData.create(hrCreationInfo);
     console.log(hrUser);
+
+
+    const createHrBene = await salaryData.createBenefits(hrEmployeeId, hrBenifitOption, hrData)
+
+    const createHrSal = await salaryData.createSalary(hrEmployeeId, hrSalaryData)
+    const hrSalary = await salaryData.getSalaryByEmpId(hrEmployeeId);
+
+    const addHrSal = await salaryData.addSalaryBreakdown(hrSalary);
 
     const empUser1 = await userData.create(employeeCreationInfo1);
     console.log(empUser1);
@@ -141,7 +199,7 @@ const run = async () => {
     const empUser1Task = await boardData.createSalaryBenifits(empUser1EmpId);
 
     console.log(empUser1Task);
-
+    console.log('Seed Done.');
     // Close the database connection
     await closeConnection();
 };
