@@ -1,60 +1,66 @@
 <h1>Employee Details for {{employeeId}}</h1>
 <div class="user-details">
-    <p><strong>First Name:</strong> {{firstName}}</p>
-    <p><strong>LastName:</strong> {{lastName}}</p>
-    <p><strong>Employee ID:</strong> {{employeeId}}</p>
-    <p><strong>Username:</strong> {{username}}</p>
-    <p><strong>Department:</strong> {{department}}</p>
-    <p><strong>Role:</strong> {{role}}</p>
-    <p><strong>Is Manager:</strong> {{#if isManager}}Yes{{else}}No{{/if}}</p>
-    <p><strong>Status:</strong> {{status}}</p>
-    <p><strong>Start Date:</strong> {{startDate}}</p>
-    <p><strong>Current Position:</strong> {{currentPosition}}</p>
-    <p><strong>Current Salary:</strong> {{currentSalary}}</p>
-    <p><strong>Email:</strong> {{contactInfo.email}}</p>
-    <p><strong>Manager ID:</strong> {{managerId}}</p>
-    <p><strong>Country of Origin:</strong> {{countryOfOrigin}}</p>
-    <p><strong>Date of Birth:</strong> {{dob}}</p>
+    <div class="straightMe">
+        <p><span class="highlight">First Name:</span> {{firstName}}</p>
+        <p><span class="highlight">LastName:</span> {{lastName}}</p>
+        <p><span class="highlight">Employee ID:</span> {{employeeId}}</p>
+        <p><span class="highlight">Username:</span> {{username}}</p>
+        <p><span class="highlight">Department:</span> {{department}}</p>
+        <p><span class="highlight">Role:</span> {{role}}</p>
+        <p><span class="highlight">Is Manager:</span> {{#if isManager}}Yes{{else}}No{{/if}}</p>
+        <p><span class="highlight">Status:</span> {{status}}</p>
+        <p><span class="highlight">Start Date:</span> {{startDate}}</p>
+        <p><span class="highlight">Current Position:</span> {{currentPosition}}</p>
+        <p><span class="highlight">Current Salary:</span> {{currentSalary}}</p>
+        <p><span class="highlight">Email:</span> {{contactInfo.email}}</p>
+        <p><span class="highlight">Manager ID:</span> {{managerId}}</p>
+        <p><span class="highlight">Country of Origin:</span> {{countryOfOrigin}}</p>
+        <p><span class="highlight">Date of Birth:</span> {{dob}}</p>
+    </div>
 </div>
 
 {{#if error}}
-    <p class="error">{{error}}</p>
+<p class="error">{{error}}</p>
 {{/if}}
 
 {{#if successMessage}}
-    <p class="success">{{successMessage}}</p>
+<p class="success">{{successMessage}}</p>
 {{/if}}
 
 <h2>Add a Note:</h2>
-<div class="notes-container">
+<div class="notes-container straightMe">
     {{#each notes}}
-        <div class="note">
-            <p>{{this}}</p>
-        </div>
+    <div class="note">
+        <p>{{this}}</p>
+    </div>
     {{/each}}
 </div>
 
-<form action="/hrc/hr/submit-note" method="post">
-    <label for="notes">Leave a note for {{firstName}}:</label>
-    <textarea id="notes" name="notes" rows="4" cols="50" required></textarea>
-    <input type="hidden" name="employeeId" value="{{employeeId}}">
-    <button type="submit">Submit Note</button>
-</form>
-{{employeeId}}
+{{!-- <div class="straightMe"> --}}
+    <form class="straightMe" action="/hrc/hr/submit-note" method="post">
+        <label for="notes">Leave a note for {{firstName}}:</label>
+        <textarea placeholder="Enter notes" id="notes" name="notes" rows="4" cols="50" required></textarea>
+        <input type="hidden" name="employeeId" value="{{employeeId}}">
+        <button class="loginButton" type="submit">Submit Note</button>
+    </form>
+    {{!--
+</div> --}}
+<p>Employee Id is {{employeeId}}</p>
 <h2>Documents Submitted by This Employee</h2>
 {{#if documents}}
-    <ul>
-        {{#each documents}}
-            <li>
-                {{typeOfDoc}} - Submitted on: {{submittedOn}}
-                <!-- Ensure the button correctly builds the URL with docId and employeeId -->
-                <button onclick="window.location.href='/hrc/employee/uploadDocs/viewDocByDocIdEmpID/{{docId}}/{{../employeeId}}'">Download</button>
-            </li>
-        {{/each}}
-    </ul>
+<ul>
+    {{#each documents}}
+    <li>
+        {{typeOfDoc}} - Submitted on: {{submittedOn}}
+        <!-- Ensure the button correctly builds the URL with docId and employeeId -->
+        <button class="backButton"
+            onclick="window.location.href='/hrc/employee/uploadDocs/viewDocByDocIdEmpID/{{docId}}/{{../employeeId}}'">Download</button>
+    </li>
+    {{/each}}
+</ul>
 {{else}}
-    <p>No documents have been submitted by this employee.</p>
+<p>No documents have been submitted by this employee.</p>
 {{/if}}
 
-<button onclick="window.location.href='/hrc/hr'">Homepage</button>
+<button class="backButton" onclick="window.location.href='/hrc/hr'">Homepage</button>
 <a class="page-link" id="logoutLink" href="/hrc/logout">Logout</a>

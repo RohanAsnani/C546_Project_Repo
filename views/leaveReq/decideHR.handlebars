@@ -15,7 +15,7 @@
         <p> <span class="highlight">Reason for the Leave:- </span> {{leaveData.reason}}</p>
     </div>
     <div class="HrForm">
-        <form action="/hrc/hr/leaveReq/getAll/{{obj}}" method="POST">
+        <form id="decideForm" action="/hrc/hr/leaveReq/getAll/{{obj}}" method="POST">
             <label class="highlight" for="reasonHR">Reason for the Decision:-</label>
             <textarea id="reasonHR" name="reasonHR"
                 placeholder="Provide a reason">{{leaveData.commentsReviewer}}</textarea>
@@ -39,3 +39,28 @@
         {{!-- For client side validation atleast and exactly one of the checkbox should be checked --}}
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#decideForm').submit(function (e) {
+            e.preventDefault();
+            var reasonHR = $('#reasonHR').val();
+            if (reasonHR.trim() === "") {
+                displayError("Please enter a valid reasonHR");
+                return;
+            }
+            if (reasonHR === null) {
+                displayError("Please enter a valid reasonHR");
+                return;
+            }
+            
+            $(this).unbind('submit').submit();
+        });
+
+        function displayError(message) {
+            var errorContainer = $('#errorContainer');
+            errorContainer.text(message).show();
+        }
+    });
+</script>

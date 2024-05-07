@@ -273,12 +273,14 @@ td {
 
 .Gbutton {
   background-color: royalblue;
-  padding: 7px 20px;
+  padding: 5px 20px;
   color: ghostwhite;
   font-weight: bolder;
   font-size: medium;
   border: 1px solid royalblue;
   border-radius: 10px;
+  margin-top: 2px;
+  margin-bottom: 2px;
 }
 
 .Gbutton:hover {
@@ -522,4 +524,21 @@ tbody tr:hover {
 }
 
 header {
+}
+
+#getEmpDetails {
+  text-decoration: none;
+  border-radius: 20px;
+  background-color: rgb(40, 196, 40);
+  border: 1px solid green;
+  padding: 3px 10px;
+  color: ghostwhite;
+  font-weight: 600;
+}
+
+#getEmpDetails:hover {
+  background-color: ghostwhite;
+  color: rgb(40, 196, 40);
+  border: 1px solid green;
+  cursor: pointer;
 }

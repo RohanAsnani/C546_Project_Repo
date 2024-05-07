@@ -42,6 +42,7 @@ router.route("/form").post(async (req, res) => {
       endDate
     ));
   } catch (e) {
+    console.log("here");
     return res.status(400).render("./404Page/", { message: e.message });
   }
 

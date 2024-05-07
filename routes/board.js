@@ -227,7 +227,7 @@ router
             return res.render('./data_functions/getTaskList', { taskList: taskList, noDataPresentMsg: msg, viewAll: true, isEmp: false, taskTypeList: 'Offboard Task List', isLoggedIn: true });
             //return res.json(boardUserData);
         } catch (e) {
-            return res.status(500).json({ error: e });
+            return res.status(500).render(e.message);
         }
     });
 

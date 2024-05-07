@@ -55,7 +55,7 @@ router.route("/getAll/:objectId").post(async (req, res) => {
       obj
     );
     return res.status(200).render("./leaveReq/decideHR");
-  } catch (error) {
+  } catch (e) {
     return res.status(400).render("./404Page/", { message: e.message });
   }
 });
