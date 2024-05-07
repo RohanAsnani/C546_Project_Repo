@@ -11,16 +11,44 @@ import sendEmail from "../util/emailNotif.js";
 router  
     .route('/')
     .get(async (req,res)=>{
-        return res.render('./data_functions/forgotpass',{title:'Forgot Password.',error:'hidden'});
+        return res.render('./data_functions/forgotpass',{title:'Forgot Password.',error:'hidden',secQues:'hidden'});
     })
     .post(async (req,res)=>{
+    
         try{
             let userData = req.body;
-        user_Test.changeForgotPass(userData.usernameOrEmail);
+            let idStat = await user_Test.getUserIdFromUOE(userData.usernameOrEmail);
+            if(idStat === false) {
+                return res.render('./data_functions/forgotpass',{title:'Forgot Password',secQues:'hidden',message:'No user found with that personal Email or username.',notVisible:'hidden'});
+            }
+            let data = await user_Test.getUserById(idStat);
+            return res.render('./data_functions/forgotpass',{title:'Forgot Password.',error:'hidden',secQues:'',mailID:'hidden',notVisible:'hidden',...data});
         }catch(e){
             return res.json(e.message);
         }
 
     })
+
+    router
+        .route('/reset')
+        .post(async (req,res)=>{
+
+            try{
+                req.body.employeeId = validation.isValidEmployeeId(req.body.employeeId);
+                req.body.secAnswer= validation.checkStr(req.body.secAnswer,"Security Answer",2,15,false);
+            }catch(e){
+                res.render('./data_functions/forgotpass',{title:'Forgot Password.',emessage:e.message})
+            }
+
+            try{
+                let data = req.body
+                data.secAnswer = data.secAnswer.toLowerCase()
+                await user_Test.changeForgotPass(data.employeeId,data.secAnswer)
+            }catch(e){
+                return res.render()
+
+            }
+            
+        })
 
     export default router

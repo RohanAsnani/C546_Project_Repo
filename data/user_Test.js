@@ -39,11 +39,14 @@ async create(creationInfo){
   
   validation.isValidDate(month, date, year);
   creationInfo.startDate = String(creationInfo.startDate[0]) + '-' + String(creationInfo.startDate[1]) + '-' + String(creationInfo.startDate[2]);
+
+  creationInfo.securityQuestion = "";
+  creationInfo.securityAnswer  = "";
         
   creationInfo.email = validation.isValidEmail(creationInfo.email);
   creationInfo.personalEmail = validation.isValidEmail(creationInfo.personalEmail);
   creationInfo = {
-    employeeId: creationInfo.employeeId, firstName : creationInfo.firstName,lastName:creationInfo.lastName,username: creationInfo.username,password: creationInfo.password,gender: creationInfo.gender,maritalStatus:creationInfo.maritalStatus,department:creationInfo.department,role:creationInfo.role,notes:creationInfo.notes,status:creationInfo.status,vet:creationInfo.vet,disability:creationInfo.disability,race:creationInfo.race,countryOfOrigin:creationInfo.countryOfOrigin,startDate:creationInfo.startDate,endDate:creationInfo.endDate,dob:creationInfo.dob,currentPosition:creationInfo.currentPosition,isManager:creationInfo.isManager,currentSalary:creationInfo.currentSalary,contactInfo:{phone:creationInfo.phone,email:creationInfo.email,personalEmail:creationInfo.personalEmail,primaryAddress:creationInfo.primaryAddress,secondaryAddress:creationInfo.secondaryAddress},managerId:creationInfo.managerId,leaveBank:creationInfo.leaveBank
+    employeeId: creationInfo.employeeId, firstName : creationInfo.firstName,lastName:creationInfo.lastName,username: creationInfo.username,password: creationInfo.password,gender: creationInfo.gender,maritalStatus:creationInfo.maritalStatus,department:creationInfo.department,role:creationInfo.role,notes:creationInfo.notes,status:creationInfo.status,vet:creationInfo.vet,disability:creationInfo.disability,race:creationInfo.race,countryOfOrigin:creationInfo.countryOfOrigin,startDate:creationInfo.startDate,endDate:creationInfo.endDate,dob:creationInfo.dob,currentPosition:creationInfo.currentPosition,isManager:creationInfo.isManager,currentSalary:creationInfo.currentSalary,contactInfo:{phone:creationInfo.phone,email:creationInfo.email,personalEmail:creationInfo.personalEmail,primaryAddress:creationInfo.primaryAddress,secondaryAddress:creationInfo.secondaryAddress},managerId:creationInfo.managerId,leaveBank:creationInfo.leaveBank,securityQuestion:creationInfo.securityQuestion,securityAnswer:creationInfo.securityAnswer
   }
   
   const userCollection = await users();
@@ -214,44 +217,48 @@ async  getNotesByEmployeeId(employeeId) {
   }
   return employeeData.notes ; 
 },
-async changeForgotPass(userId){
-  if(!userId)throw new Error('EmployeeID or Personal Email Needed.');
+async getUserIdFromUOE(userId){
+  if(!userId)throw new Error('username or Personal Email Needed.');
 
   let userCollection = await users();
-  let checkUserId = await userCollection.findOne({employeeId: userId});
+  let checkUserId = await userCollection.findOne({username: userId});
 
   let checkPersonalEmail = await userCollection.findOne({'contactInfo.personalEmail': userId});
 
   if(!checkUserId && !checkPersonalEmail)return false
-
-  let mailEmployeeId =""
-  let mailId='';
-  let firstName ='';
-  let lastName ='';
+  let mailEmployeeId='';
   if(checkUserId){
     mailEmployeeId = checkUserId.employeeId;
-    mailId = checkUserId.contactInfo.personalEmail;
-    firstName = checkUserId.firstName;
-    lastName = checkUserId.lastName;
   }else{
     mailEmployeeId = checkPersonalEmail.employeeId;
-    mailId = checkPersonalEmail.contactInfo.personalEmail;
-    firstName = checkPersonalEmail.firstName;
-    lastName = checkPersonalEmail.lastName;
   }
+  return mailEmployeeId
+},
+async changeForgotPass(userId,secAns){
+  if(!userId)throw new Error('EmployeeId needed.');
+
+  let userCollection = await users();
+  let data = await userCollection.findOne({employeeId: userId});
+
+  let check = await bcrypt.compare(secAns,data.securityAnswer);
+
+  if(check === false)throw new Error('Incorrect Answer.');
 
   let randomPass = validation.generatePassword()
   let sendPass = randomPass;
   randomPass = await validation.bcryptPass(randomPass);
 
-  let resetPass = await userCollection.updateOne({employeeId: mailEmployeeId},{$set:{password:randomPass,forgotPass:true}});
+  let resetPass = await userCollection.updateOne({employeeId: userId},{$set:{password:randomPass,forgotPass:true}});
 
   if(!resetPass.acknowledged)throw new Error('Could not Rest the Password.');
 
-  let status = await sendEmail(mailId,"HR:Centrtal-PassWord Reset",`PassWord reset has been triggerd.
-Hello ${firstName} ${lastName},
+  let status = await sendEmail(data.contactInfo.personalEmail,"HR:Centrtal-PassWord Reset",`PassWord reset has been triggerd.
+Hello ${data.firstName} ${data.lastName},
 Your password has been reset. You will find the temporary Passowrd Below.
-Temporary Password:${sendPass}. You wont be able to access other features if you dont change your password upon login.`);
+Temporary Password:   ${sendPass}
+You wont be able to access other features if you dont change your password upon login.
+Regards,
+HR:Central Team.`);
     
 },
 
