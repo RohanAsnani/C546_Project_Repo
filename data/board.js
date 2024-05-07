@@ -251,7 +251,7 @@ const exportedMethods = {
 
         patchData = validation.updateValuesOfTwoObjects(existingData,patchData);
 
-        patchData.securityAnswer = await validation.bcryptPass(patchData.securityAnswer);
+     
 
         let updatedData = await userCollection.findOneAndUpdate({employeeId: patchData.employeeId},
             {$set:patchData},
